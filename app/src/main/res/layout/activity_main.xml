@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cz.kovar.petr.homevoice.MainActivity">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/textResult"
+        android:layout_alignParentBottom="true"
+        android:textSize="24sp"
+        android:layout_toEndOf="@+id/homeButton"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:background="@color/colorMain"
+        android:fontFamily="sans-serif" />
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/listen_button"
+        android:src="@drawable/ic_mic_selector"
+        android:scaleType="fitCenter"
+        android:background="@null"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/textResult" />
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/settingsButton"
+        android:src="@drawable/ic_settings_selector"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:background="@null"
+        android:scaleType="centerInside"
+        android:layout_marginRight="5dp" />
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/homeButton"
+        android:src="@drawable/ic_home_selector"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:scaleType="fitCenter"
+        android:background="@null"
+        android:layout_marginLeft="5dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/colorMain">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/imageView"
+            android:src="@drawable/ic_clock"/>
+
+        <TextClock
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/clock"
+            android:textSize="@dimen/large_text_size"
+            android:layout_marginLeft="10dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/textView2"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:background="@color/colorMain"
+            android:layout_alignParentTop="true"
+            android:layout_weight="1" />
+
+        <TextClock
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/date"
+            android:format24Hour="EEEE, d.MMMM.yyyy"
+            android:textSize="@dimen/large_text_size"
+            android:layout_marginRight="10dp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

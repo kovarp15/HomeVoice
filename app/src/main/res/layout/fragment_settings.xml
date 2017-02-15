@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:padding="5dp"
+    android:focusableInTouchMode="true">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
+        android:background="@color/colorMain"
+        android:padding="5dp"
+        android:layout_marginTop="50dp">
+
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:rowCount="7"
+            android:columnCount="3"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/remote_url"
+                android:id="@+id/remoteURLLabel"
+                android:layout_row="0"
+                android:layout_column="0"
+                android:layout_margin="5dp"
+                android:layout_gravity="right|center_vertical"
+                android:textColor="@android:color/white" />
+
+            <EditText
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/remoteURL"
+                android:layout_row="0"
+                android:layout_column="2"
+                android:singleLine="true"
+                android:imeOptions="actionDone"
+                android:textColor="@android:color/white"
+                android:hint="@string/default_zway_url"
+                android:textColorHint="@color/colorHint"
+                android:inputType="textUri" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/local_ip"
+                android:id="@+id/localIPLabel"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:layout_margin="5dp"
+                android:layout_gravity="center_vertical|right"
+                android:textColor="@android:color/white" />
+
+            <EditText
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/localIP"
+                android:layout_row="1"
+                android:layout_column="2"
+                android:singleLine="true"
+                android:imeOptions="actionDone"
+                android:textColor="@android:color/white"
+                android:hint="@string/default_local_ip"
+                android:textColorHint="@color/colorHint" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/local_port"
+                android:id="@+id/localPortLabel"
+                android:layout_row="2"
+                android:layout_column="0"
+                android:layout_margin="5dp"
+                android:layout_gravity="center_vertical|right"
+                android:textColor="@android:color/white" />
+
+            <EditText
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/localPort"
+                android:layout_row="2"
+                android:layout_column="2"
+                android:singleLine="true"
+                android:numeric="integer"
+                android:imeOptions="actionDone"
+                android:textColor="@android:color/white"
+                android:hint="@string/default_local_port"
+                android:textColorHint="@color/colorHint" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/login"
+                android:id="@+id/loginLabel"
+                android:layout_row="3"
+                android:layout_column="0"
+                android:layout_margin="5dp"
+                android:layout_gravity="center_vertical|right"
+                android:textColor="@android:color/white" />
+
+            <EditText
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/login"
+                android:layout_row="3"
+                android:layout_column="2"
+                android:singleLine="true"
+                android:imeOptions="actionDone"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/colorHint" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/password"
+                android:id="@+id/passwordLabel"
+                android:layout_row="4"
+                android:layout_column="0"
+                android:layout_margin="5dp"
+                android:layout_gravity="center_vertical|end"
+                android:textColor="@android:color/white" />
+
+            <EditText
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/password"
+                android:layout_row="4"
+                android:layout_column="2"
+                android:singleLine="true"
+                android:password="true"
+                android:imeOptions="actionDone"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/colorHint" />
+
+            <Switch
+                android:text="Local/Remote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/remoteSwitch" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Firebase API"
+                android:id="@+id/textView"
+                android:layout_row="6"
+                android:layout_column="0"
+                android:layout_margin="5dp"
+                android:layout_gravity="center_vertical|end"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text=""
+                android:id="@+id/firebaseAPI"
+                android:layout_row="6"
+                android:layout_column="2"
+                android:layout_margin="5dp"
+                android:layout_gravity="center_vertical|end"
+                android:textColor="@android:color/white"
+                android:textIsSelectable="true" />
+        </GridLayout>
+
+    </FrameLayout>
+
+</LinearLayout>
