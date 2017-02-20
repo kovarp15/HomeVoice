@@ -1,27 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1"
     android:padding="5dp"
-    android:gravity="center">
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_height="match_parent"
-        android:layout_gravity="left|center_vertical"
-        android:background="@color/colorPrimaryDark"
-        android:layout_width="200dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="50dp"></LinearLayout>
+    android:gravity="center"
+    android:background="@color/colorPrimaryDark">
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:srcCompat="@drawable/floor_plan"
-        android:id="@+id/imageView2"
-        android:layout_marginBottom="50dp"
-        android:layout_marginTop="50dp" />
+        android:id="@+id/floorPlan"/>
 
-</LinearLayout>
+    <cz.kovar.petr.homevoice.frontend.widgets.RoomButton
+        android:text="Bedroom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/roomButton"
+        android:visibility="gone"
+        android:background="?android:selectableItemBackground"/>
+
+    <Button
+        android:text="Done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/doneButton"
+        android:visibility="gone" />
+
+</RelativeLayout>

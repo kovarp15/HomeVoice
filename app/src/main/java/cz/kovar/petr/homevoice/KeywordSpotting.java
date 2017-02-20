@@ -55,7 +55,7 @@ public class KeywordSpotting extends Service {
 
     private static final String LOG_TAG = "KeywordSpotting";
     private static final String KWS_SEARCH = "wakeup";
-    private static final String KEYPHRASE = "okay home voice";
+    private static final String KEYPHRASE = "okay smart home";
 
     private SpeechRecognizer m_recognizer;
     private boolean m_running = false;

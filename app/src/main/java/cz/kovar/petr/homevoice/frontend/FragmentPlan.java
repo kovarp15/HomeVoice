@@ -1,7 +1,7 @@
 /*
  * HomeVoice for Android a UI for Z-Way server
  *
- * Created by Petr Kovář on 10.01.2017.
+ * Created by Petr Kovář on 18.02.2017.
  * Copyright (c) 2017 Petr Kovář
  *
  * All rights reserved
@@ -22,18 +22,23 @@
 
 package cz.kovar.petr.homevoice.frontend;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import cz.kovar.petr.homevoice.R;
+import cz.kovar.petr.homevoice.frontend.widgets.RoomButton;
 
 /**
- * Provides frontend for home summary
+ * Provides frontend for plan
  */
 public class FragmentPlan extends Fragment {
+
+    private Button m_doneButton;
+    private RoomButton m_testRoomButton;
 
     public static FragmentPlan newInstance() {
 
@@ -43,7 +48,26 @@ public class FragmentPlan extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_home, container, false);
+        View v = inflater.inflate(R.layout.fragment_plan, container, false);
+
+        m_testRoomButton = (RoomButton) v.findViewById(R.id.roomButton);
+        m_testRoomButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                m_doneButton.setVisibility(View.VISIBLE);
+                m_testRoomButton.setEditMode(true);
+                return true;
+            }
+        });
+
+        m_doneButton = (Button) v.findViewById(R.id.doneButton);
+        m_doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_testRoomButton.setEditMode(false);
+                m_doneButton.setVisibility(View.GONE);
+            }
+        });
 
         return v;
     }
