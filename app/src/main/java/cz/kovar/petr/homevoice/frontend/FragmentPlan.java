@@ -237,31 +237,19 @@ public class FragmentPlan extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
+        super.onStop();
         bus.unregister(this);
     }
 
     @Subscribe
     public void onAuthSuccess(AuthEvent.Success event) {
         Log.v(LOG_TAG, "Auth Success!");
-        createButtons(dataContext.getLocationsNames());
     }
 
     @Subscribe
     public void onAuthFail(AuthEvent.Fail event) {
         Log.v(LOG_TAG, "Auth Failed!");
-        clearButtons();
-    }
-
-    private void createButtons(List<String> aIDs) {
-        for(String id : aIDs) {
-
-        }
-    }
-
-    private void clearButtons() {
-
     }
 
 }

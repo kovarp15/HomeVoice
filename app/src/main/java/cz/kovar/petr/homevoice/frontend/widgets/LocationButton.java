@@ -22,8 +22,10 @@
 package cz.kovar.petr.homevoice.frontend.widgets;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -67,7 +69,13 @@ public class LocationButton extends Button {
 
     private void init() {
 
+        TypedValue outValue = new TypedValue();
+        getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+        setBackgroundResource(outValue.resourceId);
+
         setVisibility(VISIBLE);
+
+        setShadowLayer(10, 0, 0, Color.BLACK);
 
         setOnTouchListener(new MoveListener());
 
