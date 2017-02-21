@@ -6,21 +6,14 @@
     android:weightSum="1"
     android:padding="5dp"
     android:gravity="center"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/colorPrimaryDark"
+    android:id="@+id/plan">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:srcCompat="@drawable/floor_plan"
         android:id="@+id/floorPlan"/>
-
-    <cz.kovar.petr.homevoice.frontend.widgets.RoomButton
-        android:text="Bedroom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/roomButton"
-        android:visibility="gone"
-        android:background="?android:selectableItemBackground"/>
 
     <Button
         android:text="Done"
@@ -30,5 +23,14 @@
         android:layout_alignParentStart="true"
         android:id="@+id/doneButton"
         android:visibility="gone" />
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:srcCompat="@drawable/ic_options"
+        android:id="@+id/optionsButton"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:background="@android:color/transparent" />
 
 </RelativeLayout>

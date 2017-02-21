@@ -30,12 +30,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import javax.inject.Inject;
+
 import cz.kovar.petr.homevoice.R;
+import cz.kovar.petr.homevoice.app.ZWayApplication;
+import cz.kovar.petr.homevoice.bus.MainThreadBus;
+import cz.kovar.petr.homevoice.zwave.DataContext;
 
 /**
  * Provides frontend for home summary
  */
 public class FragmentHome extends Fragment {
+
+    @Inject
+    DataContext dataContext;
+    @Inject
+    MainThreadBus bus;
 
     public static FragmentHome newInstance() {
 
@@ -44,10 +54,21 @@ public class FragmentHome extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        ((ZWayApplication) getContext().getApplicationContext()).getComponent().inject(this);
+        bus.register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        bus.unregister(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-
-        FragmentPlan plan = new FragmentPlan();
 
         return v;
     }

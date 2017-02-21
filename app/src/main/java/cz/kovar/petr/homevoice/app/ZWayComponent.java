@@ -24,6 +24,8 @@ package cz.kovar.petr.homevoice.app;
 import javax.inject.Singleton;
 
 import cz.kovar.petr.homevoice.MainActivity;
+import cz.kovar.petr.homevoice.frontend.FragmentHome;
+import cz.kovar.petr.homevoice.frontend.FragmentPlan;
 import cz.kovar.petr.homevoice.frontend.FragmentSettings;
 import cz.kovar.petr.homevoice.modules.AboutModule;
 import cz.kovar.petr.homevoice.zwave.services.AuthService;
@@ -38,5 +40,9 @@ public interface ZWayComponent {
     void inject(MainActivity activity);
 
     void inject(FragmentSettings fragment);
+
+    void inject(FragmentHome fragment);
+
+    void inject(FragmentPlan fragment);
 
 }

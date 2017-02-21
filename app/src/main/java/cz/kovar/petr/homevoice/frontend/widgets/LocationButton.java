@@ -22,7 +22,6 @@
 package cz.kovar.petr.homevoice.frontend.widgets;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -37,36 +36,30 @@ import static android.view.MotionEvent.ACTION_POINTER_DOWN;
 import static android.view.MotionEvent.ACTION_POINTER_UP;
 import static android.view.MotionEvent.ACTION_UP;
 
-public class RoomButton extends Button {
+public class LocationButton extends Button {
 
     private static final String LOG_TAG = "RoomButton";
-    private static final String MARGIN_LEFT = "margin_left";
-    private static final String MARGIN_TOP  = "margin_top";
-    private static final String WIDTH       = "width";
-    private static final String HEIGHT      = "height";
 
     private int m_width = 200;
-    private int m_heigth = 100;
-
-    private SharedPreferences m_preferences;
+    private int m_height = 100;
 
     private ScaleGestureDetector m_scaleDetector;
 
     private boolean m_modify = false;
 
-    public RoomButton(Context context) {
+    public LocationButton(Context context) {
         super(context);
 
         init();
     }
 
-    public RoomButton(Context context, AttributeSet attrs) {
+    public LocationButton(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         init();
     }
 
-    public RoomButton(Context context, AttributeSet attrs, int defStyleAttr) {
+    public LocationButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         init();
@@ -74,12 +67,7 @@ public class RoomButton extends Button {
 
     private void init() {
 
-        RoomButton.this.setVisibility(VISIBLE);
-
-        m_preferences = getContext().getSharedPreferences("Bedroom", Context.MODE_PRIVATE);
-        m_width = m_preferences.getInt(WIDTH, 200);
-        m_heigth = m_preferences.getInt(HEIGHT, 100);
-        Log.d(LOG_TAG, "INIT: W = " + m_width + ", H = " + m_heigth);
+        setVisibility(VISIBLE);
 
         setOnTouchListener(new MoveListener());
 
@@ -87,12 +75,15 @@ public class RoomButton extends Button {
 
     }
 
+    public void setDimensions(int aWidth, int aHeight) {
+        m_width = aWidth;
+        m_height = aHeight;
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = getMeasurement(widthMeasureSpec, m_width);
-        int height = getMeasurement(heightMeasureSpec, m_heigth);
-        Log.d(LOG_TAG, "onMeasure: W = " + width + ", H = " + height + ", W = " + m_width + ", H = " + m_heigth);
-        setMeasuredDimension(m_width, m_heigth);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        setMeasuredDimension(m_width, m_height);
     }
 
 
@@ -100,26 +91,21 @@ public class RoomButton extends Button {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
 
-
-        if(!m_modify) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) RoomButton.this.getLayoutParams();
+        /*if(!m_modify) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) LocationButton.this.getLayoutParams();
             params.leftMargin = m_preferences.getInt(MARGIN_LEFT, 0);
             params.topMargin = m_preferences.getInt(MARGIN_TOP, 0);
-            //params.width = m_preferences.getInt(WIDTH, 200);
-            //params.height = m_preferences.getInt(HEIGHT, 100);
-            Log.e(LOG_TAG, "left = " + params.leftMargin + ", top = " + params.topMargin + ", width = " + params.width + ", height = " + params.height);
-            RoomButton.this.setLayoutParams(params);
-        }
+            LocationButton.this.setLayoutParams(params);
+        }*/
 
     }
 
-    public void setEditMode(boolean aMode) {
-        m_modify = aMode;
+    public void setEditMode() {
+        m_modify = true;
+    }
 
-        if(!m_modify) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) getLayoutParams();
-            savePreferences(params.leftMargin, params.topMargin, m_width, m_heigth);
-        }
+    public void clearEditMode() {
+        m_modify = false;
     }
 
     /**
@@ -149,7 +135,7 @@ public class RoomButton extends Button {
             float m_scaleY = spanY / lastSpanY;
 
             m_width = (int) (m_scaleX * m_width);
-            m_heigth = (int) (m_scaleY * m_heigth);
+            m_height = (int) (m_scaleY * m_height);
 
             lastSpanX = spanX;
             lastSpanY = spanY;
@@ -201,7 +187,7 @@ public class RoomButton extends Button {
                         }
                         break;
                 }
-                RoomButton.this.invalidate();
+                LocationButton.this.invalidate();
                 return true;
             } else {
                 switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
@@ -215,15 +201,6 @@ public class RoomButton extends Button {
                 return false;
             }
         }
-    }
-
-    private void savePreferences(int aLeftMargin, int aTopMargin, int aWidth, int aHeight) {
-        SharedPreferences.Editor editor = m_preferences.edit();
-        editor.putInt(MARGIN_LEFT, aLeftMargin);
-        editor.putInt(MARGIN_TOP, aTopMargin);
-        editor.putInt(WIDTH, aWidth);
-        editor.putInt(HEIGHT, aHeight);
-        editor.apply();
     }
 
     private int getMeasurement(int measureSpec, int preferred) {
