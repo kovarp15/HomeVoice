@@ -20,6 +20,7 @@ import cz.kovar.petr.homevoice.app.ZWayApplication;
 import cz.kovar.petr.homevoice.bus.MainThreadBus;
 import cz.kovar.petr.homevoice.bus.events.AuthEvent;
 import cz.kovar.petr.homevoice.bus.events.SettingsEvent;
+import cz.kovar.petr.homevoice.bus.events.ShowEvent;
 import cz.kovar.petr.homevoice.frontend.PagerAdapter;
 import cz.kovar.petr.homevoice.modules.AboutModule;
 import cz.kovar.petr.homevoice.modules.TimeModule;
@@ -206,6 +207,12 @@ public class MainActivity extends AppCompatActivity {
         Log.v(LOG_TAG, "Auth Failed!");
         m_result.setText("I am not able to manage the connection.");
         m_pagedAdapter.clear();
+    }
+
+    @Subscribe
+    public void onShowLocation(ShowEvent.Location event) {
+        Log.v(LOG_TAG, "Show location: " + event.id);
+        m_pager.setCurrentItem(dataContext.getLocationsNames().indexOf(event.id) + 1);
     }
 
     private void startKeywordSpotting() {

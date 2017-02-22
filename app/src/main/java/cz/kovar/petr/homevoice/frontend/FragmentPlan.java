@@ -51,6 +51,7 @@ import cz.kovar.petr.homevoice.R;
 import cz.kovar.petr.homevoice.app.ZWayApplication;
 import cz.kovar.petr.homevoice.bus.MainThreadBus;
 import cz.kovar.petr.homevoice.bus.events.AuthEvent;
+import cz.kovar.petr.homevoice.bus.events.ShowEvent;
 import cz.kovar.petr.homevoice.frontend.widgets.LocationButton;
 import cz.kovar.petr.homevoice.utils.UtilsConverter;
 import cz.kovar.petr.homevoice.zwave.DataContext;
@@ -74,7 +75,9 @@ public class FragmentPlan extends Fragment {
     private HashMap<String, LocationButton> m_locationButtons = new HashMap<>();
     private SharedPreferences m_preferences;
 
-    private Button m_doneButton;
+    private ImageButton m_doneButton;
+    private ImageButton m_deleteButton;
+    private ImageButton m_cancelButton;
     private ImageButton m_optionsButton;
 
     @Inject
@@ -92,12 +95,30 @@ public class FragmentPlan extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_plan, container, false);
 
-        m_doneButton = (Button) v.findViewById(R.id.doneButton);
+        m_doneButton = (ImageButton) v.findViewById(R.id.doneButton);
         m_doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 savePlanPreferences();
                 clearEditMode();
+            }
+        });
+
+        m_deleteButton = (ImageButton) v.findViewById(R.id.deleteButton);
+        m_deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO Implement delete room
+                Toast.makeText(getContext(), getString(R.string.not_implemented_yet), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        m_cancelButton = (ImageButton) v.findViewById(R.id.cancelButton);
+        m_cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO Implement cancel functionality
+                Toast.makeText(getContext(), getString(R.string.not_implemented_yet), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -124,6 +145,7 @@ public class FragmentPlan extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch(i) {
                     case LOAD_PLAN:
+                        // TODO Implement load plan from directory
                         Toast.makeText(getContext(), getString(R.string.not_implemented_yet), Toast.LENGTH_SHORT).show();
                         break;
                     case MAP_ROOM:
@@ -170,7 +192,7 @@ public class FragmentPlan extends Fragment {
         Set<String> currentLocations = new HashSet<>(dataContext.getLocationsNames());
 
         for(String location : currentLocations) {
-            if(savedLocations.contains(location)) {
+            if(savedLocations.contains(location) && !m_locationButtons.keySet().contains(location)) {
                 int width = m_preferences.getInt(location + TAG_WIDTH, 150);
                 int height = m_preferences.getInt(location + TAG_HEIGHT, 150);
                 int left = m_preferences.getInt(location + TAG_LEFT, 0);
@@ -192,6 +214,13 @@ public class FragmentPlan extends Fragment {
                 return true;
             }
         });
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String id = ((LocationButton) view).getText().toString();
+                bus.post(new ShowEvent.Location(id));
+            }
+        });
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(aWidth, aHeight);
         params.leftMargin = aLeft;
         params.topMargin = aTop;
@@ -204,6 +233,8 @@ public class FragmentPlan extends Fragment {
     private void setEditMode(LocationButton aButton) {
         aButton.setEditMode();
         m_doneButton.setVisibility(View.VISIBLE);
+        m_deleteButton.setVisibility(View.VISIBLE);
+        m_cancelButton.setVisibility(View.VISIBLE);
     }
 
     private void clearEditMode() {
@@ -211,6 +242,8 @@ public class FragmentPlan extends Fragment {
             button.clearEditMode();
         }
         m_doneButton.setVisibility(View.GONE);
+        m_deleteButton.setVisibility(View.GONE);
+        m_cancelButton.setVisibility(View.GONE);
     }
 
     private void savePlanPreferences() {

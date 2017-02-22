@@ -94,26 +94,13 @@ public class LocationButton extends Button {
         setMeasuredDimension(m_width, m_height);
     }
 
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        super.onLayout(changed, l, t, r, b);
-
-        /*if(!m_modify) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) LocationButton.this.getLayoutParams();
-            params.leftMargin = m_preferences.getInt(MARGIN_LEFT, 0);
-            params.topMargin = m_preferences.getInt(MARGIN_TOP, 0);
-            LocationButton.this.setLayoutParams(params);
-        }*/
-
-    }
-
     public void setEditMode() {
         m_modify = true;
     }
 
     public void clearEditMode() {
         m_modify = false;
+        setPressed(false);
     }
 
     /**
