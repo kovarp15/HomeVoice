@@ -14,7 +14,14 @@
 
     <string name="not_implemented_yet">Not implemented yet</string>
 
+    <!--CONTROLS-->
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="delete">Delete</string>
+    <string name="options">Options</string>
+
     <!--FRAGMENT PLAN-->
+    <string name="floor_plan">Floor Plan</string>
     <string-array name="plan_options">
         <item>Load Plan</item>
         <item>Map Room</item>

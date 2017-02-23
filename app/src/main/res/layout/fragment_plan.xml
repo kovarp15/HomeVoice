@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:srcCompat="@drawable/floor_plan"
-        android:id="@+id/floorPlan"/>
+        android:id="@+id/floorPlan"
+        android:contentDescription="@string/floor_plan" />
 
     <ImageButton
         android:layout_width="50dp"
@@ -23,7 +24,8 @@
         android:layout_alignParentEnd="true"
         android:id="@+id/doneButton"
         android:visibility="gone"
-        android:background="?android:attr/selectableItemBackground" />
+        android:background="?android:attr/selectableItemBackground"
+        android:contentDescription="@string/done" />
 
     <ImageButton
         android:layout_width="50dp"
@@ -33,7 +35,8 @@
         android:layout_alignParentEnd="true"
         android:id="@+id/deleteButton"
         android:visibility="gone"
-        android:background="?android:attr/selectableItemBackground" />
+        android:background="?android:attr/selectableItemBackground"
+        android:contentDescription="@string/delete" />
 
     <ImageButton
         android:layout_width="50dp"
@@ -43,7 +46,8 @@
         android:layout_alignParentEnd="true"
         android:id="@+id/cancelButton"
         android:visibility="gone"
-        android:background="?android:attr/selectableItemBackground" />
+        android:background="?android:attr/selectableItemBackground"
+        android:contentDescription="@string/cancel" />
 
     <ImageButton
         android:layout_width="50dp"
@@ -52,6 +56,7 @@
         android:id="@+id/optionsButton"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:background="?android:attr/selectableItemBackground" />
+        android:background="?android:attr/selectableItemBackground"
+        android:contentDescription="@string/options" />
 
 </RelativeLayout>

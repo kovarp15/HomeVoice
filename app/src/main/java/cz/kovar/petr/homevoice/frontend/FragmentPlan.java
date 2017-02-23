@@ -32,7 +32,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListPopupWindow;
 import android.widget.RelativeLayout;
@@ -40,9 +39,11 @@ import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -73,6 +74,7 @@ public class FragmentPlan extends Fragment {
     private static final int MAP_ROOM  = 1;
 
     private HashMap<String, LocationButton> m_locationButtons = new HashMap<>();
+    private HashMap<String, Parameters> m_paramsBackup = new HashMap<>();
     private SharedPreferences m_preferences;
 
     private ImageButton m_doneButton;
@@ -95,10 +97,14 @@ public class FragmentPlan extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_plan, container, false);
 
+        final List<String> locToDelete = new ArrayList<>();
+
         m_doneButton = (ImageButton) v.findViewById(R.id.doneButton);
         m_doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                m_paramsBackup.clear();
+                deleteLocations(locToDelete);
                 savePlanPreferences();
                 clearEditMode();
             }
@@ -108,8 +114,8 @@ public class FragmentPlan extends Fragment {
         m_deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO Implement delete room
-                Toast.makeText(getContext(), getString(R.string.not_implemented_yet), Toast.LENGTH_SHORT).show();
+                locToDelete.clear();
+                locToDelete.addAll(updateDeleteList());
             }
         });
 
@@ -117,8 +123,9 @@ public class FragmentPlan extends Fragment {
         m_cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO Implement cancel functionality
-                Toast.makeText(getContext(), getString(R.string.not_implemented_yet), Toast.LENGTH_SHORT).show();
+                revertDelete(locToDelete);
+                revertModifications(m_paramsBackup);
+                clearEditMode();
             }
         });
 
@@ -203,13 +210,16 @@ public class FragmentPlan extends Fragment {
 
     }
 
-    private LocationButton addLocationButton(String aID, int aWidth, int aHeight, int aLeft, int aTop) {
-        LocationButton button = new LocationButton(getContext());
+    private LocationButton addLocationButton(final String aID, final int aWidth, final int aHeight, int aLeft, int aTop) {
+        final LocationButton button = new LocationButton(getContext());
         button.setText(aID);
         button.setDimensions(aWidth,aHeight);
         button.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                RelativeLayout.LayoutParams lparams = (RelativeLayout.LayoutParams) button.getLayoutParams();
+                Parameters params = new Parameters(lparams.width, lparams.height, lparams.leftMargin, lparams.topMargin);
+                m_paramsBackup.put(aID, params);
                 setEditMode((LocationButton) view);
                 return true;
             }
@@ -244,6 +254,49 @@ public class FragmentPlan extends Fragment {
         m_doneButton.setVisibility(View.GONE);
         m_deleteButton.setVisibility(View.GONE);
         m_cancelButton.setVisibility(View.GONE);
+    }
+
+    private List<String> updateDeleteList() {
+        List<String> toDelete = new ArrayList<>();
+        for(String name : m_locationButtons.keySet()) {
+            LocationButton button = m_locationButtons.get(name);
+            if(button.isEdited()) {
+                button.setVisibility(View.INVISIBLE);
+                toDelete.add(name);
+            }
+        }
+        return toDelete;
+    }
+
+    private void deleteLocations(List<String> aLocations) {
+        for(String name : aLocations) {
+            LocationButton button = m_locationButtons.get(name);
+            m_locationButtons.remove(name);
+            RelativeLayout parent = (RelativeLayout) button.getParent();
+            parent.removeView(button);
+        }
+        aLocations.clear();
+    }
+
+    private void revertDelete(List<String> aLocations) {
+        for(String name : aLocations) {
+            LocationButton button = m_locationButtons.get(name);
+            button.setVisibility(View.VISIBLE);
+        }
+        aLocations.clear();
+    }
+
+    private void revertModifications(Map<String, Parameters> aBackup) {
+        for(String name : aBackup.keySet()) {
+            LocationButton button = m_locationButtons.get(name);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) button.getLayoutParams();
+            params.width = aBackup.get(name).width;
+            params.height = aBackup.get(name).height;
+            params.leftMargin = aBackup.get(name).left;
+            params.topMargin = aBackup.get(name).top;
+            button.setLayoutParams(params);
+        }
+        aBackup.clear();
     }
 
     private void savePlanPreferences() {
@@ -283,6 +336,22 @@ public class FragmentPlan extends Fragment {
     @Subscribe
     public void onAuthFail(AuthEvent.Fail event) {
         Log.v(LOG_TAG, "Auth Failed!");
+    }
+
+    private class Parameters {
+
+        final int width;
+        final int height;
+        final int left;
+        final int top;
+
+        Parameters(int aWidth, int aHeight, int aLeft, int aTop) {
+            width = aWidth;
+            height = aHeight;
+            left = aLeft;
+            top = aTop;
+        }
+
     }
 
 }

@@ -96,11 +96,16 @@ public class LocationButton extends Button {
 
     public void setEditMode() {
         m_modify = true;
+        setPressed(true);
     }
 
     public void clearEditMode() {
         m_modify = false;
         setPressed(false);
+    }
+
+    public boolean isEdited() {
+        return m_modify;
     }
 
     /**
