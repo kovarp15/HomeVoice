@@ -60,8 +60,12 @@ public class Device implements Serializable{
 
     public int getIconId(){
         final String icon = metrics.icon;
-        if(TextUtils.isEmpty(icon))
+        if(TextUtils.isEmpty(icon)) {
+            if(tags.contains("LIGHT")) {
+                return R.drawable.ic_device_light;
+            }
             return 0;
+        }
 
         if(icon.equalsIgnoreCase("switch")){
             return R.drawable.ic_device_switch;

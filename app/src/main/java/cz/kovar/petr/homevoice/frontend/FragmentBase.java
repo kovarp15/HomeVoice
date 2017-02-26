@@ -1,7 +1,7 @@
 /*
  * HomeVoice for Android a UI for Z-Way server
  *
- * Created by Petr Kovář on 10.01.2017.
+ * Created by Petr Kovář on 25.02.2017.
  * Copyright (c) 2017 Petr Kovář
  *
  * All rights reserved
@@ -19,65 +19,41 @@
  * You should have received a copy of the GNU General Public License
  * along with HomeVoice for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package cz.kovar.petr.homevoice.frontend;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v4.app.Fragment;
 
 import javax.inject.Inject;
 
-import cz.kovar.petr.homevoice.R;
 import cz.kovar.petr.homevoice.app.ZWayApplication;
 import cz.kovar.petr.homevoice.bus.MainThreadBus;
 import cz.kovar.petr.homevoice.zwave.DataContext;
 
-/**
- * Provides frontend for home summary
- */
-public class FragmentHome extends Fragment {
+public class FragmentBase extends Fragment {
 
     @Inject
     DataContext dataContext;
+
     @Inject
     MainThreadBus bus;
 
-    public static FragmentHome newInstance() {
-
-        return new FragmentHome();
-
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((ZWayApplication) getActivity().getApplication()).getComponent().inject(this);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        ((ZWayApplication) getContext().getApplicationContext()).getComponent().inject(this);
+    public void onResume() {
+        super.onResume();
         bus.register(this);
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onPause() {
+        super.onPause();
         bus.unregister(this);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.e("FragmentHome", "onCreateView");
-        View v = inflater.inflate(R.layout.fragment_home, container, false);
-
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment, FragmentPlan.newInstance());
-        fragmentTransaction.commit();
-
-        return v;
     }
 
 }

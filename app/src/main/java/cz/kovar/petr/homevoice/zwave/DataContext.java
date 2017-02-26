@@ -41,9 +41,9 @@ public class DataContext {
     private List<Notification> mNotifications;
 
     public DataContext() {
-        mDevices = new ArrayList<Device>();
-        mLocation = new ArrayList<Location>();
-        mNotifications = new ArrayList<Notification>();
+        mDevices = new ArrayList<>();
+        mLocation = new ArrayList<>();
+        mNotifications = new ArrayList<>();
     }
 
     public void addNotifications(List<Notification> notifications) {

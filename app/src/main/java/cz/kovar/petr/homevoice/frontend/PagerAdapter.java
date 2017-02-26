@@ -32,6 +32,9 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
     private List<String> locationsIDs = new ArrayList<>();
 
+    private FragmentHome m_home = FragmentHome.newInstance();
+    private FragmentSettings m_settings = FragmentSettings.newInstance();
+
     public PagerAdapter(FragmentManager fm) {
         super(fm);
     }
@@ -40,11 +43,11 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     public android.support.v4.app.Fragment getItem(int pos) {
 
         if(pos == 0) {
-            return FragmentHome.newInstance();
+            return m_home;
         }
 
         if(pos == getCount() - 1) {
-            return FragmentSettings.newInstance();
+            return m_settings;
         }
 
         return FragmentLocation.newInstance(locationsIDs.get(pos - 1));

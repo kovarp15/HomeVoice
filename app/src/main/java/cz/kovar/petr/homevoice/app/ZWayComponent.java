@@ -21,14 +21,17 @@
  */
 package cz.kovar.petr.homevoice.app;
 
+import android.app.IntentService;
+
 import javax.inject.Singleton;
 
 import cz.kovar.petr.homevoice.MainActivity;
+import cz.kovar.petr.homevoice.frontend.FragmentBase;
 import cz.kovar.petr.homevoice.frontend.FragmentHome;
-import cz.kovar.petr.homevoice.frontend.FragmentPlan;
 import cz.kovar.petr.homevoice.frontend.FragmentSettings;
-import cz.kovar.petr.homevoice.modules.AboutModule;
 import cz.kovar.petr.homevoice.zwave.services.AuthService;
+import cz.kovar.petr.homevoice.zwave.services.DataUpdateService;
+import cz.kovar.petr.homevoice.zwave.services.UpdateDeviceService;
 import dagger.Component;
 
 @Singleton
@@ -43,6 +46,10 @@ public interface ZWayComponent {
 
     void inject(FragmentHome fragment);
 
-    void inject(FragmentPlan fragment);
+    void inject(FragmentBase fragment);
+
+    void inject(DataUpdateService fragment);
+
+    void inject(UpdateDeviceService service);
 
 }

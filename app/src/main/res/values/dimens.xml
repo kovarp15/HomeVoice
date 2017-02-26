@@ -3,5 +3,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="grid_item_height">95dp</dimen>
+    <dimen name="grid_item_back_view_width">120dp</dimen>
+
     <dimen name="large_text_size">22sp</dimen>
 </resources>

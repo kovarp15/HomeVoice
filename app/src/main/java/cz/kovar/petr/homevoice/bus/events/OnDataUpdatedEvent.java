@@ -1,7 +1,7 @@
 /*
  * HomeVoice for Android a UI for Z-Way server
  *
- * Created by Petr Kovář on 01.02.2017.
+ * Created by Petr Kovář on 25.02.2017.
  * Copyright (c) 2017 Petr Kovář
  *
  * All rights reserved
@@ -19,24 +19,17 @@
  * You should have received a copy of the GNU General Public License
  * along with HomeVoice for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
+package cz.kovar.petr.homevoice.bus.events;
 
-package cz.kovar.petr.homevoice.zwave.network.devices;
+import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
+import cz.kovar.petr.homevoice.zwave.dataModel.Device;
 
-public interface DevicesStateRequest {
+public class OnDataUpdatedEvent {
+    public final List<Device> devices;
 
-    @GET("/ZAutomation/api/v1/devices")
-    void getDevices(@Query("since") long updateTime, Callback<DevicesStateResponse> callback);
-
-    @GET("/ZAutomation/api/v1/devices")
-    Call<DevicesStateResponse> getDevices(@Query("since") long updateTime);
-
-    @GET("/ZAutomation/api/v1/devices/{id}")
-    void getDevice(@Path("id") String deviceId, Callback callback);
-
+    public OnDataUpdatedEvent(List<Device> devices) {
+        this.devices = devices;
+    }
 }
+

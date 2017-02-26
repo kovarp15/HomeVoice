@@ -17,15 +17,14 @@
         android:layout_marginTop="50dp"
         android:layout_marginBottom="50dp"></LinearLayout>
 
-    <fragment
+    <RelativeLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:name="cz.kovar.petr.homevoice.frontend.FragmentPlan"
+        android:layout_height="match_parent"
         android:id="@+id/fragment"
-        android:layout_weight="1"
-        tools:layout="@layout/fragment_plan"
+        android:background="@color/colorPrimaryDark"
         android:layout_marginTop="50dp"
         android:layout_marginBottom="50dp"
-        android:layout_marginLeft="5dp" />
+        android:layout_marginStart="5dp"
+        android:layout_weight="1" />
 
 </LinearLayout>

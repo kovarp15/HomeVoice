@@ -27,6 +27,12 @@
         <item>Map Room</item>
     </string-array>
 
+    <!--DEVICES-->
+    <string name="alarm">Alarm</string>
+    <string name="door">Door</string>
+    <string name="light">Light</string>
+    <string name="climate">Climate</string>
+
     <string name="zway_settings">Z-Way Settings</string>
     <string name="default_zway_url">https://find.z-wave.me</string>
     <string name="default_local_ip">192.168.0.1</string>

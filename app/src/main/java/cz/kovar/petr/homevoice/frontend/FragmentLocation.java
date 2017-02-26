@@ -24,18 +24,24 @@ package cz.kovar.petr.homevoice.frontend;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.TextViewCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import cz.kovar.petr.homevoice.R;
+import cz.kovar.petr.homevoice.zwave.dataModel.Filter;
 
 /**
  * Provides frontend for home summary
  */
-public class FragmentLocation extends Fragment {
+public class FragmentLocation extends FragmentBase {
+
+    private static final String LOG_TAG = "FragmentLocation";
 
     private static final String TAG_LOCATION = "loc";
 
@@ -60,6 +66,7 @@ public class FragmentLocation extends Fragment {
         super.onCreate(savedInstanceState);
 
         m_locationID = getArguments().getString(TAG_LOCATION);
+
     }
 
     @Override
@@ -70,6 +77,18 @@ public class FragmentLocation extends Fragment {
         m_title.setText(m_locationID);
 
         return v;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        FragmentManager fm = getChildFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        String locationIndex = String.valueOf(super.dataContext.getLocationsNames().indexOf(m_locationID));
+        fragmentTransaction.replace(R.id.fragmentDevices, FragmentDevices.newInstance(Filter.LOCATION, locationIndex));
+        fragmentTransaction.commit();
+
     }
 
 }

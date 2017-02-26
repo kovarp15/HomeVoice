@@ -56,6 +56,14 @@
         </service>
 
         <service
+            android:name=".zwave.services.DataUpdateService"
+            android:exported="false" />
+
+        <service
+            android:name=".zwave.services.UpdateDeviceService"
+            android:exported="false" />
+
+        <service
             android:name=".FirebaseService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>

@@ -78,67 +78,67 @@ public class ApiClient {
                 .create();
     }
 
-    public DevicesStateResponse getDevices(long lastUpdateTime) {
-        return m_adaptor.create(DevicesStateRequest.class).getDevices(lastUpdateTime);
+    public DevicesStateResponse getDevices(long lastUpdateTime) throws IOException {
+        return m_adaptor.create(DevicesStateRequest.class).getDevices(lastUpdateTime).execute().body();
     }
 
-    public void updateDevicesState(final Device updatedDevice) {
+    public void updateDevicesState(final Device updatedDevice) throws IOException {
         final String state = updatedDevice.deviceType == DeviceType.DOORLOCK
                 ? updatedDevice.metrics.mode : updatedDevice.metrics.level;
 
-        m_adaptor.create(UpdateDeviceRequest.class).updateDeviceSwitchState(updatedDevice.id, state);
+        m_adaptor.create(UpdateDeviceRequest.class).updateDeviceSwitchState(updatedDevice.id, state).execute().body();
     }
 
-    public void updateDevicesMode(final Device updatedDevice) {
+    public void updateDevicesMode(final Device updatedDevice) throws IOException {
         m_adaptor.create(UpdateDeviceRequest.class).updateMode(updatedDevice.id,
-                updatedDevice.metrics.mode);
+                updatedDevice.metrics.mode).execute().body();
     }
 
-    public void updateDevicesLevel(final Device updatedDevice) {
+    public void updateDevicesLevel(final Device updatedDevice) throws IOException {
         m_adaptor.create(UpdateDeviceRequest.class).updateLevel(updatedDevice.id,
-                updatedDevice.metrics.level);
+                updatedDevice.metrics.level).execute().body();
     }
 
-    public void updateToggle(final Device updatedDevice) {
-        m_adaptor.create(UpdateDeviceRequest.class).updateToggle(updatedDevice.id);
+    public void updateToggle(final Device updatedDevice) throws IOException {
+        m_adaptor.create(UpdateDeviceRequest.class).updateToggle(updatedDevice.id).execute().body();
     }
 
-    public void updateRGBColor(final Device updatedDevice) {
+    public void updateRGBColor(final Device updatedDevice) throws IOException {
         final DeviceRgbColor color = updatedDevice.metrics.color;
         m_adaptor.create(UpdateDeviceRequest.class).updateRGB(updatedDevice.id,
-                color.r, color.g, color.b);
+                color.r, color.g, color.b).execute().body();
     }
 
-    public void moveCameraRight(final Device updatedDevice) {
-        m_adaptor.create(UpdateDeviceRequest.class).moveCameraRight(updatedDevice.id);
+    public void moveCameraRight(final Device updatedDevice) throws IOException {
+        m_adaptor.create(UpdateDeviceRequest.class).moveCameraRight(updatedDevice.id).execute().body();
     }
 
-    public void moveCameraLeft(final Device updatedDevice) {
-        m_adaptor.create(UpdateDeviceRequest.class).moveCameraLeft(updatedDevice.id);
+    public void moveCameraLeft(final Device updatedDevice) throws IOException {
+        m_adaptor.create(UpdateDeviceRequest.class).moveCameraLeft(updatedDevice.id).execute().body();
     }
 
-    public void moveCameraUp(final Device updatedDevice) {
-        m_adaptor.create(UpdateDeviceRequest.class).movevCameraUp(updatedDevice.id);
+    public void moveCameraUp(final Device updatedDevice) throws IOException {
+        m_adaptor.create(UpdateDeviceRequest.class).movevCameraUp(updatedDevice.id).execute().body();
     }
 
-    public void moveCameraDown(final Device updatedDevice) {
-            m_adaptor.create(UpdateDeviceRequest.class).moveCameraDown(updatedDevice.id);
+    public void moveCameraDown(final Device updatedDevice) throws IOException {
+            m_adaptor.create(UpdateDeviceRequest.class).moveCameraDown(updatedDevice.id).execute().body();
     }
 
-    public void zoomCameraIn(final Device updatedDevice) {
-        m_adaptor.create(UpdateDeviceRequest.class).zoomCameraIn(updatedDevice.id);
+    public void zoomCameraIn(final Device updatedDevice) throws IOException {
+        m_adaptor.create(UpdateDeviceRequest.class).zoomCameraIn(updatedDevice.id).execute().body();
     }
 
-    public void zoomCameraOut(final Device updatedDevice) {
-        m_adaptor.create(UpdateDeviceRequest.class).zoomCameraOut(updatedDevice.id);
+    public void zoomCameraOut(final Device updatedDevice) throws IOException {
+        m_adaptor.create(UpdateDeviceRequest.class).zoomCameraOut(updatedDevice.id).execute().body();
     }
 
-    public void openCamera(final Device updatedDevice) {
-        m_adaptor.create(UpdateDeviceRequest.class).openCamera(updatedDevice.id);
+    public void openCamera(final Device updatedDevice) throws IOException {
+        m_adaptor.create(UpdateDeviceRequest.class).openCamera(updatedDevice.id).execute().body();
     }
 
-    public void closeCamera(final Device updatedDevice) {
-        m_adaptor.create(UpdateDeviceRequest.class).closeCamera(updatedDevice.id);
+    public void closeCamera(final Device updatedDevice) throws IOException {
+        m_adaptor.create(UpdateDeviceRequest.class).closeCamera(updatedDevice.id).execute().body();
     }
 
     public LocationsResponse getLocations() throws IOException {

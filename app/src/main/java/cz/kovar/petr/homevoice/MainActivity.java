@@ -1,7 +1,11 @@
 package cz.kovar.petr.homevoice;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,11 +36,12 @@ import cz.kovar.petr.homevoice.tts.SpeechSynthesizer;
 import cz.kovar.petr.homevoice.zwave.ApiClient;
 import cz.kovar.petr.homevoice.zwave.DataContext;
 import cz.kovar.petr.homevoice.zwave.services.AuthService;
+import cz.kovar.petr.homevoice.zwave.services.DataUpdateService;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "MainActivity";
-    private static final int NUM_OF_VIEWS = 2;
+    private static final int NUM_OF_VIEWS = 10;
 
     public static final String TAG_COMMAND = "cmd";
     public static final int CMD_NONE = -1;
@@ -157,6 +162,24 @@ public class MainActivity extends AppCompatActivity {
 
         AuthService.login(this, UserData.loadZWayProfile(this));
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Log.e(LOG_TAG, "onStart");
+
+        final Intent intent = new Intent(this, DataUpdateService.class);
+        bindService(intent,
+                new ServiceConnection() {
+                    @Override
+                    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {}
+
+                    @Override
+                    public void onServiceDisconnected(ComponentName componentName) {}
+                },
+                Context.BIND_AUTO_CREATE);
     }
 
     @Override

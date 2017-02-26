@@ -204,7 +204,7 @@ public class AuthService extends IntentService {
             if (getCookie(HttpUrl.parse(profile.getURL()), ZWayCookieJar.CLOUD_COOKIE) != null
                     && getCookie(HttpUrl.parse(profile.getURL()), ZWayCookieJar.ZWAY_COOKIE) != null) {
                 onAuthSuccess(profile, adapter);
-                //ZWayAuth(adapter, profile);
+                //ZWayAuth(m_adapter, profile);
                 return;
             }
         }

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:orientation="vertical"
@@ -12,7 +13,6 @@
         android:layout_marginTop="50dp">
 
         <TextView
-            android:layout_height="75dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Location"
             android:id="@+id/fragmentTitle"
@@ -25,7 +25,76 @@
             android:gravity="center"
             android:background="@color/colorMain"
             android:layout_width="250dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_height="195dp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/fragmentTitle"
+            android:id="@+id/fragmentDevices"
+            android:paddingStart="5dp">
+
+        </FrameLayout>
+
+        <ScrollView
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/fragmentTitle"
+            android:layout_marginTop="5dp">
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fragmentTitle"
+                android:layout_alignParentStart="true"
+                android:columnCount="2"
+                android:scrollbars="vertical">
+
+                <Button
+                    android:layout_width="123dp"
+                    android:layout_height="123dp"
+                    android:id="@+id/alarmButton"
+                    android:drawableTop="@drawable/ic_device_motion"
+                    android:text="@string/alarm"
+                    android:paddingTop="20dp"
+                    android:background="@color/colorPrimaryDark" />
+
+                <Button
+                    android:layout_width="123dp"
+                    android:layout_height="123dp"
+                    android:id="@+id/doorButton"
+                    android:drawableTop="@drawable/ic_device_door"
+                    android:text="@string/door"
+                    android:paddingTop="20dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:layout_marginStart="4dp" />
+
+                <Button
+                    android:layout_width="123dp"
+                    android:layout_height="123dp"
+                    android:id="@+id/lightButton"
+                    android:drawableTop="@drawable/ic_device_light"
+                    android:text="@string/light"
+                    android:paddingTop="20dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:layout_marginTop="5dp" />
+
+                <Button
+                    android:layout_width="123dp"
+                    android:layout_height="123dp"
+                    android:id="@+id/climateButton"
+                    android:drawableTop="@drawable/ic_device_temperature"
+                    android:text="@string/climate"
+                    android:paddingTop="20dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorPrimaryDark" />
+
+            </GridLayout>
+        </ScrollView>
 
     </RelativeLayout>
 

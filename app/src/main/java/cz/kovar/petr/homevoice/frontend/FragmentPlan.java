@@ -25,7 +25,6 @@ package cz.kovar.petr.homevoice.frontend;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,21 +45,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
-
 import cz.kovar.petr.homevoice.R;
-import cz.kovar.petr.homevoice.app.ZWayApplication;
-import cz.kovar.petr.homevoice.bus.MainThreadBus;
 import cz.kovar.petr.homevoice.bus.events.AuthEvent;
 import cz.kovar.petr.homevoice.bus.events.ShowEvent;
 import cz.kovar.petr.homevoice.frontend.widgets.LocationButton;
 import cz.kovar.petr.homevoice.utils.UtilsConverter;
-import cz.kovar.petr.homevoice.zwave.DataContext;
 
 /**
  * Provides frontend for plan
  */
-public class FragmentPlan extends Fragment {
+public class FragmentPlan extends FragmentBase {
 
     private static final String LOG_TAG = "FragmentPlan";
     private static final String PLAN_PREF_NAME = "plan_preferences";
@@ -82,11 +76,6 @@ public class FragmentPlan extends Fragment {
     private ImageButton m_cancelButton;
     private ImageButton m_optionsButton;
 
-    @Inject
-    DataContext dataContext;
-    @Inject
-    MainThreadBus bus;
-
     public static FragmentPlan newInstance() {
 
         return new FragmentPlan();
@@ -95,6 +84,8 @@ public class FragmentPlan extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        Log.e(LOG_TAG, "onCreateView");
         View v = inflater.inflate(R.layout.fragment_plan, container, false);
 
         final List<String> locToDelete = new ArrayList<>();
@@ -236,7 +227,7 @@ public class FragmentPlan extends Fragment {
         params.topMargin = aTop;
         button.setLayoutParams(params);
         m_locationButtons.put(aID, button);
-        ((RelativeLayout)getActivity().findViewById(R.id.fragment)).addView(button);
+        ((RelativeLayout) getActivity().findViewById(R.id.fragment)).addView(button);
         return button;
     }
 
@@ -316,16 +307,8 @@ public class FragmentPlan extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        ((ZWayApplication) getContext().getApplicationContext()).getComponent().inject(this);
-        bus.register(this);
         m_preferences = getContext().getSharedPreferences(PLAN_PREF_NAME, Context.MODE_PRIVATE);
         initLocationButtons();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        bus.unregister(this);
     }
 
     @Subscribe
