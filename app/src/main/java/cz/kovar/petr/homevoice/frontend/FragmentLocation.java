@@ -19,19 +19,17 @@
  * You should have received a copy of the GNU General Public License
  * along with HomeVoice for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package cz.kovar.petr.homevoice.frontend;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.TextViewCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
+
+import java.util.HashMap;
 
 import cz.kovar.petr.homevoice.R;
 import cz.kovar.petr.homevoice.zwave.dataModel.Filter;
@@ -45,7 +43,12 @@ public class FragmentLocation extends FragmentBase {
 
     private static final String TAG_LOCATION = "loc";
 
-    private TextView m_title;
+    private Button m_alarmButton;
+    private Button m_doorButton;
+    private Button m_lightButton;
+    private Button m_climateButton;
+    private Button m_powerButton;
+    private Button m_cameraButton;
 
     private String m_locationID;
 
@@ -73,8 +76,62 @@ public class FragmentLocation extends FragmentBase {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_location, container, false);
 
-        m_title = (TextView) v.findViewById(R.id.fragmentTitle);
+        Button m_title = (Button) v.findViewById(R.id.titleButton);
         m_title.setText(m_locationID);
+        m_title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDevices(null);
+            }
+        });
+
+        m_alarmButton = (Button) v.findViewById(R.id.alarmButton);
+        m_alarmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDevices("ALARM");
+            }
+        });
+
+        m_doorButton = (Button) v.findViewById(R.id.doorButton);
+        m_doorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDevices("DOOR");
+            }
+        });
+
+        m_lightButton = (Button) v.findViewById(R.id.lightButton);
+        m_lightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDevices("LIGHT");
+            }
+        });
+
+        m_climateButton = (Button) v.findViewById(R.id.climateButton);
+        m_climateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDevices("CLIMATE");
+            }
+        });
+
+        m_powerButton = (Button) v.findViewById(R.id.powerButton);
+        m_powerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDevices("POWER");
+            }
+        });
+
+        m_cameraButton = (Button) v.findViewById(R.id.cameraButton);
+        m_cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDevices("CAMERA");
+            }
+        });
 
         return v;
     }
@@ -82,13 +139,18 @@ public class FragmentLocation extends FragmentBase {
     @Override
     public void onStart() {
         super.onStart();
+        showDevices(null);
+    }
 
+    private void showDevices(final String aTag) {
         FragmentManager fm = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        String locationIndex = String.valueOf(super.dataContext.getLocationsNames().indexOf(m_locationID));
-        fragmentTransaction.replace(R.id.fragmentDevices, FragmentDevices.newInstance(Filter.LOCATION, locationIndex));
+        final String locationIndex = String.valueOf(super.dataContext.getLocationsNames().indexOf(m_locationID));
+        HashMap<Filter, String> filters = new HashMap<>();
+        filters.put(Filter.LOCATION, locationIndex);
+        if(aTag != null) filters.put(Filter.TAG, aTag);
+        fragmentTransaction.replace(R.id.fragmentDevices, FragmentDevices.newInstance(filters));
         fragmentTransaction.commit();
-
     }
 
 }

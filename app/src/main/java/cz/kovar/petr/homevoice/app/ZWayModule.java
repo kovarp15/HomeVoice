@@ -22,12 +22,14 @@
 package cz.kovar.petr.homevoice.app;
 
 import android.content.Context;
+import android.icu.util.Output;
 
 import com.squareup.otto.Bus;
 
 import javax.inject.Singleton;
 
 import cz.kovar.petr.homevoice.bus.MainThreadBus;
+import cz.kovar.petr.homevoice.frontend.adapters.OutputFieldAdapter;
 import cz.kovar.petr.homevoice.zwave.ApiClient;
 import cz.kovar.petr.homevoice.zwave.DataContext;
 import dagger.Module;
@@ -54,6 +56,12 @@ public class ZWayModule {
     @Singleton
     DataContext provideDataContext() {
         return new DataContext();
+    }
+
+    @Provides
+    @Singleton
+    OutputFieldAdapter provideOutputAdapter() {
+        return new OutputFieldAdapter();
     }
 
 }

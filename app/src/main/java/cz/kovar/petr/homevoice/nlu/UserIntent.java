@@ -49,6 +49,10 @@ public class UserIntent {
         return m_entities.containsKey(aName);
     }
 
+    public Entity getEntity(String aName) {
+        return m_entities.get(aName);
+    }
+
     static UserIntent createFromJSON(JsonElement aRoot) {
         UserIntent result = new UserIntent();
         JsonObject rootobj = aRoot.getAsJsonObject();

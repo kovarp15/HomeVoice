@@ -27,19 +27,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import cz.kovar.petr.homevoice.bus.events.IntentEvent;
 import cz.kovar.petr.homevoice.nlu.UserIntent;
-import cz.kovar.petr.homevoice.tts.SpeechSynthesizer;
 
-public class TimeModule implements Module {
-
-    private Context m_context;
-    private SpeechSynthesizer m_synthetizer;
+public class TimeModule extends Module {
 
     private static final String TIME_INTENT = "TIME";
 
-    public TimeModule(Context aContext, SpeechSynthesizer aSynthetizer) {
-        m_context = aContext;
-        m_synthetizer = aSynthetizer;
+    public TimeModule(Context aContext) {
+        super(aContext);
     }
 
     @Override
@@ -50,7 +46,7 @@ public class TimeModule implements Module {
 
         if(intentName.equals(TIME_INTENT)) {
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa", Locale.US);
-            m_synthetizer.speak("It is " + sdf.format(new Date().getTime()));
+            bus.post(new IntentEvent.Handled("It is " + sdf.format(new Date().getTime())));
         }
     }
 

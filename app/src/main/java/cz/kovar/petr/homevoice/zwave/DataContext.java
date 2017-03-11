@@ -26,6 +26,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import cz.kovar.petr.homevoice.zwave.dataModel.Device;
 import cz.kovar.petr.homevoice.zwave.dataModel.Filter;
@@ -187,6 +188,10 @@ public class DataContext {
                 result.add(device);
         }
         return result;
+    }
+
+    public List<Device> getDevices() {
+        return new ArrayList<>(mDevices);
     }
 
     public void clear() {

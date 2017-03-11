@@ -57,19 +57,19 @@ public class FragmentDevicesBase extends FragmentBase
     @Override
     public void onSwitchStateChanged(Device updatedDevice) {
         UpdateDeviceService.updateDeviceState(getActivity(), updatedDevice);
-        startUpdaytDelay();
+        startUpdateDelay();
     }
 
     @Override
     public void onSeekBarStateChanged(final Device updatedDevice) {
         UpdateDeviceService.updateDeviceLevel(getActivity(), updatedDevice);
-        startUpdaytDelay();
+        startUpdateDelay();
     }
 
     @Override
     public void onToggleClicked(Device updatedDevice) {
         UpdateDeviceService.updateDeviceToggle(getActivity(), updatedDevice);
-        startUpdaytDelay();
+        startUpdateDelay();
     }
 
     @Override
@@ -81,7 +81,7 @@ public class FragmentDevicesBase extends FragmentBase
                 device.metrics.color.g = Color.green(color);
                 device.metrics.color.b = Color.blue(color);
                 UpdateDeviceService.updateRgbColor(getActivity(), device);
-                startUpdaytDelay();
+                startUpdateDelay();
             }
         };
         dialog.setOldColor(device.metrics.color.getColorAsInt());
@@ -111,7 +111,7 @@ public class FragmentDevicesBase extends FragmentBase
         }
     }
 
-    public void startUpdaytDelay() {
+    public void startUpdateDelay() {
         if(updateDelayTimer != null) {
             updateDelayTimer.cancel();
         }

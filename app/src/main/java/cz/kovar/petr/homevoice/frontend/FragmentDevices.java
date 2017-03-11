@@ -19,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with HomeVoice for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package cz.kovar.petr.homevoice.frontend;
 
 import android.os.Bundle;
@@ -31,8 +30,10 @@ import android.widget.GridView;
 
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import cz.kovar.petr.homevoice.R;
 import cz.kovar.petr.homevoice.bus.events.OnDataUpdatedEvent;
@@ -43,20 +44,17 @@ public class FragmentDevices extends FragmentDevicesBase {
 
     private static final String LOG_TAG = "FragmentDevices";
 
-    public static final String FILTER_KEY = "filter_key";
-    public static final String FILTER_NAME_KEY = "filter_name_key";
+    public static final String FILTERS = "filters";
 
-    private Filter m_filter;
-    private String m_filterValue;
+    private HashMap<Filter, String> m_filters = new HashMap<>();
 
     private GridView m_gridView;
 
-    public static FragmentDevices newInstance(Filter filter, String filterValue) {
+    public static FragmentDevices newInstance(HashMap<Filter, String> aFilters) {
 
         FragmentDevices f = new FragmentDevices();
         Bundle b = new Bundle();
-        b.putInt(FILTER_KEY, filter.ordinal());
-        b.putString(FILTER_NAME_KEY, filterValue);
+        b.putSerializable(FILTERS, aFilters);
 
         f.setArguments(b);
 
@@ -107,33 +105,50 @@ public class FragmentDevices extends FragmentDevicesBase {
     }
 
     private List<Device> getFilteredDeviceList(){
-        m_filter = Filter.values()[getArguments().getInt(FILTER_KEY, 0)];
-        m_filterValue = getArguments().getString(FILTER_NAME_KEY, Filter.DEFAULT_FILTER);
-        switch (m_filter){
-            case LOCATION:
-                return dataContext.getDevicesForLocation(m_filterValue);
-            case TYPE:
-                return dataContext.getDevicesWithType(m_filterValue);
-            case TAG:
-                return dataContext.getDevicesWithTag(m_filterValue);
+        m_filters = (HashMap<Filter, String>) getArguments().getSerializable(FILTERS);
+        List<Device> devices = dataContext.getDevices();
+
+        for(Filter filter : m_filters.keySet()) {
+            filterDevices(devices, filter, m_filters.get(filter));
         }
-        return new ArrayList<>();
+
+        return devices;
+    }
+
+    private void filterDevices(List<Device> aDevices, Filter aFilter, String aFilterValue) {
+        Set<Device> devToRemove = new HashSet<>();
+        for(Device device : aDevices) {
+            switch (aFilter){
+                case LOCATION:
+                    if(!device.location.equalsIgnoreCase(aFilterValue)) devToRemove.add(device);
+                    break;
+                case TYPE:
+                    if(!device.deviceType.toString().equalsIgnoreCase(aFilterValue)) devToRemove.add(device);
+                    break;
+                case TAG:
+                    if(!device.tags.contains(aFilterValue)) devToRemove.add(device);
+                    break;
+            }
+        }
+        aDevices.removeAll(devToRemove);
     }
 
     private boolean isAppropriateDevice(Device device) {
-        if(m_filterValue.equalsIgnoreCase(Filter.DEFAULT_FILTER))
-            return true;
-
-        switch (m_filter){
-            case LOCATION:
-                return device.location != null &&  device.location.equalsIgnoreCase(m_filterValue);
-            case TYPE:
-                return device.deviceType.toString().equalsIgnoreCase(m_filterValue);
-            case TAG:
-                return device.tags.contains(m_filterValue);
+        for(Filter filter : m_filters.keySet()) {
+            String filterValue = m_filters.get(filter);
+            switch (filter) {
+                case LOCATION:
+                    if(!device.location.equalsIgnoreCase(filterValue)) return false;
+                    break;
+                case TYPE:
+                    if(device.deviceType != null && !device.deviceType.toString().equalsIgnoreCase(filterValue)) return false;
+                    break;
+                case TAG:
+                    if(!device.tags.contains(filterValue)) return false;
+                    break;
+            }
         }
-
-        return true;
+        return device.visibility;
     }
 
 }

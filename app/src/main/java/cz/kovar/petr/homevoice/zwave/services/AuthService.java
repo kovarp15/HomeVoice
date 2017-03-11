@@ -97,6 +97,7 @@ public class AuthService extends IntentService {
     @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
+        Log.d(LOG_TAG, "onStart");
         ((ZWayApplication) getApplicationContext()).getComponent().inject(this);
         bus.register(this);
     }
@@ -104,6 +105,7 @@ public class AuthService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d(LOG_TAG, "onDestroy");
         bus.unregister(this);
     }
 
@@ -112,6 +114,7 @@ public class AuthService extends IntentService {
         intent.setAction(ACTION_LOGIN);
         intent.putExtra(EXTRA_LOGIN_PROFILE, profile);
         intent.putExtra(EXTRA_LOGIN_REQUEST_DELAY, requestDelay);
+        context.stopService(intent);
         context.startService(intent);
     }
 
@@ -120,6 +123,7 @@ public class AuthService extends IntentService {
         intent.setAction(ACTION_LOGIN);
         intent.putExtra(EXTRA_LOGIN_PROFILE, profile);
         intent.putExtra(EXTRA_LOGIN_REQUEST_DELAY, DEFAULT_AUTH_REQUEST_DELAY);
+        context.stopService(intent);
         context.startService(intent);
     }
 

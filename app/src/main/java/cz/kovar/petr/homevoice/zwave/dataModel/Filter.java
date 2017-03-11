@@ -22,10 +22,14 @@
 
 package cz.kovar.petr.homevoice.zwave.dataModel;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import cz.kovar.petr.homevoice.R;
 
 public enum Filter {
-    LOCATION, TYPE, TAG;
+    LOCATION, TYPE, TAG, ID;
 
     public int getFilterLabelResId() {
         switch (this) {
@@ -35,8 +39,48 @@ public enum Filter {
                 return R.string.label_devices_with_type;
             case TAG:
                 return R.string.label_devices_with_tag;
+            case ID:
+                return R.string.label_devices_with_id;
         }
         return 0;
+    }
+
+    public static void filterDevices(List<Device> aDevices, List<FilterData> aFilters) {
+        Set<Device> devToRemove = new HashSet<>();
+        for(Device device : aDevices) {
+            boolean keep1 = true;
+            for(FilterData filter : aFilters) {
+                boolean keep2 = false;
+                switch (filter.filter){
+                    case LOCATION:
+                        for(String filterValue : filter.value) {
+                            keep2 |= device.location.equalsIgnoreCase(filterValue);
+                        }
+                        //if(!device.location.equalsIgnoreCase(filter.value)) devToRemove.add(device);
+                        break;
+                    case TYPE:
+                        for(String filterValue : filter.value) {
+                            keep2 |= device.deviceType.toString().equalsIgnoreCase(filterValue);
+                        }
+                        //if(!device.deviceType.toString().equalsIgnoreCase(filter.value)) devToRemove.add(device);
+                        break;
+                    case TAG:
+                        for(String filterValue : filter.value) {
+                            keep2 |= device.tags.contains(filterValue);
+                        }
+                        //if(!device.tags.contains(filter.value)) devToRemove.add(device);
+                        break;
+                    case ID:
+                        for(String filterValue : filter.value) {
+                            keep2 |= device.id.equalsIgnoreCase(filterValue);
+                        }
+                        //if(!device.id.equalsIgnoreCase(filter.value)) devToRemove.add(device);
+                }
+                keep1 &= keep2;
+            }
+            if(!keep1) devToRemove.add(device);
+        }
+        aDevices.removeAll(devToRemove);
     }
 
     public static final String DEFAULT_FILTER = "All";

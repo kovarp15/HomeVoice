@@ -1,7 +1,7 @@
 /*
  * HomeVoice for Android a UI for Z-Way server
  *
- * Created by Petr Kovář on 10.01.2017.
+ * Created by Petr Kovář on 11.03.2017.
  * Copyright (c) 2017 Petr Kovář
  *
  * All rights reserved
@@ -19,22 +19,16 @@
  * You should have received a copy of the GNU General Public License
  * along with HomeVoice for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
+package cz.kovar.petr.homevoice.bus.events;
 
-package cz.kovar.petr.homevoice.app;
+public class IntentEvent {
 
-/**
- * App Config contain configuration that is used in application
- * such as default values, parameters, etc.
- */
-public class AppConfig {
+    public static class IntentHandled {
+        public IntentHandled() {}
+    }
 
-    public static final boolean DEBUG = true;
-
-    public static final String DEFAULT_REMOTE_URL = "https://find.z-wave.me/zboxweb/";
-    public static final int    DEFAULT_LOCAL_PORT = 8083;
-
-    public static final int NOTIFICATIONS_LIMIT = 100;
-
-    public static final String ZWAY_PREF_FILE_KEY       = "ZWayPreferenceFile";
+    public static class IntentContextUncomplete {
+        public IntentContextUncomplete() {}
+    }
 
 }

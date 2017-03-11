@@ -32,6 +32,8 @@
     <string name="door">Door</string>
     <string name="light">Light</string>
     <string name="climate">Climate</string>
+    <string name="power">Power</string>
+    <string name="camera">Camera</string>
 
     <string name="zway_settings">Z-Way Settings</string>
     <string name="default_zway_url">https://find.z-wave.me</string>
@@ -42,14 +44,75 @@
     <string name="label_devices_with_tag">Devices with tag</string>
     <string name="label_devices_with_type">Devices with type</string>
     <string name="label_devices_with_location">Devices with location</string>
+    <string name="label_devices_with_id">Devices with id</string>
 
+    <!--CLOSE MODULE-->
+    <string-array name="goodbye">
+        <item>Goodbye</item>
+        <item>Bye bye</item>
+        <item>See you</item>
+        <item>See you later</item>
+        <item>Have a good day</item>
+        <item>Bye</item>
+        <item>Adios</item>
+    </string-array>
+
+    <!--ABOUT MODULE-->
     <string-array name="about_response">
-        <item>I am HomeVoice, your personal assistant.</item>
-        <item>My name is HomeVoice and I am your personal assistant.</item>
+        <item>I\'m HomeVoice, your personal assistant.</item>
+        <item>My name is HomeVoice and I\'m your personal assistant.</item>
+        <item>I\'m your personal assistant HomeVoice.</item>
+        <item>I\'m your personal assistant, I\'m HomeVoice.</item>
+        <item>Call me HomeVoice, I\'m your personal assistant.</item>
+        <item>I\'m HomeVoice, the butler of your smart home.</item>
     </string-array>
 
     <string-array name="abilities_response">
         <item>I can control and secure you smart home.</item>
+        <item>I control all smart devices at your home.</item>
+        <item>There\'s almost nothing I couldn\'t do for your smart home.</item>
     </string-array>
+
+    <!--ROOM MODULE-->
+    <string-array name="room_list_response">
+        <item>Your smart home consists of </item>
+        <item>Your house includes </item>
+        <item>You have the following rooms: </item>
+        <item>Here is the list of your rooms: </item>
+    </string-array>
+
+    <!--DEVICE RESPONSES-->
+    <string-array name="no_such_light_response">
+        <item>There is no such light in your smart home.</item>
+        <item>Your smart home does not contain such light.</item>
+    </string-array>
+
+    <string-array name="multiple_lights_response">
+        <item>There are multiple lights at your smart home.</item>
+        <item>Your smart home contains multiple lights.</item>
+    </string-array>
+
+    <string-array name="there_is_not">
+        <item>There isn\'t any</item>
+        <item>I can\'t see any</item>
+    </string-array>
+
+    <string-array name="there_are_not">
+        <item>There aren\'t any</item>
+        <item>I can\'t see any</item>
+    </string-array>
+
+    <string-array name="in_smart_home">
+        <item>in your smart home.</item>
+        <item>in your house.</item>
+    </string-array>
+
+    <string-array name="unknown">
+        <item>Sorry, I didn\'t get that.</item>
+        <item>I\'m not sure, what you meant.</item>
+        <item>I\'m sorry, but I didn\'t understand.</item>
+    </string-array>
+
+
 
 </resources>

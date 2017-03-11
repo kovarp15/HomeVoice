@@ -23,6 +23,7 @@ package cz.kovar.petr.homevoice.tts;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 
 import java.util.Locale;
 
@@ -45,9 +46,18 @@ public class SpeechSynthesizer {
     }
 
     public void speak(String aText) {
-        if(m_initialized) m_tts.speak(aText, TextToSpeech.QUEUE_ADD, null, String.valueOf(aText.hashCode()));
+        if(m_initialized) m_tts.speak(aText, TextToSpeech.QUEUE_ADD, null, aText);
     }
 
+    public void setUtteranceProgressListener(UtteranceProgressListener aListener) {
+        m_tts.setOnUtteranceProgressListener(aListener);
+    }
 
+    public void shutdown() {
+        if(m_tts != null) {
+            m_tts.stop();
+            m_tts.shutdown();
+        }
+    }
 
 }

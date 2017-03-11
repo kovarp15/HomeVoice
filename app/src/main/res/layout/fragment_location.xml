@@ -12,10 +12,10 @@
         android:layout_marginBottom="50dp"
         android:layout_marginTop="50dp">
 
-        <TextView
+        <Button
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Location"
-            android:id="@+id/fragmentTitle"
+            android:text=""
+            android:id="@+id/titleButton"
             android:layout_gravity="center_horizontal"
             android:textSize="@dimen/large_text_size"
             android:textColor="@android:color/white"
@@ -23,7 +23,8 @@
             android:layout_alignParentStart="true"
             android:textAlignment="center"
             android:gravity="center"
-            android:background="@color/colorMain"
+            android:background="@color/colorPrimaryDark"
+            android:foreground="?android:attr/selectableItemBackground"
             android:layout_width="250dp"
             android:textStyle="bold"
             android:layout_height="195dp" />
@@ -32,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/fragmentTitle"
+            android:layout_toEndOf="@+id/titleButton"
             android:id="@+id/fragmentDevices"
             android:paddingStart="5dp">
 
@@ -42,14 +43,12 @@
             android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/fragmentTitle"
+            android:layout_below="@+id/titleButton"
             android:layout_marginTop="5dp">
 
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/fragmentTitle"
-                android:layout_alignParentStart="true"
                 android:columnCount="2"
                 android:scrollbars="vertical">
 
@@ -60,7 +59,8 @@
                     android:drawableTop="@drawable/ic_device_motion"
                     android:text="@string/alarm"
                     android:paddingTop="20dp"
-                    android:background="@color/colorPrimaryDark" />
+                    android:background="@color/colorPrimaryDark"
+                    android:foreground="?android:attr/selectableItemBackground"/>
 
                 <Button
                     android:layout_width="123dp"
@@ -70,6 +70,7 @@
                     android:text="@string/door"
                     android:paddingTop="20dp"
                     android:background="@color/colorPrimaryDark"
+                    android:foreground="?android:attr/selectableItemBackground"
                     android:layout_marginStart="4dp" />
 
                 <Button
@@ -80,6 +81,7 @@
                     android:text="@string/light"
                     android:paddingTop="20dp"
                     android:background="@color/colorPrimaryDark"
+                    android:foreground="?android:attr/selectableItemBackground"
                     android:layout_marginTop="5dp" />
 
                 <Button
@@ -91,7 +93,31 @@
                     android:paddingTop="20dp"
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/colorPrimaryDark" />
+                    android:background="@color/colorPrimaryDark"
+                    android:foreground="?android:attr/selectableItemBackground"/>
+
+                <Button
+                    android:layout_width="123dp"
+                    android:layout_height="123dp"
+                    android:id="@+id/powerButton"
+                    android:drawableTop="@drawable/ic_device_energy"
+                    android:text="@string/power"
+                    android:paddingTop="20dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:foreground="?android:attr/selectableItemBackground"/>
+
+                <Button
+                    android:layout_width="123dp"
+                    android:layout_height="123dp"
+                    android:id="@+id/cameraButton"
+                    android:drawableTop="@drawable/ic_device_camera"
+                    android:text="@string/camera"
+                    android:paddingTop="20dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:layout_marginStart="4dp" />
 
             </GridLayout>
         </ScrollView>

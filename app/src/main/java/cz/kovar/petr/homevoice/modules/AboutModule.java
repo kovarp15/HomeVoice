@@ -22,24 +22,23 @@
 package cz.kovar.petr.homevoice.modules;
 
 import android.content.Context;
-
-import java.util.Random;
+import android.util.Log;
 
 import cz.kovar.petr.homevoice.R;
+import cz.kovar.petr.homevoice.app.AppConfig;
+import cz.kovar.petr.homevoice.bus.events.IntentEvent;
 import cz.kovar.petr.homevoice.nlu.UserIntent;
-import cz.kovar.petr.homevoice.tts.SpeechSynthesizer;
 
-public class AboutModule implements Module {
+public class AboutModule extends Module {
 
-    private Context m_context;
-    private SpeechSynthesizer m_synthetizer;
+    private static final String LOG_TAG = "AboutModule";
 
     private static final String ABOUT_INTENT = "ABOUT";
     private static final String SCOPE_ENTITY = "scope";
 
-    public AboutModule(Context aContext, SpeechSynthesizer aSynthetizer) {
-        m_context = aContext;
-        m_synthetizer = aSynthetizer;
+    public AboutModule(Context aContext) {
+        super(aContext);
+        if(AppConfig.DEBUG) Log.d(LOG_TAG, "INITIALIZED");
     }
 
     @Override
@@ -48,14 +47,10 @@ public class AboutModule implements Module {
 
         if(intentName.equals(ABOUT_INTENT)) {
             if(aIntent.hasEntity(SCOPE_ENTITY))
-                m_synthetizer.speak(randomResponse(R.array.abilities_response));
+                bus.post(new IntentEvent.Handled(randomResponse(R.array.abilities_response)));
             else
-                m_synthetizer.speak(randomResponse(R.array.about_response));
+                bus.post(new IntentEvent.Handled(randomResponse(R.array.about_response)));
         }
     }
 
-    private String randomResponse(int aStringArrayID) {
-        String[] responseArray = m_context.getResources().getStringArray(aStringArrayID);
-        return responseArray[new Random().nextInt(responseArray.length)];
-    }
 }

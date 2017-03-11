@@ -32,11 +32,14 @@ import java.util.List;
 
 import cz.kovar.petr.homevoice.R;
 
-public class Device implements Serializable{
+public class Device implements Serializable {
+
+    public static final String TAG_LIGHT = "LIGHT";
 
     public String id;
     public Metrics metrics;
     public List<String> tags;
+    public boolean visibility;
     public String location;
     public DeviceType deviceType;
     @SerializedName("permanently_hidden")
@@ -49,6 +52,7 @@ public class Device implements Serializable{
                 "id='" + id + '\'' +
                 ", metrics=" + metrics +
                 ", tags=" + tags +
+                ", visibility=" + visibility +
                 ", location='" + location + '\'' +
                 ", deviceType=" + deviceType +
                 '}';
