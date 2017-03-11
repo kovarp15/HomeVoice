@@ -21,14 +21,26 @@
  */
 package cz.kovar.petr.homevoice.bus.events;
 
+import java.util.List;
+
+import cz.kovar.petr.homevoice.modules.Module;
+
 public class IntentEvent {
 
-    public static class IntentHandled {
-        public IntentHandled() {}
+    public static class Handled {
+        public final String response;
+        public Handled(String aResponse) {
+            response = aResponse;
+        }
     }
 
-    public static class IntentContextUncomplete {
-        public IntentContextUncomplete() {}
+    public static class ContextIncomplete {
+        public final Module module;
+        public final List<String> query;
+        public ContextIncomplete(Module aModule, List<String> aQuery) {
+            module = aModule;
+            query = aQuery;
+        }
     }
 
 }
