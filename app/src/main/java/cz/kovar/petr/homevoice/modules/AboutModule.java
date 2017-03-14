@@ -24,6 +24,8 @@ package cz.kovar.petr.homevoice.modules;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 import cz.kovar.petr.homevoice.R;
 import cz.kovar.petr.homevoice.app.AppConfig;
 import cz.kovar.petr.homevoice.bus.events.IntentEvent;
@@ -47,9 +49,13 @@ public class AboutModule extends Module {
 
         if(intentName.equals(ABOUT_INTENT)) {
             if(aIntent.hasEntity(SCOPE_ENTITY))
-                bus.post(new IntentEvent.Handled(randomResponse(R.array.abilities_response)));
+                bus.post(new IntentEvent.Handled(new ArrayList<String>() {{
+                    add(randomResponse(R.array.abilities_response));
+                }}));
             else
-                bus.post(new IntentEvent.Handled(randomResponse(R.array.about_response)));
+                bus.post(new IntentEvent.Handled(new ArrayList<String>() {{
+                    add(randomResponse(R.array.about_response));
+                }}));
         }
     }
 

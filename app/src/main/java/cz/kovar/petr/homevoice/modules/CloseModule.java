@@ -27,6 +27,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 import cz.kovar.petr.homevoice.R;
 import cz.kovar.petr.homevoice.app.AppConfig;
 import cz.kovar.petr.homevoice.bus.events.IntentEvent;
@@ -47,7 +49,9 @@ public class CloseModule extends Module {
     public void handleIntent(UserIntent aIntent) {
         if(aIntent.hasIntent() && aIntent.getIntent().getValue().equals(INTENT_CLOSE)) {
             closeActivity(2000);
-            bus.post(new IntentEvent.Handled(SentenceHelper.randomResponse(m_context, R.array.goodbye)));
+            bus.post(new IntentEvent.Handled(new ArrayList<String>() {{
+                add(SentenceHelper.randomResponse(m_context, R.array.goodbye));
+            }}));
         }
     }
 

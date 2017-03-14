@@ -81,30 +81,73 @@
         <item>Here is the list of your rooms: </item>
     </string-array>
 
-    <!--DEVICE RESPONSES-->
-    <string-array name="no_such_light_response">
-        <item>There is no such light in your smart home.</item>
-        <item>Your smart home does not contain such light.</item>
+    <!--TIME MODULE-->
+    <string-array name="current_time">
+        <item>It\'s %1$s.</item>
+        <item>It is %1$s. </item>
+        <item>The time is %1$s.</item>
     </string-array>
 
+    <string-array name="repeated_time_query">
+        <item>You\'re really interested in time, aren\'t you?</item>
+        <item>It\'s the same time it was few seconds ago.</item>
+        <item>The time hasn\'t changed since your last query.</item>
+        <item>It\'s not funny to ask for the time again.</item>
+    </string-array>
+
+    <!--DEVICE RESPONSES-->
     <string-array name="multiple_lights_response">
         <item>There are multiple lights at your smart home.</item>
         <item>Your smart home contains multiple lights.</item>
     </string-array>
 
-    <string-array name="there_is_not">
-        <item>There isn\'t any</item>
-        <item>I can\'t see any</item>
+    <string-array name="not_available_singular">
+        <item>There isn\'t any %1$s in your %2$s.</item>
+        <item>I can\'t see any %1$s in your %2$s.</item>
+        <item>Your %2$s doesn\'t contain any %1$s.</item>
+        <item>You don\'t have any %1$s in your %2$s.</item>
+        <item>It seems You don\'t have any %1$s in your %2$s.</item>
     </string-array>
 
-    <string-array name="there_are_not">
-        <item>There aren\'t any</item>
-        <item>I can\'t see any</item>
+    <string-array name="not_available_plural">
+        <item>There aren\'t any %1$s in your %2$s.</item>
+        <item>I can\'t see any %1$s in your %2$s.</item>
+        <item>Your %2$s doesn\'t contain any %1$s.</item>
+        <item>You don\'t have any %1$s in your %2$s.</item>
+        <item>It seems You don\'t have any %1$s in your %2$s.</item>
     </string-array>
 
-    <string-array name="in_smart_home">
-        <item>in your smart home.</item>
-        <item>in your house.</item>
+    <string-array name="turned_on_off">
+        <item>I just turned the %1$s %2$s in your %3$s.</item>
+        <item>I turned the %1$s %2$s in your %3$s.</item>
+        <item>The %1$s has just been turned %2$s in your %3$s.</item>
+    </string-array>
+
+    <string-array name="turned_on_off_already">
+        <item>The %1$s has already been turned %2$s in your %3$s.</item>
+    </string-array>
+
+    <string-array name="set_level">
+        <item>I just set the %1$s level %2$s in your %3$s.</item>
+        <item>I set the %1$s level %2$s in your %3$s.</item>
+        <item>The %1$s level has just been set %2$s in your %3$s.</item>
+    </string-array>
+
+    <string-array name="set_level_already">
+        <item>The %1$s has already been set %2$s in your %3$s.</item>
+    </string-array>
+
+    <string-array name="device_in_several_locations">
+        <item>You\'ve got a %1$s in %2$s.</item>
+        <item>There is a %1$s in %2$s.</item>
+        <item>I can see a %1$s in %2$s.</item>
+    </string-array>
+
+    <string-array name="select_location">
+        <item>Please, select one or more locations.</item>
+        <item>Which location do you mean?</item>
+        <item>Choose one or more locations.</item>
+        <item>Please, specify the location.</item>
     </string-array>
 
     <string-array name="unknown">

@@ -24,18 +24,24 @@ package cz.kovar.petr.homevoice.modules;
 import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import cz.kovar.petr.homevoice.nlu.UserIntent;
 import cz.kovar.petr.homevoice.utils.Levenshtein;
+import cz.kovar.petr.homevoice.zwave.dataModel.Device;
 import cz.kovar.petr.homevoice.zwave.dataModel.DeviceType;
 import cz.kovar.petr.homevoice.zwave.dataModel.Filter;
 import cz.kovar.petr.homevoice.zwave.dataModel.FilterData;
 
 public abstract class DeviceModule extends Module {
 
+    static final String VALUE_ON = "on";
+    static final String VALUE_OFF = "off";
+
+    DeviceModuleContext suggestedContext = new DeviceModuleContext();
     DeviceModuleContext moduleContext = new DeviceModuleContext();
 
     DeviceModule(Context aContext) {
@@ -45,6 +51,8 @@ public abstract class DeviceModule extends Module {
     protected abstract void updateContext(DeviceModuleContext aContext, UserIntent aIntent);
 
     abstract void processContext(DeviceModuleContext aContext, OnProcessContextListener aListener);
+
+    abstract void provideAction(DeviceModuleContext aContext, List<Device> aDevices);
 
     boolean containsLocation(String aLocationName) {
         for(String location : dataContext.getLocationsNames()) {
@@ -73,6 +81,10 @@ public abstract class DeviceModule extends Module {
             }
         }
         return suggestedName;
+    }
+
+    boolean suggestionAvailable() {
+        return !suggestedContext.isEmpty();
     }
 
     List<FilterData> generateFilters(DeviceModuleContext aModuleContext) {
@@ -107,6 +119,30 @@ public abstract class DeviceModule extends Module {
         Set<String> deviceNames = new HashSet<>();
         Set<String> deviceTypes = new HashSet<>();
 
+        void inject(DeviceModuleContext aContext) {
+            if(!aContext.intent.isEmpty()) intent = aContext.intent;
+            if(!aContext.value.isEmpty()) value = aContext.value;
+            if(!aContext.locations.isEmpty()) {
+                locations.clear();
+                locations.addAll(aContext.locations);
+            }
+            if(!aContext.deviceNames.isEmpty()) {
+                deviceNames.clear();
+                deviceNames.addAll(aContext.deviceNames);
+            }
+            if(!aContext.deviceTypes.isEmpty()) {
+                deviceTypes.clear();
+                deviceTypes.addAll(aContext.deviceTypes);
+            }
+        }
+
+        boolean appliesActuator() {
+            return deviceTypes.contains(DeviceType.SWITCH_BINARY.toString())
+                    || deviceTypes.contains(DeviceType.SWITCH_MULTILEVEL.toString())
+                    || deviceTypes.contains(DeviceType.SWITCH_RGBW.toString())
+                    || deviceTypes.contains(DeviceType.SWITCH_CONTROLL.toString());
+        }
+
         void setIntent(String aIntent) {
             intent = aIntent;
         }
@@ -115,16 +151,28 @@ public abstract class DeviceModule extends Module {
             value = aValue.toString();
         }
 
-        void addLocation(String aLocation) {
+        void setLocation(String aLocation) {
+            locations.clear();
             locations.add(aLocation);
+        }
+
+        void setLocations(Collection<String> aLocations) {
+            locations.clear();
+            locations.addAll(aLocations);
         }
 
         void addDeviceName(String aDeviceName) {
             deviceNames.add(aDeviceName);
         }
 
-        void addDeviceType(DeviceType aDeviceType) {
+        void setDeviceType(DeviceType aDeviceType) {
+            deviceTypes.clear();
             deviceTypes.add(aDeviceType.toString());
+        }
+
+        void setDeviceTypes(Collection<String> aDeviceTypes) {
+            deviceTypes.clear();
+            deviceTypes.addAll(aDeviceTypes);
         }
 
         void clear() {
@@ -134,13 +182,22 @@ public abstract class DeviceModule extends Module {
             deviceTypes = new HashSet<>();
         }
 
+        boolean isEmpty() {
+            return intent.isEmpty() && value.isEmpty() && locations.isEmpty()
+                    && deviceNames.isEmpty() && deviceTypes.isEmpty();
+        }
+
     }
 
     interface OnProcessContextListener {
 
+        void devicesNotAvailable(Set<String> aLocation);
+
+        void devicesAtMultipleLocations(Set<String> aLocation);
+
         void locationsNotAvailable(Set<String> aLocation);
 
-        void onContextReady();
+        void onContextReady(List<Device> aDevices);
 
     }
 

@@ -29,7 +29,7 @@ import java.util.Random;
 public class SentenceHelper {
 
     public static String enumeration(Collection<String> aStringSet) {
-        String ret = " ";
+        String ret = "";
         int counter = 0;
         for(String location : aStringSet) {
             if(counter == 0) {

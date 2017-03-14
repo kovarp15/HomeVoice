@@ -23,12 +23,13 @@ package cz.kovar.petr.homevoice.modules;
 
 import android.content.Context;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import cz.kovar.petr.homevoice.R;
 import cz.kovar.petr.homevoice.bus.events.IntentEvent;
 import cz.kovar.petr.homevoice.nlu.Entity;
 import cz.kovar.petr.homevoice.nlu.UserIntent;
+import cz.kovar.petr.homevoice.utils.SentenceHelper;
 
 public class RoomModule extends Module {
 
@@ -50,38 +51,29 @@ public class RoomModule extends Module {
                 Entity query = aIntent.getEntity(QUERY_ENTITY);
                 processQuery(query.getValue().toString());
             } else {
-                bus.post(new IntentEvent.Handled(randomResponse(R.array.room_list_response) + getRoomList()));
+                bus.post(new IntentEvent.Handled(new ArrayList<String>() {{
+                    add(randomResponse(R.array.room_list_response)
+                            + SentenceHelper.enumeration(dataContext.getLocationsNames()));
+                }}));
             }
         }
     }
 
     private void processQuery(String aQueryValue) {
         if(aQueryValue.equals(QUERY_VALUE_COUNT)) {
-            bus.post(new IntentEvent.Handled("You have " + getRoomCount() + "rooms"));
-            //m_synthetizer.speak("You have " + getRoomCount() + "rooms");
+            bus.post(new IntentEvent.Handled(new ArrayList<String>() {{
+                add("You have " + getRoomCount() + "rooms");
+            }}));
         } else if(aQueryValue.equals(QUERY_VALUE_LIST)) {
-            bus.post(new IntentEvent.Handled(randomResponse(R.array.room_list_response) + getRoomList()));
-            //m_synthetizer.speak(randomResponse(R.array.room_list_response) + getRoomList());
+            bus.post(new IntentEvent.Handled(new ArrayList<String>() {{
+                add(randomResponse(R.array.room_list_response)
+                        + SentenceHelper.enumeration(dataContext.getLocationsNames()));
+            }}));
         }
     }
 
     private int getRoomCount() {
         return dataContext.getLocationsNames().size();
-    }
-
-    private String getRoomList() {
-        List<String> locations = dataContext.getLocationsNames();
-        String ret = " ";
-        for(String location : locations) {
-            if(locations.indexOf(location) == 0) {
-                ret += location;
-            } else if(locations.indexOf(location) == locations.size() - 1) {
-                ret += " and " + location;
-            } else {
-                ret += ", " + location;
-            }
-        }
-        return ret;
     }
 
 }

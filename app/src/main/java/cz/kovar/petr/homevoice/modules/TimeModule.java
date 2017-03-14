@@ -24,15 +24,23 @@ package cz.kovar.petr.homevoice.modules;
 import android.content.Context;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import cz.kovar.petr.homevoice.R;
 import cz.kovar.petr.homevoice.bus.events.IntentEvent;
 import cz.kovar.petr.homevoice.nlu.UserIntent;
+import cz.kovar.petr.homevoice.utils.SentenceHelper;
 
 public class TimeModule extends Module {
 
+    private static final String LOG_TAG = "TimeModule";
+
     private static final String TIME_INTENT = "TIME";
+    private static final long REPEATED_THRESHOLD = 10000;
+
+    private long m_lastActivityTime = 0;
 
     public TimeModule(Context aContext) {
         super(aContext);
@@ -45,8 +53,20 @@ public class TimeModule extends Module {
         String intentName = (String) aIntent.getIntent().getValue();
 
         if(intentName.equals(TIME_INTENT)) {
-            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa", Locale.US);
-            bus.post(new IntentEvent.Handled("It is " + sdf.format(new Date().getTime())));
+            long currentTime = System.currentTimeMillis();
+
+            if(currentTime - m_lastActivityTime < REPEATED_THRESHOLD) {
+                bus.post(new IntentEvent.Handled(new ArrayList<String>() {{
+                    add(SentenceHelper.randomResponse(m_context, R.array.repeated_time_query));
+                }}));
+            } else {
+                final SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa", Locale.US);
+                bus.post(new IntentEvent.Handled(new ArrayList<String>() {{
+                    add(String.format(SentenceHelper.randomResponse(m_context, R.array.current_time), sdf.format(new Date().getTime())));
+                }}));
+            }
+
+            m_lastActivityTime = currentTime;
         }
     }
 

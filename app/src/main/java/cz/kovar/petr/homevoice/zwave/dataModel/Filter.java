@@ -72,7 +72,7 @@ public enum Filter {
                         break;
                     case ID:
                         for(String filterValue : filter.value) {
-                            keep2 |= device.id.equalsIgnoreCase(filterValue);
+                            keep2 |= device.metrics.title.equalsIgnoreCase(filterValue);
                         }
                         //if(!device.id.equalsIgnoreCase(filter.value)) devToRemove.add(device);
                 }

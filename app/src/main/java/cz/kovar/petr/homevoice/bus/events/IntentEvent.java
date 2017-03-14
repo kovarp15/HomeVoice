@@ -28,8 +28,8 @@ import cz.kovar.petr.homevoice.modules.Module;
 public class IntentEvent {
 
     public static class Handled {
-        public final String response;
-        public Handled(String aResponse) {
+        public final List<String> response;
+        public Handled(List<String> aResponse) {
             response = aResponse;
         }
     }

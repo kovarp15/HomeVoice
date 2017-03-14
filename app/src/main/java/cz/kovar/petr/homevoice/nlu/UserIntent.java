@@ -53,6 +53,10 @@ public class UserIntent {
         return m_entities.get(aName);
     }
 
+    public void removeEntity(String aName) {
+        m_entities.remove(aName);
+    }
+
     static UserIntent createFromJSON(JsonElement aRoot) {
         UserIntent result = new UserIntent();
         JsonObject rootobj = aRoot.getAsJsonObject();

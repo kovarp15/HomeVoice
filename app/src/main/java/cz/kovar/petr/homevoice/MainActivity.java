@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity  {
                             output.addOutput(SentenceHelper.randomResponse(MainActivity.this, R.array.unknown), new OutputFieldAdapter.OnProgressListener() {
                                 @Override
                                 public void onDone() {
-                                    startKeywordSpotting();
+                                    startRecognition();
                                 }
                             });
                         }
