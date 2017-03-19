@@ -1,7 +1,7 @@
 /*
  * HomeVoice for Android a UI for Z-Way server
  *
- * Created by Petr Kovář on 15.02.2017.
+ * Created by Petr Kovář on 18.03.2017.
  * Copyright (c) 2017 Petr Kovář
  *
  * All rights reserved
@@ -32,14 +32,13 @@ import cz.kovar.petr.homevoice.app.AppConfig;
 import cz.kovar.petr.homevoice.nlu.UserIntent;
 import cz.kovar.petr.homevoice.utils.SentenceHelper;
 
-public class AboutModule extends Module {
+public class CancelModule extends Module {
 
-    private static final String LOG_TAG = "AboutModule";
+    private static final String LOG_TAG = "CancelModule";
 
-    private static final String INTENT_ABOUT = "ABOUT";
-    private static final String ENTITY_SCOPE = "scope";
+    private static final String INTENT_CANCEL = "CANCEL";
 
-    public AboutModule(Context aContext) {
+    public CancelModule(Context aContext) {
         super(aContext);
         if(AppConfig.DEBUG) Log.d(LOG_TAG, "INITIALIZED");
     }
@@ -47,7 +46,7 @@ public class AboutModule extends Module {
     @Override
     Set<String> getSupportedIntents() {
         return new HashSet<String>() {{
-            add(INTENT_ABOUT);
+            add(INTENT_CANCEL);
         }};
     }
 
@@ -59,21 +58,15 @@ public class AboutModule extends Module {
         if(!supportsIntent(moduleContext.intent)) return;
 
         switch(moduleContext.intent) {
-            case INTENT_ABOUT:
-                if(aIntent.hasEntity(ENTITY_SCOPE))
-                    provideAbilitiesResponse();
-                else
-                    provideAboutResponse();
+            case INTENT_CANCEL:
+                provideCancel();
                 break;
         }
+
     }
 
-    private void provideAboutResponse() {
-        notifyIntentHandled(SentenceHelper.randomResponse(m_context, R.array.about_response));
-    }
-
-    private void provideAbilitiesResponse() {
-        notifyIntentHandled(SentenceHelper.randomResponse(m_context, R.array.abilities_response));
+    private void provideCancel() {
+        notifyIntentHandled(SentenceHelper.randomResponse(m_context, R.array.cancel_response));
     }
 
     @Override

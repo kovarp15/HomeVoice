@@ -22,58 +22,88 @@
 package cz.kovar.petr.homevoice.modules;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import cz.kovar.petr.homevoice.R;
-import cz.kovar.petr.homevoice.bus.events.IntentEvent;
+import cz.kovar.petr.homevoice.app.AppConfig;
 import cz.kovar.petr.homevoice.nlu.Entity;
 import cz.kovar.petr.homevoice.nlu.UserIntent;
 import cz.kovar.petr.homevoice.utils.SentenceHelper;
 
 public class RoomModule extends Module {
 
-    private static final String ROOM_INTENT = "ROOM";
-    private static final String QUERY_ENTITY = "query";
-    private static final String QUERY_VALUE_LIST = "LIST";
-    private static final String QUERY_VALUE_COUNT = "COUNT";
+    private static final String LOG_TAG = "RoomModule";
+
+    private static final String INTENT_ROOM = "ROOM";
+    private static final String ENTITY_QUERY = "query";
+    private static final String QUERY_LIST = "LIST";
+    private static final String QUERY_COUNT = "COUNT";
 
     public RoomModule(Context aContext) {
         super(aContext);
+        if(AppConfig.DEBUG) Log.d(LOG_TAG, "INITIALIZED");
+    }
+
+    @Override
+    Set<String> getSupportedIntents() {
+        return new HashSet<String>() {{
+            add(INTENT_ROOM);
+        }};
     }
 
     @Override
     public void handleIntent(UserIntent aIntent) {
-        String intentName = (String) aIntent.getIntent().getValue();
 
-        if(intentName.equals(ROOM_INTENT)) {
-            if (aIntent.hasEntity(QUERY_ENTITY)) {
-                Entity query = aIntent.getEntity(QUERY_ENTITY);
-                processQuery(query.getValue().toString());
-            } else {
-                bus.post(new IntentEvent.Handled(new ArrayList<String>() {{
-                    add(randomResponse(R.array.room_list_response)
-                            + SentenceHelper.enumeration(dataContext.getLocationsNames()));
-                }}));
-            }
+        updateContext(moduleContext, aIntent);
+
+        if(!supportsIntent(moduleContext.intent)) return;
+
+        switch(moduleContext.intent) {
+            case INTENT_ROOM:
+                if (aIntent.hasEntity(ENTITY_QUERY)) {
+                    Entity query = aIntent.getEntity(ENTITY_QUERY);
+                    processQuery(query.getValue().toString());
+                } else {
+                    notifyIntentHandled(SentenceHelper.randomResponse(m_context, R.array.room_list_response)
+                            + SentenceHelper.enumerationAND(dataContext.getLocationsNames()));
+                }
+                break;
         }
     }
 
+    @Override
+    void resetModule() {}
+
     private void processQuery(String aQueryValue) {
-        if(aQueryValue.equals(QUERY_VALUE_COUNT)) {
-            bus.post(new IntentEvent.Handled(new ArrayList<String>() {{
-                add("You have " + getRoomCount() + "rooms");
-            }}));
-        } else if(aQueryValue.equals(QUERY_VALUE_LIST)) {
-            bus.post(new IntentEvent.Handled(new ArrayList<String>() {{
-                add(randomResponse(R.array.room_list_response)
-                        + SentenceHelper.enumeration(dataContext.getLocationsNames()));
-            }}));
+        switch(aQueryValue) {
+            case QUERY_COUNT:
+                provideRoomCountResponse();
+                break;
+            case QUERY_LIST:
+                provideRoomListResponse();
+                break;
         }
+    }
+
+    private void provideRoomCountResponse() {
+        notifyIntentHandled(String.format(SentenceHelper.randomResponse(m_context, R.array.room_count_response),
+                getRoomCount()));
+    }
+
+    private void provideRoomListResponse() {
+        List<String> response = new ArrayList<>();
+        response.add(SentenceHelper.randomResponse(m_context, R.array.room_list_response));
+        response.add(SentenceHelper.enumerationAND(dataContext.getLocationsNames()) + ".");
+        notifyIntentHandled(response);
     }
 
     private int getRoomCount() {
-        return dataContext.getLocationsNames().size();
+        return dataContext.getLocationsNames().size() - 1;
     }
 
 }

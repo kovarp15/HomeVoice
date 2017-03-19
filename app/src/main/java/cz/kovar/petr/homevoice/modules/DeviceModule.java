@@ -38,8 +38,15 @@ import cz.kovar.petr.homevoice.zwave.dataModel.FilterData;
 
 public abstract class DeviceModule extends Module {
 
-    static final String VALUE_ON = "on";
-    static final String VALUE_OFF = "off";
+    static final String ENTITY_DEVICE_NAME  = "device_name";
+    static final String ENTITY_LOCATION     = "location";
+    static final String LOCATION_EVERYWHERE = "everywhere";
+    static final String LOCATION_HOME       = "home";
+    static final String LOCATION_SMART_HOME = "smart home";
+    static final String ENTITY_NUMBER       = "number";
+    static final String ENTITY_ON_OFF       = "on_off";
+    static final String VALUE_ON            = "on";
+    static final String VALUE_OFF           = "off";
 
     DeviceModuleContext suggestedContext = new DeviceModuleContext();
     DeviceModuleContext moduleContext = new DeviceModuleContext();
@@ -47,6 +54,8 @@ public abstract class DeviceModule extends Module {
     DeviceModule(Context aContext) {
         super(aContext);
     }
+
+    abstract Set<String> getDefaultDeviceTypes();
 
     protected abstract void updateContext(DeviceModuleContext aContext, UserIntent aIntent);
 
@@ -111,10 +120,11 @@ public abstract class DeviceModule extends Module {
 
     }
 
-    class DeviceModuleContext {
+    class DeviceModuleContext extends ModuleContext {
 
         String intent = "";
         String value = "";
+        String query = "";
         Set<String> locations = new HashSet<>();
         Set<String> deviceNames = new HashSet<>();
         Set<String> deviceTypes = new HashSet<>();
@@ -122,6 +132,7 @@ public abstract class DeviceModule extends Module {
         void inject(DeviceModuleContext aContext) {
             if(!aContext.intent.isEmpty()) intent = aContext.intent;
             if(!aContext.value.isEmpty()) value = aContext.value;
+            if(!aContext.query.isEmpty()) value = aContext.query;
             if(!aContext.locations.isEmpty()) {
                 locations.clear();
                 locations.addAll(aContext.locations);
@@ -151,6 +162,10 @@ public abstract class DeviceModule extends Module {
             value = aValue.toString();
         }
 
+        void setQuery(String aQuery) {
+            query = aQuery;
+        }
+
         void setLocation(String aLocation) {
             locations.clear();
             locations.add(aLocation);
@@ -177,6 +192,7 @@ public abstract class DeviceModule extends Module {
 
         void clear() {
             value = "";
+            query = "";
             locations = new HashSet<>();
             deviceNames = new HashSet<>();
             deviceTypes = new HashSet<>();
@@ -191,7 +207,7 @@ public abstract class DeviceModule extends Module {
 
     interface OnProcessContextListener {
 
-        void devicesNotAvailable(Set<String> aLocation);
+        void devicesNotAvailable(DeviceModuleContext aContext);
 
         void devicesAtMultipleLocations(Set<String> aLocation);
 

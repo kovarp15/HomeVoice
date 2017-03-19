@@ -25,8 +25,10 @@ import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import cz.kovar.petr.homevoice.R;
@@ -40,27 +42,41 @@ import cz.kovar.petr.homevoice.zwave.dataModel.Filter;
 import cz.kovar.petr.homevoice.zwave.services.UpdateDeviceService;
 
 import static cz.kovar.petr.homevoice.zwave.dataModel.DeviceType.SWITCH_BINARY;
+import static cz.kovar.petr.homevoice.zwave.dataModel.DeviceType.SWITCH_MULTILEVEL;
+import static cz.kovar.petr.homevoice.zwave.dataModel.DeviceType.SWITCH_RGBW;
 
 public class LightModule extends DeviceModule {
 
     private static final String LOG_TAG = "LightModule";
 
-    private static final String SET_LIGHT_INTENT = "SET_LIGHT";
-    private static final String GET_LIGHT_INTENT = "GET_LIGHT";
+    private static final String INTENT_SET_LIGHT = "SET_LIGHT";
+    private static final String INTENT_GET_LIGHT = "GET_LIGHT";
 
-    private static final String ENTITY_LOCATION = "location";
-    private static final String LOCATION_VALUE_EVERYWHERE = "everywhere";
-    private static final String ENTITY_DEVICE_NAME = "device_name";
-    private static final String ENTITY_ON_OFF = "on_off";
-    private static final String ENTITY_NUMBER = "number";
+    private static final String ENTITY_QUERY = "query";
+    private static final String QUERY_VALUE = "value";
+    private static final String QUERY_LIST = "LIST";
+    private static final String QUERY_COUNT = "COUNT";
 
     public LightModule(Context aContext) {
         super(aContext);
-        setSupportedIntents(new HashSet<String>() {{
-            add(SET_LIGHT_INTENT);
-            add(GET_LIGHT_INTENT);
-        }});
         if(AppConfig.DEBUG) Log.d(LOG_TAG, "INITIALIZED");
+    }
+
+    @Override
+    Set<String> getSupportedIntents() {
+        return new HashSet<String>() {{
+            add(INTENT_SET_LIGHT);
+            add(INTENT_GET_LIGHT);
+        }};
+    }
+
+    @Override
+    Set<String> getDefaultDeviceTypes() {
+        return new HashSet<String>() {{
+            add(SWITCH_BINARY.toString());
+            add(SWITCH_MULTILEVEL.toString());
+            add(SWITCH_RGBW.toString());
+        }};
     }
 
     @Override
@@ -70,24 +86,17 @@ public class LightModule extends DeviceModule {
         processContext(moduleContext, new OnProcessContextListener() {
 
             @Override
-            public void devicesNotAvailable(final Set<String> aLocations) {
-                if(moduleContext.appliesActuator()) {
-                    bus.post(new IntentEvent.Handled(new ArrayList<String>() {{
-                            add(String.format(randomResponse(R.array.not_available_singular),
-                                    "light", aLocations.isEmpty() ?
-                                            "smart home" : SentenceHelper.enumeration(aLocations)));
-                        }}));
-                }
+            public void devicesNotAvailable(DeviceModuleContext aContext) {
+                notifyDevicesNotAvailable(aContext, aContext.deviceNames);
             }
 
             @Override
             public void devicesAtMultipleLocations(Set<String> aLocations) {
                 List<String> query = new ArrayList<>();
-                query.add(String.format(randomResponse(R.array.device_in_several_locations),
-                        "light", SentenceHelper.enumeration(aLocations)));
-                query.add(randomResponse(R.array.select_location));
+                query.add(String.format(SentenceHelper.randomResponse(m_context, R.array.device_in_several_locations),
+                        "light", SentenceHelper.enumerationAND(aLocations)));
+                query.add(SentenceHelper.randomResponse(m_context, R.array.select_location));
 
-                followup = true;
                 bus.post(new IntentEvent.ContextIncomplete(LightModule.this, query));
             }
 
@@ -96,30 +105,24 @@ public class LightModule extends DeviceModule {
                 if(aLocations.size() == 1) {
                     String suggestedLocation = suggestLocation(aLocations.iterator().next());
                     List<String> query = new ArrayList<>();
-                    query.add(String.format(randomResponse(R.array.not_available_singular),
-                            SentenceHelper.enumeration(aLocations), "smart home"));
+                    query.add(String.format(SentenceHelper.randomResponse(m_context, R.array.not_available_singular),
+                            SentenceHelper.enumerationAND(aLocations), "smart home"));
                     query.add("Did you mean " + suggestedLocation + "?");
                     suggestedContext = new DeviceModuleContext();
                     suggestedContext.setLocation(suggestedLocation);
 
-                    followup = true;
                     bus.post(new IntentEvent.ContextIncomplete(LightModule.this, query));
                 } else if(aLocations.size() > 1) {
                     bus.post(new IntentEvent.Handled(new ArrayList<String>() {{
-                            add(String.format(randomResponse(R.array.not_available_plural),
-                            SentenceHelper.enumeration(aLocations), "smart home"));
+                            add(String.format(SentenceHelper.randomResponse(m_context, R.array.not_available_plural),
+                            SentenceHelper.enumerationAND(aLocations), "smart home"));
                     }}));
                 }
             }
 
             @Override
             public void onContextReady(List<Device> aDevices) {
-
                 provideAction(moduleContext, aDevices);
-
-                followup = false;
-                moduleContext.clear();
-                suggestedContext.clear();
             }
 
         });
@@ -127,20 +130,25 @@ public class LightModule extends DeviceModule {
     }
 
     @Override
+    void resetModule() {
+        moduleContext.clear();
+        suggestedContext.clear();
+    }
+
+    @Override
     protected void updateContext(DeviceModuleContext aContext, UserIntent aIntent) {
 
-        if(followup) aIntent.removeEntity(ENTITY_ON_OFF);
-
         if(suggestionAvailable() && aIntent.hasEntity(ENTITY_YES_NO)) {
-            if (aIntent.getEntity(ENTITY_YES_NO).getValue().equals(ENTITY_VALUE_YES)) {
+            if (aIntent.getEntity(ENTITY_YES_NO).getValue().equals(VALUE_YES)) {
                 moduleContext.inject(suggestedContext);
                 suggestedContext.clear();
-            } else if (aIntent.getEntity(ENTITY_YES_NO).getValue().equals(ENTITY_VALUE_NO)) {
+            } else if (aIntent.getEntity(ENTITY_YES_NO).getValue().equals(VALUE_NO)) {
                 suggestedContext.clear();
             }
         }
 
         updateContextValue(aContext, aIntent);
+        updateContextQuery(aContext, aIntent);
         updateContextIntent(aContext, aIntent);
         updateContextLocations(aContext, aIntent);
         updateContextDevice(aContext, aIntent);
@@ -166,7 +174,7 @@ public class LightModule extends DeviceModule {
         // check if devices exists
         List<Device> devices = getFilteredDevices(aContext);
         if(devices.isEmpty() && aListener != null) {
-            aListener.devicesNotAvailable(aContext.locations);
+            aListener.devicesNotAvailable(aContext);
             return;
         }
 
@@ -194,47 +202,79 @@ public class LightModule extends DeviceModule {
     @Override
     void provideAction(DeviceModuleContext aContext, List<Device> aDevices) {
 
-        Set<Device> binaryUpdated = new HashSet<>();
-        Set<Device> binaryNotUpdated = new HashSet<>();
+        if(aContext.intent.equalsIgnoreCase(INTENT_SET_LIGHT)) {
 
-        Set<Device> multilevelUpdated = new HashSet<>();
-        Set<Device> multilevelNotUpdated = new HashSet<>();
+            Set<Device> binaryUpdated = new HashSet<>();
+            Set<Device> binaryNotUpdated = new HashSet<>();
 
-        for(Device device : aDevices) {
-            switch(device.deviceType) {
-                case SWITCH_BINARY:
-                    String newState = provideBinaryValue(aContext.value);
-                    String oldState = device.metrics.level;
-                    if(!newState.equalsIgnoreCase(oldState)) {
-                        device.metrics.level = newState;
-                        UpdateDeviceService.updateDeviceState(m_context, device);
-                        binaryUpdated.add(device);
-                    } else {
-                        binaryNotUpdated.add(device);
-                    }
-                    break;
-                case SWITCH_MULTILEVEL:
-                    String newLevel = provideMultilevelValue(aContext.value);
-                    String oldLevel = device.metrics.level;
-                    if(!newLevel.equalsIgnoreCase(oldLevel)) {
-                        device.metrics.level = newLevel;
-                        UpdateDeviceService.updateDeviceLevel(m_context, device);
-                        if(newLevel.equals("0") || newLevel.equals("99"))
+            Set<Device> multilevelUpdated = new HashSet<>();
+            Set<Device> multilevelNotUpdated = new HashSet<>();
+
+            for (Device device : aDevices) {
+                switch (device.deviceType) {
+                    case SWITCH_BINARY:
+                        String newState = provideBinaryValue(aContext.value);
+                        String oldState = device.metrics.level;
+                        if (!newState.equalsIgnoreCase(oldState)) {
+                            device.metrics.level = newState;
+                            UpdateDeviceService.updateDeviceState(m_context, device);
                             binaryUpdated.add(device);
-                        else
-                            multilevelUpdated.add(device);
-                        break;
-                    } else {
-                        if(newLevel.equals("0") || newLevel.equals("99"))
+                        } else {
                             binaryNotUpdated.add(device);
-                        else
-                            multilevelNotUpdated.add(device);
+                        }
                         break;
-                    }
+                    case SWITCH_MULTILEVEL:
+                        String newLevel = provideMultilevelValue(aContext.value);
+                        String oldLevel = device.metrics.level;
+                        if (!newLevel.equalsIgnoreCase(oldLevel)) {
+                            device.metrics.level = newLevel;
+                            UpdateDeviceService.updateDeviceLevel(m_context, device);
+                            if (newLevel.equals("0") || newLevel.equals("99"))
+                                binaryUpdated.add(device);
+                            else
+                                multilevelUpdated.add(device);
+                            break;
+                        } else {
+                            if (newLevel.equals("0") || newLevel.equals("99"))
+                                binaryNotUpdated.add(device);
+                            else
+                                multilevelNotUpdated.add(device);
+                            break;
+                        }
+                }
             }
+
+            notifyBinaryLightUpdated(binaryUpdated, binaryNotUpdated, aContext);
+            notifyMultilevelLightUpdate(multilevelUpdated, multilevelNotUpdated, aContext);
+
+        } else if(aContext.intent.equalsIgnoreCase(INTENT_GET_LIGHT)) {
+            provideGetLight(aContext, aDevices);
         }
-        notifyBinaryLightUpdated(binaryUpdated, binaryNotUpdated, aContext);
-        notifyMultilevelLightUpdate(multilevelUpdated, multilevelNotUpdated, aContext);
+
+    }
+
+    private void provideGetLight(DeviceModuleContext aContext, List<Device> aDevices) {
+
+        if(!aContext.query.isEmpty()) {
+            switch(aContext.query) {
+                case QUERY_VALUE:
+                    // TODO provide LIGHT VALUE
+                    bus.post(new IntentEvent.Handled(new ArrayList<String>() {{
+                        add("Interested in value?");
+                    }}));
+                    break;
+                case QUERY_LIST:
+                    notifyDeviceList(aDevices);
+                    break;
+                case QUERY_COUNT:
+                    notifyDeviceCount(aDevices);
+                    break;
+            }
+        } else {
+            bus.post(new IntentEvent.ContextIncomplete(LightModule.this, new ArrayList<String>() {{
+                add(String.format(SentenceHelper.randomResponse(m_context, R.array.what_query), "lights"));
+            }}));
+        }
 
     }
 
@@ -244,7 +284,7 @@ public class LightModule extends DeviceModule {
     }
 
     private void updateContextValue(DeviceModuleContext aContext, UserIntent aIntent) {
-        if(aIntent.hasEntity(ENTITY_ON_OFF)){
+        if(aIntent.hasEntity(ENTITY_ON_OFF) && aIntent.getEntity(ENTITY_ON_OFF).getConfidence() > 0.9){
             aContext.setDeviceTypes(new HashSet<String>() {{
                 add(SWITCH_BINARY.toString());
                 add(DeviceType.SWITCH_MULTILEVEL.toString());
@@ -258,10 +298,17 @@ public class LightModule extends DeviceModule {
         }
     }
 
+    private void updateContextQuery(DeviceModuleContext aContext, UserIntent aIntent) {
+        if(aIntent.hasEntity(ENTITY_QUERY))
+            aContext.setQuery(aIntent.getEntity(ENTITY_QUERY).getValue().toString());
+    }
+
     private void updateContextLocations(DeviceModuleContext aContext, UserIntent aIntent) {
         if(aIntent.hasEntity(ENTITY_LOCATION)) {
             String location = aIntent.getEntity(ENTITY_LOCATION).getValue().toString();
-            if (location.equalsIgnoreCase(LOCATION_VALUE_EVERYWHERE))
+            if (location.equalsIgnoreCase(LOCATION_EVERYWHERE)
+                    || location.equalsIgnoreCase(LOCATION_SMART_HOME)
+                    || location.equalsIgnoreCase(LOCATION_HOME))
                 aContext.setLocations(dataContext.getLocationsNames());
             else
                 aContext.setLocation(aIntent.getEntity(ENTITY_LOCATION).getValue().toString());
@@ -292,6 +339,22 @@ public class LightModule extends DeviceModule {
         }
     }
 
+    private void notifyDevicesNotAvailable(DeviceModuleContext aContext, Set<String> aNames) {
+
+        String location = aContext.locations.isEmpty() ?
+                "smart home" : SentenceHelper.enumerationOR(aContext.locations);
+
+        if(aNames == null || aNames.isEmpty()){
+            notifyIntentHandled(String.format(SentenceHelper.randomResponse(m_context, R.array.not_available_singular),
+                    getDeviceType(aContext.deviceTypes), location));
+        } else {
+            String names = SentenceHelper.enumerationOR(aNames);
+            notifyIntentHandled(String.format(SentenceHelper.randomResponse(m_context, R.array.not_available_singular),
+                    names, location));
+        }
+
+    }
+
     private void notifyBinaryLightUpdated(Set<Device> aUpdatedDevices,
                                           Set<Device> aNotUpdatedDevices,
                                           DeviceModuleContext aContext) {
@@ -310,17 +373,17 @@ public class LightModule extends DeviceModule {
 
         List<String> response = new ArrayList<>();
         if(!updatedLocations.isEmpty())
-            response.add(String.format(randomResponse(R.array.turned_on_off),
+            response.add(String.format(SentenceHelper.randomResponse(m_context, R.array.turned_on_off),
                     "light",
                     provideBinaryValue(aContext.value),
-                    SentenceHelper.enumeration(updatedLocations)));
+                    SentenceHelper.enumerationAND(updatedLocations)));
         if(!notUpdatedLocations.isEmpty())
-            response.add(String.format(randomResponse(R.array.turned_on_off_already),
+            response.add(String.format(SentenceHelper.randomResponse(m_context, R.array.turned_on_off_already),
                     "light",
                     provideBinaryValue(aContext.value),
-                    SentenceHelper.enumeration(notUpdatedLocations)));
+                    SentenceHelper.enumerationAND(notUpdatedLocations)));
 
-        bus.post(new IntentEvent.Handled(response));
+        notifyIntentHandled(response);
 
     }
 
@@ -328,7 +391,7 @@ public class LightModule extends DeviceModule {
                                              Set<Device> aNotUpdatedDevices,
                                              DeviceModuleContext aContext) {
 
-        if(aUpdatedDevices.isEmpty() || aNotUpdatedDevices.isEmpty()) return;
+        if(aUpdatedDevices.isEmpty() && aNotUpdatedDevices.isEmpty()) return;
 
         List<String> availableLocations = dataContext.getLocationsNames();
         Set<String> updatedLocations = new HashSet<>();
@@ -342,18 +405,101 @@ public class LightModule extends DeviceModule {
 
         List<String> response = new ArrayList<>();
         if(!updatedLocations.isEmpty())
-            response.add(String.format(randomResponse(R.array.set_level),
+            response.add(String.format(SentenceHelper.randomResponse(m_context, R.array.set_level),
                     "light",
                     provideMultilevelValue(aContext.value),
-                    SentenceHelper.enumeration(updatedLocations)));
+                    SentenceHelper.enumerationAND(updatedLocations)));
         if(!notUpdatedLocations.isEmpty())
-            response.add(String.format(randomResponse(R.array.set_level_already),
+            response.add(String.format(SentenceHelper.randomResponse(m_context, R.array.set_level_already),
                     "light",
                     provideMultilevelValue(aContext.value),
-                    SentenceHelper.enumeration(notUpdatedLocations)));
+                    SentenceHelper.enumerationAND(notUpdatedLocations)));
 
-        bus.post(new IntentEvent.Handled(response));
+        notifyIntentHandled(response);
 
+    }
+
+    private void notifyDeviceCount(List<Device> aDevices) {
+
+        List<String> availableLocations = dataContext.getLocationsNames();
+        Map<String, Integer> devicesInLocation = new HashMap<>();
+
+        for(Device device : aDevices) {
+            String location = availableLocations.get(Integer.parseInt(device.location));
+            if(devicesInLocation.containsKey(location)) {
+                int count = devicesInLocation.get(location) + 1;
+                devicesInLocation.put(location, count);
+            } else {
+                devicesInLocation.put(location, 1);
+            }
+        }
+
+        Set<String> counts = new HashSet<>();
+        for(String location : devicesInLocation.keySet()) {
+            int count = devicesInLocation.get(location);
+            if(count > 1)
+                counts.add(devicesInLocation.get(location).toString() + " lights in " + location);
+            else
+                counts.add(devicesInLocation.get(location).toString() + " light in " + location);
+        }
+
+        List<String> response = new ArrayList<>();
+        response.add(String.format(SentenceHelper.randomResponse(m_context, R.array.smart_home_contains),
+                SentenceHelper.enumerationAND(counts)));
+
+        notifyIntentHandled(response);
+
+    }
+
+    private void notifyDeviceList(List<Device> aDevices) {
+
+        List<String> availableLocations = dataContext.getLocationsNames();
+        Map<String, Set<String>> devicesInLocation = new HashMap<>();
+
+        for(final Device device : aDevices) {
+            String location = availableLocations.get(Integer.parseInt(device.location));
+            if(devicesInLocation.containsKey(location)) {
+                devicesInLocation.get(location).add(device.metrics.title);
+            } else {
+                devicesInLocation.put(location, new HashSet<String>() {{
+                    add(device.metrics.title);
+                }});
+            }
+        }
+
+        Set<String> locations = new HashSet<>();
+        for(String location : devicesInLocation.keySet()) {
+            locations.add(SentenceHelper.enumerationAND(devicesInLocation.get(location)) + " in " + location);
+        }
+
+        List<String> response = new ArrayList<>();
+        response.add(String.format(SentenceHelper.randomResponse(m_context, R.array.smart_home_contains),
+                SentenceHelper.enumerationAND(locations)));
+
+        notifyIntentHandled(response);
+
+    }
+
+    private String getDeviceType(Set<String> aDeviceTypes) {
+
+        Set<String> generalLight = new HashSet<String>() {{
+            add(DeviceType.SWITCH_BINARY.toString());
+            add(DeviceType.SWITCH_MULTILEVEL.toString());
+        }};
+
+        Set<String> multilevelLight = new HashSet<String>() {{
+           add(DeviceType.SWITCH_MULTILEVEL.toString());
+        }};
+
+        Set<String> colorLight = new HashSet<String>() {{
+           add(DeviceType.SWITCH_RGBW.toString());
+        }};
+
+        if(aDeviceTypes.containsAll(generalLight)) return "light";
+        if(aDeviceTypes.containsAll(multilevelLight)) return "multilevel light";
+        if(aDeviceTypes.containsAll(colorLight)) return "color light";
+
+        return "light";
     }
 
     private List<Device> getFilteredDevices(DeviceModuleContext aContext) {

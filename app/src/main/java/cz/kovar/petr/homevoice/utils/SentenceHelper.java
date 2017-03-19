@@ -28,7 +28,7 @@ import java.util.Random;
 
 public class SentenceHelper {
 
-    public static String enumeration(Collection<String> aStringSet) {
+    public static String enumerationAND(Collection<String> aStringSet) {
         String ret = "";
         int counter = 0;
         for(String location : aStringSet) {
@@ -36,6 +36,22 @@ public class SentenceHelper {
                 ret += location;
             } else if(counter == aStringSet.size() - 1) {
                 ret += " and " + location;
+            } else {
+                ret += ", " + location;
+            }
+            counter++;
+        }
+        return ret;
+    }
+
+    public static String enumerationOR(Collection<String> aStringSet) {
+        String ret = "";
+        int counter = 0;
+        for(String location : aStringSet) {
+            if(counter == 0) {
+                ret += location;
+            } else if(counter == aStringSet.size() - 1) {
+                ret += " or " + location;
             } else {
                 ret += ", " + location;
             }

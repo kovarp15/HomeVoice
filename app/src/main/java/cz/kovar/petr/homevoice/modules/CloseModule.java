@@ -27,11 +27,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import cz.kovar.petr.homevoice.R;
 import cz.kovar.petr.homevoice.app.AppConfig;
-import cz.kovar.petr.homevoice.bus.events.IntentEvent;
 import cz.kovar.petr.homevoice.nlu.UserIntent;
 import cz.kovar.petr.homevoice.utils.SentenceHelper;
 
@@ -46,14 +46,34 @@ public class CloseModule extends Module {
     }
 
     @Override
-    public void handleIntent(UserIntent aIntent) {
-        if(aIntent.hasIntent() && aIntent.getIntent().getValue().equals(INTENT_CLOSE)) {
-            closeActivity(2000);
-            bus.post(new IntentEvent.Handled(new ArrayList<String>() {{
-                add(SentenceHelper.randomResponse(m_context, R.array.goodbye));
-            }}));
-        }
+    Set<String> getSupportedIntents() {
+        return new HashSet<String>() {{
+            add(INTENT_CLOSE);
+        }};
     }
+
+    @Override
+    public void handleIntent(UserIntent aIntent) {
+
+        updateContext(moduleContext, aIntent);
+
+        if(!supportsIntent(moduleContext.intent)) return;
+
+        switch(moduleContext.intent) {
+            case INTENT_CLOSE:
+                closeActivity(2000);
+                provideGoodbyeResponse();
+                break;
+        }
+
+    }
+
+    private void provideGoodbyeResponse() {
+        notifyIntentHandled(SentenceHelper.randomResponse(m_context, R.array.goodbye));
+    }
+
+    @Override
+    void resetModule() {}
 
     private void closeActivity(int aDelay) {
         Handler handler = new Handler(Looper.getMainLooper());

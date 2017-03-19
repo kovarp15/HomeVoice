@@ -37,6 +37,10 @@ public class Entity {
         return m_name;
     }
 
+    public double getConfidence() {
+        return m_confidence;
+    }
+
     public Object getValue() {
         return m_value;
     }

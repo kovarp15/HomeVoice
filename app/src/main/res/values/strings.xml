@@ -74,11 +74,25 @@
     </string-array>
 
     <!--ROOM MODULE-->
+    <string-array name="room_count_response">
+        <item>Your smart home consists of %1$s rooms.</item>
+        <item>Your smart home includes %1$s rooms.</item>
+        <item>You have %1$s rooms in your smart home.</item>
+        <item>There are %1$s rooms in your smart home. </item>
+    </string-array>
+
     <string-array name="room_list_response">
         <item>Your smart home consists of </item>
-        <item>Your house includes </item>
+        <item>Your smart home includes </item>
         <item>You have the following rooms: </item>
         <item>Here is the list of your rooms: </item>
+    </string-array>
+
+    <!--CANCEL MODULE-->
+    <string-array name="cancel_response">
+        <item>I cancelled that.</item>
+        <item>Execution stopped.</item>
+        <item>I cancelled the execution.</item>
     </string-array>
 
     <!--TIME MODULE-->
@@ -93,6 +107,47 @@
         <item>It\'s the same time it was few seconds ago.</item>
         <item>The time hasn\'t changed since your last query.</item>
         <item>It\'s not funny to ask for the time again.</item>
+    </string-array>
+
+    <!--FEEDBACK MODULE-->
+    <string-array name="compliment_response">
+        <item>Thank you.</item>
+        <item>It\'s nice from you.</item>
+        <item>Thanks.</item>
+        <item>I appreciate it.</item>
+        <item>My pleasure.</item>
+        <item>Thanks for your kind words.</item>
+        <item>Thank you. That\'s very kind of you.</item>
+        <item>You\'re too kind.</item>
+        <item>Thanks a lot.</item>
+        <item>Thank you very much.</item>
+    </string-array>
+
+    <string-array name="criticism_response">
+        <item>I\'m sorry!</item>
+        <item>Whoops! Sorry!</item>
+        <item>Oh! Sorry!</item>
+        <item>Oh, my bad!</item>
+        <item>I apologize.</item>
+        <item>My mistake.</item>
+        <item>My apologies.</item>
+        <item>I hope you can forgive me.</item>
+        <item>Sorry about that.</item>
+        <item>My fault.</item>
+    </string-array>
+
+    <string-array name="fault_description_request">
+        <item>Could you please explain what is wrong?</item>
+        <item>Please explain what I did wrong.</item>
+        <item>How could I do it better?</item>
+        <item>Can you please describe my fault?</item>
+        <item>Please describe the correct behavior?</item>
+    </string-array>
+
+    <string-array name="fault_description_response">
+        <item>Thank you for your help.</item>
+        <item>Thanks for fault description.</item>
+        <item>I appreciate your help.</item>
     </string-array>
 
     <!--DEVICE RESPONSES-->
@@ -148,6 +203,15 @@
         <item>Which location do you mean?</item>
         <item>Choose one or more locations.</item>
         <item>Please, specify the location.</item>
+    </string-array>
+
+    <string-array name="smart_home_contains">
+        <item>You have %1$s.</item>
+    </string-array>
+
+    <string-array name="what_query">
+        <item>What would you like to know about %1$s?</item>
+        <item>How can I help you with %1$s?</item>
     </string-array>
 
     <string-array name="unknown">

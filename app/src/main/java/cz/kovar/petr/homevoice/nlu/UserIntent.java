@@ -33,12 +33,17 @@ import java.util.Set;
 public class UserIntent {
 
     private Map<String, Entity> m_entities = new HashMap<>();
+    private String m_text = "";
 
     public Entity getIntent() {
         if (hasIntent())
             return m_entities.get("intent");
         else
             return null;
+    }
+
+    public String getText() {
+        return m_text;
     }
 
     public boolean hasIntent() {
@@ -61,6 +66,7 @@ public class UserIntent {
         UserIntent result = new UserIntent();
         JsonObject rootobj = aRoot.getAsJsonObject();
         JsonObject entities = rootobj.getAsJsonObject("entities");
+        result.m_text = rootobj.get("_text").getAsString();
         Set<Map.Entry<String, JsonElement>> entries  =  entities.entrySet();
         for(Map.Entry<String, JsonElement> entry : entries) {
             result.m_entities.put(entry.getKey(), Entity.createFromJSON(entry));

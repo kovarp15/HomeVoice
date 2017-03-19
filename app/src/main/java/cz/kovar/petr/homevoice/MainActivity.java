@@ -26,12 +26,15 @@ import cz.kovar.petr.homevoice.app.ZWayApplication;
 import cz.kovar.petr.homevoice.bus.MainThreadBus;
 import cz.kovar.petr.homevoice.bus.events.AuthEvent;
 import cz.kovar.petr.homevoice.bus.events.IntentEvent;
+import cz.kovar.petr.homevoice.bus.events.ModuleEvent;
 import cz.kovar.petr.homevoice.bus.events.SettingsEvent;
 import cz.kovar.petr.homevoice.bus.events.ShowEvent;
 import cz.kovar.petr.homevoice.frontend.PagerAdapter;
 import cz.kovar.petr.homevoice.frontend.adapters.OutputFieldAdapter;
 import cz.kovar.petr.homevoice.modules.AboutModule;
+import cz.kovar.petr.homevoice.modules.CancelModule;
 import cz.kovar.petr.homevoice.modules.CloseModule;
+import cz.kovar.petr.homevoice.modules.FeedbackModule;
 import cz.kovar.petr.homevoice.modules.LightModule;
 import cz.kovar.petr.homevoice.modules.Module;
 import cz.kovar.petr.homevoice.modules.RoomModule;
@@ -67,8 +70,11 @@ public class MainActivity extends AppCompatActivity  {
     private Module m_activeModule = null;
 
     private SpeechSynthesizer m_synthesizer;
+
+    private CancelModule m_cancelModule;
     private CloseModule m_closeModule;
     private AboutModule m_aboutModule;
+    private FeedbackModule m_feedbackModule;
     private TimeModule m_timeModule;
     private RoomModule m_roomModule;
     private LightModule m_lightModule;
@@ -92,11 +98,13 @@ public class MainActivity extends AppCompatActivity  {
 
         m_synthesizer = new SpeechSynthesizer(this);
 
-        m_closeModule = new CloseModule(this);
         m_aboutModule = new AboutModule(this);
-        m_timeModule = new TimeModule(this);
-        m_roomModule = new RoomModule(this);
+        m_cancelModule = new CancelModule(this);
+        m_closeModule = new CloseModule(this);
+        m_feedbackModule = new FeedbackModule(this);
         m_lightModule = new LightModule(this);
+        m_roomModule = new RoomModule(this);
+        m_timeModule = new TimeModule(this);
 
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -162,11 +170,11 @@ public class MainActivity extends AppCompatActivity  {
                 nlu.getIntent(new NLUInterface.OnNLUListener() {
                     @Override
                     public void onMsgObjReceived(UserIntent aMsg) {
-                        if(aMsg != null && m_activeModule != null) {
-                            m_activeModule.handleIntent(aMsg);
-                        } else if(aMsg != null && aMsg.getIntent() != null && aMsg.getIntent().getValue() != null) {
+                        if(aMsg != null && (m_activeModule != null ||(aMsg.getIntent() != null && aMsg.getIntent().getValue() != null))) {
+                            m_cancelModule.handleIntent(aMsg);
                             m_closeModule.handleIntent(aMsg);
                             m_aboutModule.handleIntent(aMsg);
+                            m_feedbackModule.handleIntent(aMsg);
                             m_timeModule.handleIntent(aMsg);
                             m_roomModule.handleIntent(aMsg);
                             m_lightModule.handleIntent(aMsg);
@@ -283,6 +291,7 @@ public class MainActivity extends AppCompatActivity  {
                 startKeywordSpotting();
             }
         });
+        resetModules();
     }
 
     @Subscribe
@@ -295,6 +304,16 @@ public class MainActivity extends AppCompatActivity  {
                 startRecognition();
             }
         });
+    }
+
+    private void resetModules() {
+        m_aboutModule.reset();
+        m_cancelModule.reset();
+        m_closeModule.reset();
+        m_feedbackModule.reset();
+        m_lightModule.reset();
+        m_roomModule.reset();
+        m_timeModule.reset();
     }
 
     private void startKeywordSpotting() {
