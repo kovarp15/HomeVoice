@@ -37,11 +37,11 @@ import cz.kovar.petr.homevoice.utils.SentenceHelper;
 import cz.kovar.petr.homevoice.zwave.dataModel.Device;
 import cz.kovar.petr.homevoice.zwave.dataModel.DeviceType;
 
-public class HumidityModule extends BaseDeviceModule {
+public class HumidityModule extends BaseSensorModule {
 
-    private static final String LOG_TAG = "TemperatureModule";
+    private static final String LOG_TAG = "HumidityModule";
 
-    private static final String INTENT_GET_TEMPERATURE = "GET_TEMPERATURE";
+    private static final String INTENT_GET_TEMPERATURE = "GET_HUMIDITY";
 
     public HumidityModule(Context aContext) {
         super(aContext);
@@ -64,7 +64,7 @@ public class HumidityModule extends BaseDeviceModule {
 
     @Override
     String getTag() {
-        return "THERMOMETER";
+        return "HUMIDITY";
     }
 
     @Override
@@ -73,8 +73,13 @@ public class HumidityModule extends BaseDeviceModule {
     }
 
     @Override
-    String getDeviceTitle(BaseModuleContext aContext) {
-        return "thermometer";
+    String getDeviceTitle() {
+        return "humidity sensor";
+    }
+
+    @Override
+    String getQuantityTitle() {
+        return "humidity";
     }
 
     @Override
@@ -95,20 +100,20 @@ public class HumidityModule extends BaseDeviceModule {
         for(String location : devicesInLocation.keySet()) {
             Set<Device> deviceSet = devicesInLocation.get(location);
             if(devices.size() == 1) {
-                double temp = Double.parseDouble(devices.get(0).metrics.level);
+                double humidity = Double.parseDouble(devices.get(0).metrics.level);
                 response.add(String.format(SentenceHelper.randomResponse(m_context,
-                        R.array.temperature_response), temp, location));
+                        R.array.humidity_response), humidity, location));
             } else {
-                double averageTemp = getAverageTemperature(deviceSet);
+                double averageHumidity = getAverageHumidity(deviceSet);
                 response.add(String.format(SentenceHelper.randomResponse(m_context,
-                        R.array.average_temperature_response), averageTemp, location));
+                        R.array.average_temperature_response), averageHumidity, location));
             }
         }
         notifyIntentHandled(response);
 
     }
 
-    private double getAverageTemperature(Set<Device> aDevices) {
+    private double getAverageHumidity(Set<Device> aDevices) {
         double temp = 0;
         for(Device device : aDevices) {
             temp += Double.parseDouble(device.metrics.level)/aDevices.size();
