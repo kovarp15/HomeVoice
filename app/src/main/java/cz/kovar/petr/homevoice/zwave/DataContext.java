@@ -146,6 +146,17 @@ public class DataContext {
         return result;
     }
 
+    public List<String> getLocationsNamesLowerCase() {
+        final List<String> result = new ArrayList<String>();
+        if (mLocation != null) {
+            for (Location location : mLocation) {
+                if (!result.contains(location.title))
+                    result.add(location.title.toLowerCase());
+            }
+        }
+        return result;
+    }
+
     public List<Location> getLocations() {
         return mLocation == null ? new ArrayList<Location>() : mLocation;
     }

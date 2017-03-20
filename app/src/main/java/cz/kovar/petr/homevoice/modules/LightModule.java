@@ -159,21 +159,22 @@ public class LightModule extends DeviceModule {
     void processContext(DeviceModuleContext aContext, OnProcessContextListener aListener) {
 
         // check if requested intent can be handled by this module
-        if(!supportsIntent(aContext.intent)) return;
+        if (!supportsIntent(aContext.intent)) return;
 
         // check if all requested locations are available
         Set<String> locNotAvailable = new HashSet<>();
-        for(String locationName : aContext.locations) {
-            if(!containsLocation(locationName)) locNotAvailable.add(locationName);
+        for (String locationName : aContext.locations) {
+            if (!containsLocation(locationName)) locNotAvailable.add(locationName);
         }
-        if(!locNotAvailable.isEmpty() && aListener != null) {
+        if (!locNotAvailable.isEmpty() && aListener != null) {
+            aContext.locations.removeAll(locNotAvailable);
             aListener.locationsNotAvailable(locNotAvailable);
             return;
         }
 
         // check if devices exists
         List<Device> devices = getFilteredDevices(aContext);
-        if(devices.isEmpty() && aListener != null) {
+        if (devices.isEmpty() && aListener != null) {
             aListener.devicesNotAvailable(aContext);
             return;
         }
@@ -182,21 +183,21 @@ public class LightModule extends DeviceModule {
         boolean locOK = true;
         List<String> availableLocations = dataContext.getLocationsNames();
         Set<String> deviceLocations = new HashSet<>();
-        for(Device device : devices) {
+        for (Device device : devices) {
             String location = availableLocations.get(Integer.parseInt(device.location));
             deviceLocations.add(location);
             boolean ok = false;
-            for(String requestedLocation : aContext.locations)
+            for (String requestedLocation : aContext.locations)
                 ok |= requestedLocation.equalsIgnoreCase(location);
             locOK &= ok;
         }
-        if(!locOK && aListener != null) {
+        if (!locOK && aListener != null) {
             aListener.devicesAtMultipleLocations(deviceLocations);
             return;
         }
 
         // notify context ready
-        if(aListener != null) aListener.onContextReady(devices);
+        if (aListener != null) aListener.onContextReady(devices);
     }
 
     @Override
@@ -258,10 +259,7 @@ public class LightModule extends DeviceModule {
         if(!aContext.query.isEmpty()) {
             switch(aContext.query) {
                 case QUERY_VALUE:
-                    // TODO provide LIGHT VALUE
-                    bus.post(new IntentEvent.Handled(new ArrayList<String>() {{
-                        add("Interested in value?");
-                    }}));
+                    notifyDeviceValue(aDevices);
                     break;
                 case QUERY_LIST:
                     notifyDeviceList(aDevices);
@@ -284,7 +282,7 @@ public class LightModule extends DeviceModule {
     }
 
     private void updateContextValue(DeviceModuleContext aContext, UserIntent aIntent) {
-        if(aIntent.hasEntity(ENTITY_ON_OFF) && aIntent.getEntity(ENTITY_ON_OFF).getConfidence() > 0.9){
+        if(aIntent.hasEntity(ENTITY_ON_OFF) && aIntent.getEntity(ENTITY_ON_OFF).getConfidence() > 0.95){
             aContext.setDeviceTypes(new HashSet<String>() {{
                 add(SWITCH_BINARY.toString());
                 add(DeviceType.SWITCH_MULTILEVEL.toString());
@@ -296,6 +294,7 @@ public class LightModule extends DeviceModule {
             aContext.setDeviceType(DeviceType.SWITCH_MULTILEVEL);
             aContext.setValue(aIntent.getEntity(ENTITY_NUMBER).getValue().toString());
         }
+
     }
 
     private void updateContextQuery(DeviceModuleContext aContext, UserIntent aIntent) {
@@ -414,6 +413,32 @@ public class LightModule extends DeviceModule {
                     "light",
                     provideMultilevelValue(aContext.value),
                     SentenceHelper.enumerationAND(notUpdatedLocations)));
+
+        notifyIntentHandled(response);
+
+    }
+
+    private void notifyDeviceValue(List<Device> aDevices) {
+
+        List<String> availableLocations = dataContext.getLocationsNames();
+
+        List<String> response = new ArrayList<>();
+        for(Device device : aDevices) {
+            String name = device.metrics.title;
+            String value = device.metrics.level;
+            String location = availableLocations.get(Integer.parseInt(device.location));
+            if(value.equalsIgnoreCase(VALUE_ON)
+                    || value.equalsIgnoreCase(VALUE_OFF)
+                    || value.equals("0") || value.equals("99")) {
+                String binaryValue = provideBinaryValue(value);
+                response.add(String.format(SentenceHelper.randomResponse(m_context, R.array.value_binary_response),
+                        name, binaryValue, location));
+            } else {
+                String multilevelValue = provideMultilevelValue(value);
+                response.add(String.format(SentenceHelper.randomResponse(m_context, R.array.value_multilevel_response),
+                        name, multilevelValue, location));
+            }
+        }
 
         notifyIntentHandled(response);
 

@@ -65,6 +65,16 @@ public abstract class Module {
         }}));
     }
 
+    void notifyContextNotReady(Module aModule, final String aRequest) {
+        bus.post(new IntentEvent.ContextIncomplete(aModule, new ArrayList<String>() {{
+            add(aRequest);
+        }}));
+    }
+
+    void notifyContextNotReady(Module aModule, final List<String> aRequest) {
+        bus.post(new IntentEvent.ContextIncomplete(aModule, aRequest));
+    }
+
     public void reset() {
         resetModule();
     }

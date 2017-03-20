@@ -38,7 +38,7 @@ import cz.kovar.petr.homevoice.zwave.dataModel.FilterData;
 
 public abstract class DeviceModule extends Module {
 
-    static final String ENTITY_DEVICE_NAME  = "device_name";
+    static final String ENTITY_DEVICE_NAME  = "name";
     static final String ENTITY_LOCATION     = "location";
     static final String LOCATION_EVERYWHERE = "everywhere";
     static final String LOCATION_HOME       = "home";
@@ -129,6 +129,10 @@ public abstract class DeviceModule extends Module {
         Set<String> deviceNames = new HashSet<>();
         Set<String> deviceTypes = new HashSet<>();
 
+        DeviceModuleContext() {
+            deviceTypes = getDefaultDeviceTypes();
+        }
+
         void inject(DeviceModuleContext aContext) {
             if(!aContext.intent.isEmpty()) intent = aContext.intent;
             if(!aContext.value.isEmpty()) value = aContext.value;
@@ -145,13 +149,6 @@ public abstract class DeviceModule extends Module {
                 deviceTypes.clear();
                 deviceTypes.addAll(aContext.deviceTypes);
             }
-        }
-
-        boolean appliesActuator() {
-            return deviceTypes.contains(DeviceType.SWITCH_BINARY.toString())
-                    || deviceTypes.contains(DeviceType.SWITCH_MULTILEVEL.toString())
-                    || deviceTypes.contains(DeviceType.SWITCH_RGBW.toString())
-                    || deviceTypes.contains(DeviceType.SWITCH_CONTROLL.toString());
         }
 
         void setIntent(String aIntent) {
@@ -195,7 +192,7 @@ public abstract class DeviceModule extends Module {
             query = "";
             locations = new HashSet<>();
             deviceNames = new HashSet<>();
-            deviceTypes = new HashSet<>();
+            deviceTypes = getDefaultDeviceTypes();
         }
 
         boolean isEmpty() {

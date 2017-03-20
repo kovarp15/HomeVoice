@@ -15,9 +15,12 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.TextClock;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
+
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -26,7 +29,6 @@ import cz.kovar.petr.homevoice.app.ZWayApplication;
 import cz.kovar.petr.homevoice.bus.MainThreadBus;
 import cz.kovar.petr.homevoice.bus.events.AuthEvent;
 import cz.kovar.petr.homevoice.bus.events.IntentEvent;
-import cz.kovar.petr.homevoice.bus.events.ModuleEvent;
 import cz.kovar.petr.homevoice.bus.events.SettingsEvent;
 import cz.kovar.petr.homevoice.bus.events.ShowEvent;
 import cz.kovar.petr.homevoice.frontend.PagerAdapter;
@@ -35,9 +37,11 @@ import cz.kovar.petr.homevoice.modules.AboutModule;
 import cz.kovar.petr.homevoice.modules.CancelModule;
 import cz.kovar.petr.homevoice.modules.CloseModule;
 import cz.kovar.petr.homevoice.modules.FeedbackModule;
+import cz.kovar.petr.homevoice.modules.HumidityModule;
 import cz.kovar.petr.homevoice.modules.LightModule;
 import cz.kovar.petr.homevoice.modules.Module;
 import cz.kovar.petr.homevoice.modules.RoomModule;
+import cz.kovar.petr.homevoice.modules.TemperatureModule;
 import cz.kovar.petr.homevoice.modules.TimeModule;
 import cz.kovar.petr.homevoice.nlu.UserIntent;
 import cz.kovar.petr.homevoice.nlu.NLUInterface;
@@ -78,6 +82,8 @@ public class MainActivity extends AppCompatActivity  {
     private TimeModule m_timeModule;
     private RoomModule m_roomModule;
     private LightModule m_lightModule;
+    private TemperatureModule m_temperatureModule;
+    private HumidityModule m_humidityModule;
 
     private ServiceConnection m_serviceConnection;
 
@@ -105,6 +111,8 @@ public class MainActivity extends AppCompatActivity  {
         m_lightModule = new LightModule(this);
         m_roomModule = new RoomModule(this);
         m_timeModule = new TimeModule(this);
+        m_temperatureModule = new TemperatureModule(this);
+        m_humidityModule = new HumidityModule(this);
 
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -178,6 +186,8 @@ public class MainActivity extends AppCompatActivity  {
                             m_timeModule.handleIntent(aMsg);
                             m_roomModule.handleIntent(aMsg);
                             m_lightModule.handleIntent(aMsg);
+                            m_temperatureModule.handleIntent(aMsg);
+                            m_humidityModule.handleIntent(aMsg);
                         } else {
                             output.addOutput(SentenceHelper.randomResponse(MainActivity.this, R.array.unknown), new OutputFieldAdapter.OnProgressListener() {
                                 @Override
@@ -314,6 +324,8 @@ public class MainActivity extends AppCompatActivity  {
         m_lightModule.reset();
         m_roomModule.reset();
         m_timeModule.reset();
+        m_temperatureModule.reset();
+        m_humidityModule.reset();
     }
 
     private void startKeywordSpotting() {

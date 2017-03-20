@@ -90,9 +90,8 @@
 
     <!--CANCEL MODULE-->
     <string-array name="cancel_response">
-        <item>I cancelled that.</item>
-        <item>Execution stopped.</item>
-        <item>I cancelled the execution.</item>
+        <item>As you wish.</item>
+        <item>I\'m quiet now.</item>
     </string-array>
 
     <!--TIME MODULE-->
@@ -172,6 +171,25 @@
         <item>It seems You don\'t have any %1$s in your %2$s.</item>
     </string-array>
 
+    <string-array name="device_available_response">
+        <item>But I can see %1$s in your %2$s.</item>
+        <item>But I can see %1$s available in your %2$s.</item>
+        <item>But there is %1$s in your %2$s.</item>
+        <item>But there is %1$s available in your %2$s.</item>
+        <item>But your %2$s contains some %1$s.</item>
+        <item>But your %2$s contains some %1$s.</item>
+        <item>But You have some %1$s in your %2$s.</item>
+        <item>But it seems You have some %1$s in your %2$s.</item>
+    </string-array>
+
+    <string-array name="wanna_know_value">
+        <item>Would you like to know %1$s in your %2$s?</item>
+        <item>Are you interested in %1$s in your %2$s?</item>
+        <item>Want to know %1$s in your %2$s?</item>
+        <item>Should I tell you %1$s in your %2$s?</item>
+        <item>Interested in %1$s in your %2$s?</item>
+    </string-array>
+
     <string-array name="turned_on_off">
         <item>I just turned the %1$s %2$s in your %3$s.</item>
         <item>I turned the %1$s %2$s in your %3$s.</item>
@@ -186,6 +204,29 @@
         <item>I just set the %1$s level %2$s in your %3$s.</item>
         <item>I set the %1$s level %2$s in your %3$s.</item>
         <item>The %1$s level has just been set %2$s in your %3$s.</item>
+    </string-array>
+
+    <string-array name="value_binary_response">
+        <item>%1$s is turned %2$s in %3$s.</item>
+        <item>%1$s is %2$s in %3$s.</item>
+        <item>%1$s is turned %2$s in your %3$s.</item>
+        <item>%1$s is %2$s in your %3$s.</item>
+        <item>In %3$s %1$s is turned %2$s.</item>
+        <item>In your %3$s %1$s is turned %2$s.</item>
+        <item>In %3$s %1$s is %2$s.</item>
+        <item>%3$s %1$s is %2$s.</item>
+        <item>%3$s %1$s is turned %2$s.</item>
+    </string-array>
+
+    <string-array name="value_multilevel_response">
+        <item>%1$s level is %2$s in %3$s.</item>
+        <item>Level of %1$s is %2$s in %3$s.</item>
+        <item>%1$s level is %2$s in your %3$s.</item>
+        <item>Level of %1$s is %2$s in your %3$s.</item>
+        <item>In %3$s %1$s level is %2$s.</item>
+        <item>In your %3$s %1$s level is %2$s.</item>
+        <item>%3$s %1$s level is %2$s.</item>
+        <item>Level of %3$s %1$s is %2$s.</item>
     </string-array>
 
     <string-array name="set_level_already">
@@ -220,6 +261,22 @@
         <item>I\'m sorry, but I didn\'t understand.</item>
     </string-array>
 
+    <!--TEMPERATURE MODULE-->
+    <string-array name="temperature_response">
+        <item>Temperature in %2$s is %1$s °C.</item>
+    </string-array>
 
+    <string-array name="average_temperature_response">
+        <item>Average temperature in %2$s is %1$s degrees Celsius.</item>
+    </string-array>
+
+    <!--HUMIDITY MODULE-->
+    <string-array name="humidity_response">
+        <item>Humidity in %2$s is %1$s%%.</item>
+    </string-array>
+
+    <string-array name="average_humidity_response">
+        <item>Average humidity in %2$s is %1$s%%.</item>
+    </string-array>
 
 </resources>
