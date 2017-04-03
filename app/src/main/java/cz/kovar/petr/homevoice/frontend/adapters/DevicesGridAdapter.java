@@ -204,7 +204,7 @@ public class DevicesGridAdapter extends BaseAdapter {
         try {
             value = Integer.valueOf(device.metrics.level);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         changeViewVisibility(holder.seekBar, isSeekBarVisible);
@@ -213,7 +213,7 @@ public class DevicesGridAdapter extends BaseAdapter {
             try {
                 holder.seekBar.setProgress(value - min);
             } catch (NumberFormatException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
             holder.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override

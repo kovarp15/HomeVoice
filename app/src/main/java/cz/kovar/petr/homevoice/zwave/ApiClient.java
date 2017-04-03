@@ -43,6 +43,7 @@ import cz.kovar.petr.homevoice.zwave.network.notifications.NotificationRequest;
 import cz.kovar.petr.homevoice.zwave.network.notifications.NotificationResponse;
 import cz.kovar.petr.homevoice.zwave.network.notifications.UpdateNotificationRequest;
 import cz.kovar.petr.homevoice.zwave.utils.BooleanTypeAdapter;
+import okhttp3.Cookie;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,6 +57,7 @@ public class ApiClient {
         public void onSuccess(T result);
 
         public void onFailure(K request, boolean isNetworkError);
+
     }
 
     public static interface EmptyApiCallback<T> {
@@ -66,10 +68,16 @@ public class ApiClient {
 
     private ZWayProfile m_localProtile;
     private Retrofit m_adaptor;
+    private Cookie m_cookie;
 
-    public void init(ZWayProfile aProfile, Retrofit aAdaptor) {
+    public void init(ZWayProfile aProfile, Retrofit aAdaptor, Cookie aCookie) {
         m_localProtile = aProfile;
         m_adaptor = aAdaptor;
+        m_cookie = aCookie;
+    }
+
+    public Cookie getCookie() {
+        return m_cookie;
     }
 
     private Gson getGson() {

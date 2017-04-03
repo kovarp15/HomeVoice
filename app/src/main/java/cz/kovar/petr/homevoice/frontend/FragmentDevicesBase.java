@@ -23,14 +23,20 @@
 package cz.kovar.petr.homevoice.frontend;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.util.Log;
+import android.webkit.URLUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cz.kovar.petr.homevoice.UserData;
 import cz.kovar.petr.homevoice.frontend.adapters.DevicesGridAdapter;
+import cz.kovar.petr.homevoice.frontend.dialogs.CameraDialog;
+import cz.kovar.petr.homevoice.utils.CameraUtils;
 import cz.kovar.petr.homevoice.zwave.dataModel.Device;
 import cz.kovar.petr.homevoice.zwave.services.UpdateDeviceService;
 
@@ -90,6 +96,18 @@ public class FragmentDevicesBase extends FragmentBase
 
     @Override
     public void onOpenCameraView(Device updatedDevice) {
+        final String cameraUrl = CameraUtils.getCameraUrl(UserData.loadZWayProfile(getContext()),
+                updatedDevice.metrics.url);
+        Log.d("FragmentDevicesBase", "onOpenCameraView: " + cameraUrl);
+        if(!TextUtils.isEmpty(cameraUrl)
+                && URLUtil.isValidUrl(cameraUrl)) {
+            CameraDialog dialog = CameraDialog.newInstance(updatedDevice);
+            FragmentManager fm = getFragmentManager();
+            dialog.show(fm, "camera");
+            //bus.post(new StartActivityEvent(intent));
+        } else {
+            //bus.post(new ShowAttentionDialogEvent(getString(R.string.invalid_camera_url)));
+        }
         /*final String cameraUrl = CameraUtils.getCameraUrl(profile, updatedDevice.metrics.url);
         if(!TextUtils.isEmpty(cameraUrl)
                 && URLUtil.isValidUrl(cameraUrl)) {

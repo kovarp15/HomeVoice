@@ -83,6 +83,7 @@ public class AuthService extends IntentService {
 
     private OkHttpClient mClient;
     private int mDelay = DEFAULT_AUTH_REQUEST_DELAY;
+    private Cookie m_cloudCookie = null;
 
     private boolean mCancelEvent;
 
@@ -207,6 +208,7 @@ public class AuthService extends IntentService {
 
             if (getCookie(HttpUrl.parse(profile.getURL()), ZWayCookieJar.CLOUD_COOKIE) != null
                     && getCookie(HttpUrl.parse(profile.getURL()), ZWayCookieJar.ZWAY_COOKIE) != null) {
+                m_cloudCookie = getCookie(HttpUrl.parse(profile.getURL()), ZWayCookieJar.CLOUD_COOKIE);
                 onAuthSuccess(profile, adapter);
                 //ZWayAuth(m_adapter, profile);
                 return;
@@ -246,7 +248,7 @@ public class AuthService extends IntentService {
             return;
         }
 
-        apiClient.init(aProfile, aAdaptor);
+        apiClient.init(aProfile, aAdaptor, m_cloudCookie);
 
         dataContext.clear();
         //final List<ContactsContract.Profile> serverProfiles = loadProfiles();
