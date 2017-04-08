@@ -32,6 +32,7 @@ import cz.kovar.petr.homevoice.modules.DeviceModule;
 import cz.kovar.petr.homevoice.modules.Module;
 import cz.kovar.petr.homevoice.modules.RoomModule;
 import cz.kovar.petr.homevoice.utils.NetworkStateReceiver;
+import cz.kovar.petr.homevoice.zwave.network.auth.ZWayAuthQueue;
 import cz.kovar.petr.homevoice.zwave.services.AuthService;
 import cz.kovar.petr.homevoice.zwave.services.DataUpdateService;
 import cz.kovar.petr.homevoice.zwave.services.UpdateDeviceService;
@@ -57,6 +58,7 @@ public interface ZWayComponent {
 
     void inject(NetworkStateReceiver receiver);
 
+    void inject(ZWayAuthQueue queue);
     void inject(Module module);
     void inject(RoomModule module);
     void inject(DeviceModule module);

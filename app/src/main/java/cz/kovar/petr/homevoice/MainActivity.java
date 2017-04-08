@@ -54,6 +54,7 @@ import cz.kovar.petr.homevoice.utils.NetworkStateReceiver;
 import cz.kovar.petr.homevoice.utils.SentenceHelper;
 import cz.kovar.petr.homevoice.zwave.ApiClient;
 import cz.kovar.petr.homevoice.zwave.DataContext;
+import cz.kovar.petr.homevoice.zwave.network.auth.ZWayAuthQueue;
 import cz.kovar.petr.homevoice.zwave.network.portScan.NetInfo;
 import cz.kovar.petr.homevoice.zwave.network.portScan.NetworkScanTask;
 import cz.kovar.petr.homevoice.zwave.services.AuthService;
@@ -80,6 +81,8 @@ public class MainActivity extends AppCompatActivity  {
 
     private Module m_activeModule = null;
 
+    private ZWayAuthQueue m_authQueue;
+
     private SpeechSynthesizer m_synthesizer;
 
     private CancelModule m_cancelModule;
@@ -96,6 +99,8 @@ public class MainActivity extends AppCompatActivity  {
 
     @Inject
     ApiClient apiClient;
+    @Inject
+    UserData userData;
     @Inject
     DataContext dataContext;
     @Inject
@@ -131,6 +136,9 @@ public class MainActivity extends AppCompatActivity  {
 
         ((ZWayApplication) getApplication()).getComponent().inject(this);
         bus.register(this);
+        m_authQueue = new ZWayAuthQueue(this);
+
+        userData.initUserData(this);
 
         m_pager = (ViewPager) findViewById(R.id.pager);
         m_pager.setOffscreenPageLimit(NUM_OF_VIEWS);
@@ -273,12 +281,13 @@ public class MainActivity extends AppCompatActivity  {
         if(AppConfig.DEBUG) Log.d(LOG_TAG, "[NETWORK] " + (event.online ? "online" : "offline"));
         if(event.online) {
             m_connection.setImageResource(R.drawable.ic_reachable);
-            AuthService.login(this, UserData.loadZWayProfile(this));
+            m_authQueue.init();
             NetInfo info = NetInfo.getNetInfo();
             NetworkScanTask scan = new NetworkScanTask(8083, new NetworkScanTask.OnNetworkScanListener() {
                 @Override
                 public void onDeviceFound(String aIP) {
                     Log.i(LOG_TAG, "[NETWORK] discovered IP: " + aIP);
+                    m_authQueue.addToQueue(aIP);
                 }
             });
             scan.setNetwork(NetUtils.getUnsignedLongFromIp(info.m_ip), info.m_netStart, info.m_netEnd);

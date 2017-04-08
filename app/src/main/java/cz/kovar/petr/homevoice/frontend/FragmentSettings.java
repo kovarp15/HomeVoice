@@ -32,10 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -48,9 +45,6 @@ import cz.kovar.petr.homevoice.app.ZWayApplication;
 import cz.kovar.petr.homevoice.bus.MainThreadBus;
 import cz.kovar.petr.homevoice.bus.events.SettingsEvent;
 import cz.kovar.petr.homevoice.zwave.ZWayProfile;
-import cz.kovar.petr.homevoice.zwave.network.portScan.NetInfo;
-import cz.kovar.petr.homevoice.zwave.network.portScan.NetworkScanTask;
-import cz.kovar.petr.homevoice.zwave.utils.NetUtils;
 
 /**
  * Provides frontend for preference settings
@@ -62,20 +56,18 @@ public class FragmentSettings extends Fragment {
     private ZWayProfile m_profile = null;
 
     @Inject
+    UserData userData;
+    @Inject
     MainThreadBus bus;
+
+    private EditText m_localIPEdit;
+    private EditText m_loginEdit;
+    private EditText m_passwordEdit;
 
     public static FragmentSettings newInstance() {
 
         Log.v(LOG_TAG, "Create new instance of Fragment Settings.");
         return new FragmentSettings();
-
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        m_profile = UserData.loadZWayProfile(getContext());
 
     }
 
@@ -93,6 +85,8 @@ public class FragmentSettings extends Fragment {
         super.onStart();
         ((ZWayApplication) getContext().getApplicationContext()).getComponent().inject(this);
         bus.register(this);
+        m_profile = userData.getProfile();
+        updateLayout();
     }
 
     @Override
@@ -103,61 +97,54 @@ public class FragmentSettings extends Fragment {
 
     private void initZWayLayout(View aView) {
 
-        final EditText localIPEdit   = (EditText) aView.findViewById(R.id.localIP);
-        localIPEdit.setText(m_profile.getLocalIP());
-        localIPEdit.setOnEditorActionListener(new ClearFocusListener(localIPEdit));
-        localIPEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        m_localIPEdit = (EditText) aView.findViewById(R.id.localIP);
+        m_localIPEdit.setOnEditorActionListener(new ClearFocusListener(m_localIPEdit));
+        m_localIPEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if(!hasFocus) {
-                    m_profile.setLocalIP(localIPEdit.getText().toString());
-                    onZWayProfileChanged(m_profile);
+                    m_profile.setLocalIP(m_localIPEdit.getText().toString());
+                    notifyZWayProfileChanged(m_profile);
                 }
             }
         });
 
-        final EditText loginEdit     = (EditText) aView.findViewById(R.id.login);
-        loginEdit.setText(m_profile.getRemoteLogin());
-        loginEdit.setOnEditorActionListener(new ClearFocusListener(loginEdit));
-        loginEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        m_loginEdit = (EditText) aView.findViewById(R.id.login);
+        m_loginEdit.setOnEditorActionListener(new ClearFocusListener(m_loginEdit));
+        m_loginEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if(!hasFocus) {
-                    m_profile.setRemoteLogin(loginEdit.getText().toString());
-                    onZWayProfileChanged(m_profile);
+                    m_profile.setRemoteLogin(m_loginEdit.getText().toString());
+                    notifyZWayProfileChanged(m_profile);
                 }
             }
         });
 
-        final EditText passwordEdit  = (EditText) aView.findViewById(R.id.password);
-        passwordEdit.setText(m_profile.getPassword());
-        passwordEdit.setOnEditorActionListener(new ClearFocusListener(passwordEdit));
-        passwordEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        m_passwordEdit = (EditText) aView.findViewById(R.id.password);
+        m_passwordEdit.setOnEditorActionListener(new ClearFocusListener(m_passwordEdit));
+        m_passwordEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if(!hasFocus) {
-                    m_profile.setPassword(passwordEdit.getText().toString());
-                    onZWayProfileChanged(m_profile);
+                    m_profile.setPassword(m_passwordEdit.getText().toString());
+                    notifyZWayProfileChanged(m_profile);
                 }
             }
         });
 
-        final Switch remoteSwitch = (Switch) aView.findViewById(R.id.remoteSwitch);
-        remoteSwitch.setChecked(m_profile.useRemote());
-        remoteSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                m_profile.useRemote(b);
-                onZWayProfileChanged(m_profile);
-            }
-        });
-
-        final TextView firebaseAPI = (TextView) aView.findViewById(R.id.firebaseAPI);
+        TextView firebaseAPI = (TextView) aView.findViewById(R.id.firebaseAPI);
         firebaseAPI.setText(FirebaseInstanceId.getInstance().getToken());
 
     }
 
-    private void onZWayProfileChanged(ZWayProfile aProfile) {
+    private void updateLayout() {
+        m_localIPEdit.setText(m_profile.getLocalIP());
+        m_loginEdit.setText(m_profile.getRemoteLogin());
+        m_passwordEdit.setText(m_profile.getPassword());
+    }
+
+    private void notifyZWayProfileChanged(ZWayProfile aProfile) {
         bus.post(new SettingsEvent.ZWayChanged(aProfile));
     }
 

@@ -1,3 +1,24 @@
+/*
+ * HomeVoice for Android a UI for Z-Way server
+ *
+ * Created by Petr Kovář on 22.03.2017.
+ * Copyright (c) 2017 Petr Kovář
+ *
+ * All rights reserved
+ * kovarp15@fel.cvut.cz
+ * HomeVoice for Android is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * HomeVoice for Android is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with HomeVoice for Android.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package cz.kovar.petr.homevoice.frontend.dialogs;
 
 import android.os.Bundle;
@@ -20,15 +41,13 @@ import cz.kovar.petr.homevoice.zwave.dataModel.Device;
 import cz.kovar.petr.homevoice.zwave.dataModel.Metrics;
 import okhttp3.Cookie;
 
-/**
- * Created by petr on 22.03.17.
- */
-
 public class CameraDialog extends DialogFragment {
 
     private MjpegView m_mjpegView;
     private Device m_device;
 
+    @Inject
+    UserData userData;
     @Inject
     ApiClient apiClient;
 
@@ -75,7 +94,7 @@ public class CameraDialog extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        final String cameraUrl = CameraUtils.getCameraUrl(UserData.loadZWayProfile(getContext()),
+        final String cameraUrl = CameraUtils.getCameraUrl(userData.getProfile(),
                 m_device.metrics.url);
         m_mjpegView.setSource(cameraUrl);
     }

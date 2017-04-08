@@ -144,6 +144,7 @@ public class AuthService extends IntentService {
 
     @Subscribe
     public void onCancelEvent(CancelConnectionEvent event) {
+        Log.e(LOG_TAG, "CANCEL");
         mCancelEvent = true;
     }
 

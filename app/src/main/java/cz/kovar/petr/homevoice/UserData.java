@@ -33,13 +33,18 @@ import cz.kovar.petr.homevoice.zwave.ZWayProfile;
  */
 public class UserData {
 
+    private ZWayProfile m_profile = null;
+
+    public ZWayProfile getProfile() {
+        return m_profile;
+    }
+
     /**
-     * Returns new instance of ZWayData
+     * Initializes User Data
      *
      * @param aContext activity
-     * @return new instance of ZWayData
      */
-    public static ZWayProfile loadZWayProfile(Context aContext) {
+    public void initUserData(Context aContext) {
 
         SharedPreferences sharedPreferences = aContext.getSharedPreferences(AppConfig.ZWAY_PREF_FILE_KEY, Context.MODE_PRIVATE);
 
@@ -50,7 +55,7 @@ public class UserData {
         String  pass      = sharedPreferences.getString(ZWayProfile.PREF_TAG_PASSWORD, "");
         boolean useRemote = sharedPreferences.getBoolean(ZWayProfile.PREF_TAG_USE_REMOTE, true);
 
-        return new ZWayProfile(remoteURL, localIP, localPort, login, pass, useRemote);
+        m_profile = new ZWayProfile(remoteURL, localIP, localPort, login, pass, useRemote);
 
     }
 

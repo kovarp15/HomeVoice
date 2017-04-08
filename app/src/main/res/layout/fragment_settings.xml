@@ -117,14 +117,6 @@
                 android:textColor="@android:color/white"
                 android:textIsSelectable="true" />
 
-            <Switch
-                android:text="Local/Remote"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/remoteSwitch"
-                android:layout_row="4"
-                android:layout_column="0" />
-
         </GridLayout>
 
     </FrameLayout>

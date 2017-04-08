@@ -33,7 +33,10 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.inject.Inject;
+
 import cz.kovar.petr.homevoice.UserData;
+import cz.kovar.petr.homevoice.app.ZWayApplication;
 import cz.kovar.petr.homevoice.frontend.adapters.DevicesGridAdapter;
 import cz.kovar.petr.homevoice.frontend.dialogs.CameraDialog;
 import cz.kovar.petr.homevoice.utils.CameraUtils;
@@ -57,7 +60,6 @@ public class FragmentDevicesBase extends FragmentBase
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.e("FragmentDevicesBase", "onActivityCreated");
         m_adapter = new DevicesGridAdapter(getActivity(), new ArrayList<Device>(), this);
     }
 
@@ -97,7 +99,7 @@ public class FragmentDevicesBase extends FragmentBase
 
     @Override
     public void onOpenCameraView(Device updatedDevice) {
-        final String cameraUrl = CameraUtils.getCameraUrl(UserData.loadZWayProfile(getContext()),
+        final String cameraUrl = CameraUtils.getCameraUrl(userData.getProfile(),
                 updatedDevice.metrics.url);
         Log.d("FragmentDevicesBase", "onOpenCameraView: " + cameraUrl);
         if(!TextUtils.isEmpty(cameraUrl)

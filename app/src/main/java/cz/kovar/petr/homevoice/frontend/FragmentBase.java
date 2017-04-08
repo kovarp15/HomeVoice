@@ -26,6 +26,7 @@ import android.support.v4.app.Fragment;
 
 import javax.inject.Inject;
 
+import cz.kovar.petr.homevoice.UserData;
 import cz.kovar.petr.homevoice.app.ZWayApplication;
 import cz.kovar.petr.homevoice.bus.MainThreadBus;
 import cz.kovar.petr.homevoice.zwave.DataContext;
@@ -33,8 +34,9 @@ import cz.kovar.petr.homevoice.zwave.DataContext;
 public class FragmentBase extends Fragment {
 
     @Inject
+    UserData userData;
+    @Inject
     DataContext dataContext;
-
     @Inject
     MainThreadBus bus;
 
