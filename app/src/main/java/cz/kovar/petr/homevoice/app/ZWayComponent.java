@@ -21,8 +21,6 @@
  */
 package cz.kovar.petr.homevoice.app;
 
-import android.app.IntentService;
-
 import javax.inject.Singleton;
 
 import cz.kovar.petr.homevoice.MainActivity;
@@ -31,9 +29,9 @@ import cz.kovar.petr.homevoice.frontend.FragmentHome;
 import cz.kovar.petr.homevoice.frontend.FragmentSettings;
 import cz.kovar.petr.homevoice.frontend.dialogs.CameraDialog;
 import cz.kovar.petr.homevoice.modules.DeviceModule;
-import cz.kovar.petr.homevoice.modules.LightModule;
 import cz.kovar.petr.homevoice.modules.Module;
 import cz.kovar.petr.homevoice.modules.RoomModule;
+import cz.kovar.petr.homevoice.utils.NetworkStateReceiver;
 import cz.kovar.petr.homevoice.zwave.services.AuthService;
 import cz.kovar.petr.homevoice.zwave.services.DataUpdateService;
 import cz.kovar.petr.homevoice.zwave.services.UpdateDeviceService;
@@ -56,6 +54,8 @@ public interface ZWayComponent {
     void inject(DataUpdateService fragment);
 
     void inject(UpdateDeviceService service);
+
+    void inject(NetworkStateReceiver receiver);
 
     void inject(Module module);
     void inject(RoomModule module);

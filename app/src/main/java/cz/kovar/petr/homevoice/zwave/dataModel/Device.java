@@ -124,6 +124,12 @@ public class Device implements Serializable {
             return R.drawable.ic_device_water;
         } else if(icon.equalsIgnoreCase("window")){
             return R.drawable.ic_device_window;
+        } else if(icon.equalsIgnoreCase("camera")){
+            return R.drawable.ic_device_camera;
+        } else if(icon.equalsIgnoreCase("multilevel")) {
+            if(tags.contains("LIGHT")) {
+                return R.drawable.ic_device_light;
+            }
         }
         return 0;
     }

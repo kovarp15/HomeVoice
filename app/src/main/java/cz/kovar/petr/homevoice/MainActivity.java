@@ -3,7 +3,10 @@ package cz.kovar.petr.homevoice;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -15,12 +18,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.TextClock;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
-
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -29,6 +30,7 @@ import cz.kovar.petr.homevoice.app.ZWayApplication;
 import cz.kovar.petr.homevoice.bus.MainThreadBus;
 import cz.kovar.petr.homevoice.bus.events.AuthEvent;
 import cz.kovar.petr.homevoice.bus.events.IntentEvent;
+import cz.kovar.petr.homevoice.bus.events.InternetStateEvent;
 import cz.kovar.petr.homevoice.bus.events.SettingsEvent;
 import cz.kovar.petr.homevoice.bus.events.ShowEvent;
 import cz.kovar.petr.homevoice.frontend.PagerAdapter;
@@ -48,11 +50,15 @@ import cz.kovar.petr.homevoice.nlu.NLUInterface;
 import cz.kovar.petr.homevoice.nlu.WitHandler;
 import cz.kovar.petr.homevoice.sr.SpeechRecognition;
 import cz.kovar.petr.homevoice.tts.SpeechSynthesizer;
+import cz.kovar.petr.homevoice.utils.NetworkStateReceiver;
 import cz.kovar.petr.homevoice.utils.SentenceHelper;
 import cz.kovar.petr.homevoice.zwave.ApiClient;
 import cz.kovar.petr.homevoice.zwave.DataContext;
+import cz.kovar.petr.homevoice.zwave.network.portScan.NetInfo;
+import cz.kovar.petr.homevoice.zwave.network.portScan.NetworkScanTask;
 import cz.kovar.petr.homevoice.zwave.services.AuthService;
 import cz.kovar.petr.homevoice.zwave.services.DataUpdateService;
+import cz.kovar.petr.homevoice.zwave.utils.NetUtils;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -70,6 +76,7 @@ public class MainActivity extends AppCompatActivity  {
     private SpeechRecognition m_recognition;
 
     private ImageButton m_micButton = null;
+    private ImageView m_connection = null;
 
     private Module m_activeModule = null;
 
@@ -119,6 +126,7 @@ public class MainActivity extends AppCompatActivity  {
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         wakeupScreen();
+        registerNetworkReceiver();
         setContentView(R.layout.activity_main);
 
         ((ZWayApplication) getApplication()).getComponent().inject(this);
@@ -144,6 +152,8 @@ public class MainActivity extends AppCompatActivity  {
                 m_pager.setCurrentItem(m_pagedAdapter.getCount() - 1);
             }
         });
+
+        m_connection = (ImageView) findViewById(R.id.connection);
 
         m_micButton = (ImageButton) findViewById(R.id.listen_button);
         m_micButton.setOnClickListener(new View.OnClickListener() {
@@ -208,15 +218,11 @@ public class MainActivity extends AppCompatActivity  {
 
         handleIntent(getIntent());
 
-        AuthService.login(this, UserData.loadZWayProfile(this));
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        Log.d(LOG_TAG, "onStart");
 
         final Intent intent = new Intent(this, DataUpdateService.class);
         m_serviceConnection = new ServiceConnection() {
@@ -235,7 +241,6 @@ public class MainActivity extends AppCompatActivity  {
     public void onDestroy() {
         super.onDestroy();
 
-        Log.d(LOG_TAG, "onDestroy");
         bus.unregister(this);
 
         unbindService(m_serviceConnection);
@@ -247,12 +252,10 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     public void onNewIntent(Intent aIntent) {
-        Log.d(LOG_TAG, "onNewIntent");
         handleIntent(aIntent);
     }
 
     private void handleIntent(Intent aIntent) {
-        Log.d(LOG_TAG, "handleIntent");
         if(aIntent != null) {
             int cmd = aIntent.getIntExtra(TAG_COMMAND, CMD_NONE);
             switch (cmd) {
@@ -266,22 +269,49 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     @Subscribe
+    public void onNetworkChanged(InternetStateEvent event) {
+        if(AppConfig.DEBUG) Log.d(LOG_TAG, "[NETWORK] " + (event.online ? "online" : "offline"));
+        if(event.online) {
+            m_connection.setImageResource(R.drawable.ic_reachable);
+            AuthService.login(this, UserData.loadZWayProfile(this));
+            NetInfo info = NetInfo.getNetInfo();
+            NetworkScanTask scan = new NetworkScanTask(8083, new NetworkScanTask.OnNetworkScanListener() {
+                @Override
+                public void onDeviceFound(String aIP) {
+                    Log.i(LOG_TAG, "[NETWORK] discovered IP: " + aIP);
+                }
+            });
+            scan.setNetwork(NetUtils.getUnsignedLongFromIp(info.m_ip), info.m_netStart, info.m_netEnd);
+            scan.execute();
+        } else {
+            m_connection.setImageResource(R.drawable.ic_unreachable);
+            dataContext.clear();
+            m_pagedAdapter.clear();
+        }
+    }
+
+    @Subscribe
     public void onSettingsChanged(SettingsEvent.ZWayChanged event) {
         UserData.saveZWayProfile(this, event.profile);
-        output.printOutput("Trying to connect...");
         AuthService.login(this, event.profile);
         m_pagedAdapter.clear();
     }
 
     @Subscribe
     public void onAuthSuccess(AuthEvent.Success event) {
-        if(AppConfig.DEBUG) Log.d(LOG_TAG, "Successfully connected to smart home.");
+        if(event.profile.useRemote()) {
+            if(AppConfig.DEBUG) Log.d(LOG_TAG, "[NETWORK] cloud connection established");
+            m_connection.setImageResource(R.drawable.ic_conn_cloud);
+        } else {
+            if(AppConfig.DEBUG) Log.d(LOG_TAG, "[NETWORK] local connection established");
+            m_connection.setImageResource(R.drawable.ic_conn_local);
+        }
         m_pagedAdapter.addLocationIDs(dataContext.getLocationsNames());
     }
 
     @Subscribe
     public void onAuthFail(AuthEvent.Fail event) {
-        if(AppConfig.DEBUG) Log.d(LOG_TAG, "Connection to smart home failed.");
+        if(AppConfig.DEBUG) Log.d(LOG_TAG, "[NETWORK] z-way auth attempt failed");
         m_pagedAdapter.clear();
     }
 
@@ -357,6 +387,14 @@ public class MainActivity extends AppCompatActivity  {
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    private void registerNetworkReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        getApplicationContext().registerReceiver(new NetworkStateReceiver(), filter);
     }
 
 }

@@ -32,6 +32,7 @@ import android.widget.Button;
 import java.util.HashMap;
 
 import cz.kovar.petr.homevoice.R;
+import cz.kovar.petr.homevoice.zwave.DataContext;
 import cz.kovar.petr.homevoice.zwave.dataModel.Filter;
 
 /**

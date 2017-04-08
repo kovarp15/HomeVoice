@@ -37,6 +37,7 @@ import cz.kovar.petr.homevoice.UserData;
 import cz.kovar.petr.homevoice.frontend.adapters.DevicesGridAdapter;
 import cz.kovar.petr.homevoice.frontend.dialogs.CameraDialog;
 import cz.kovar.petr.homevoice.utils.CameraUtils;
+import cz.kovar.petr.homevoice.zwave.DataContext;
 import cz.kovar.petr.homevoice.zwave.dataModel.Device;
 import cz.kovar.petr.homevoice.zwave.services.UpdateDeviceService;
 

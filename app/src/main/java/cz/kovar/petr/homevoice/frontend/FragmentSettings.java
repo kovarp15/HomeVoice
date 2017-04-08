@@ -32,25 +32,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
-
-import java.util.Locale;
 
 import javax.inject.Inject;
 
-import cz.kovar.petr.homevoice.FirebaseService;
 import cz.kovar.petr.homevoice.R;
 import cz.kovar.petr.homevoice.UserData;
 import cz.kovar.petr.homevoice.app.ZWayApplication;
 import cz.kovar.petr.homevoice.bus.MainThreadBus;
 import cz.kovar.petr.homevoice.bus.events.SettingsEvent;
 import cz.kovar.petr.homevoice.zwave.ZWayProfile;
+import cz.kovar.petr.homevoice.zwave.network.portScan.NetInfo;
+import cz.kovar.petr.homevoice.zwave.network.portScan.NetworkScanTask;
+import cz.kovar.petr.homevoice.zwave.utils.NetUtils;
 
 /**
  * Provides frontend for preference settings
@@ -103,19 +103,6 @@ public class FragmentSettings extends Fragment {
 
     private void initZWayLayout(View aView) {
 
-        final EditText remoteURLEdit = (EditText) aView.findViewById(R.id.remoteURL);
-        remoteURLEdit.setText(m_profile.getRemoteURL());
-        remoteURLEdit.setOnEditorActionListener(new ClearFocusListener(remoteURLEdit));
-        remoteURLEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if(!hasFocus) {
-                    m_profile.setRemoteURL(remoteURLEdit.getText().toString());
-                    onZWayProfileChanged(m_profile);
-                }
-            }
-        });
-
         final EditText localIPEdit   = (EditText) aView.findViewById(R.id.localIP);
         localIPEdit.setText(m_profile.getLocalIP());
         localIPEdit.setOnEditorActionListener(new ClearFocusListener(localIPEdit));
@@ -124,19 +111,6 @@ public class FragmentSettings extends Fragment {
             public void onFocusChange(View view, boolean hasFocus) {
                 if(!hasFocus) {
                     m_profile.setLocalIP(localIPEdit.getText().toString());
-                    onZWayProfileChanged(m_profile);
-                }
-            }
-        });
-
-        final EditText localPortEdit = (EditText) aView.findViewById(R.id.localPort);
-        localPortEdit.setText(String.format(Locale.ENGLISH, "%d" , m_profile.getLocalPort()));
-        localPortEdit.setOnEditorActionListener(new ClearFocusListener(localPortEdit));
-        localPortEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if(!hasFocus) {
-                    m_profile.setLocalPort(Integer.valueOf(localPortEdit.getText().toString()));
                     onZWayProfileChanged(m_profile);
                 }
             }

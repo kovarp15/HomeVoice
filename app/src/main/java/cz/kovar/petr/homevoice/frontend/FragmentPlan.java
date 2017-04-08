@@ -25,7 +25,6 @@ package cz.kovar.petr.homevoice.frontend;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +55,8 @@ import cz.kovar.petr.homevoice.utils.UtilsConverter;
  */
 public class FragmentPlan extends FragmentBase {
 
-    private static final String LOG_TAG = "FragmentPlan";
+    // private static final String LOG_TAG = "FragmentPlan";
+
     private static final String PLAN_PREF_NAME = "plan_preferences";
     private static final String TAG_LOCATIONS = "locations";
     private static final String TAG_WIDTH = "width";
@@ -85,7 +85,6 @@ public class FragmentPlan extends FragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        Log.e(LOG_TAG, "onCreateView");
         View v = inflater.inflate(R.layout.fragment_plan, container, false);
 
         final List<String> locToDelete = new ArrayList<>();
@@ -175,7 +174,7 @@ public class FragmentPlan extends FragmentBase {
         popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                setEditMode(addLocationButton(locations.get(i),
+                setEditMode(initLocationButton(locations.get(i),
                                   UtilsConverter.dp2px(getContext(),150),
                                   UtilsConverter.dp2px(getContext(),150),
                                   0, 0));
@@ -195,13 +194,13 @@ public class FragmentPlan extends FragmentBase {
                 int height = m_preferences.getInt(location + TAG_HEIGHT, 150);
                 int left = m_preferences.getInt(location + TAG_LEFT, 0);
                 int top = m_preferences.getInt(location + TAG_TOP, 0);
-                addLocationButton(location, width, height, left, top);
+                initLocationButton(location, width, height, left, top);
             }
         }
 
     }
 
-    private LocationButton addLocationButton(final String aID, final int aWidth, final int aHeight, int aLeft, int aTop) {
+    private LocationButton initLocationButton(final String aID, final int aWidth, final int aHeight, int aLeft, int aTop) {
         final LocationButton button = new LocationButton(getContext());
         button.setText(aID);
         button.setDimensions(aWidth,aHeight);
@@ -313,12 +312,12 @@ public class FragmentPlan extends FragmentBase {
 
     @Subscribe
     public void onAuthSuccess(AuthEvent.Success event) {
-        Log.v(LOG_TAG, "Auth Success!");
+
     }
 
     @Subscribe
     public void onAuthFail(AuthEvent.Fail event) {
-        Log.v(LOG_TAG, "Auth Failed!");
+
     }
 
     private class Parameters {
