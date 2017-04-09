@@ -294,6 +294,7 @@ public class MainActivity extends AppCompatActivity  {
             scan.execute();
         } else {
             m_connection.setImageResource(R.drawable.ic_unreachable);
+            apiClient.clear();
             dataContext.clear();
             m_pagedAdapter.clear();
         }

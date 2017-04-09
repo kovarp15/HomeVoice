@@ -236,4 +236,8 @@ public class ApiClient {
         return m_adaptor != null;
     }
 
+    public void clear() {
+        m_adaptor = null;
+    }
+
 }

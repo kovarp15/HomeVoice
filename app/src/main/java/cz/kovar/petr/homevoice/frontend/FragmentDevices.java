@@ -98,9 +98,10 @@ public class FragmentDevices extends FragmentDevicesBase {
 
     private void prepareDevicesView(){
         final List<Device> devices = getFilteredDeviceList();
-        if(devices != null) {
-            m_adapter.addAll(devices);
-        }
+        updateDevicesList(devices);
+        //if(devices != null) {
+        //    m_adapter.addAll(devices);
+        //}
         m_gridView.setAdapter(m_adapter);
     }
 

@@ -249,9 +249,8 @@ public class AuthService extends IntentService {
             return;
         }
 
-        apiClient.init(aProfile, aAdaptor, m_cloudCookie);
-
         dataContext.clear();
+        apiClient.init(aProfile, aAdaptor, m_cloudCookie);
         //final List<ContactsContract.Profile> serverProfiles = loadProfiles();
         final List<Location> locations = loadLocation();
 

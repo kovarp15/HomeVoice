@@ -115,6 +115,8 @@ public class DataUpdateService extends Service {
             public void run() {
                 if(apiClient.isPrepared()) {
                     onUpdateData();
+                } else {
+                    m_lastUpdateTime = 0;
                 }
             }
         });
