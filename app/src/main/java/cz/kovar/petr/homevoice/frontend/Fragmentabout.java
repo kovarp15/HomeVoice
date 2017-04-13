@@ -46,7 +46,7 @@ public class FragmentAbout extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_about, container, false);
         TextView versionView = (TextView) v.findViewById(R.id.version);
-        versionView.setText(BuildConfig.VERSION_NAME + " (rev. " + BuildConfig.BUILD_NUMBER + ")");
+        versionView.setText("v" + BuildConfig.VERSION_NAME + " (rev. " + BuildConfig.BUILD_NUMBER + ")");
         return v;
     }
 
