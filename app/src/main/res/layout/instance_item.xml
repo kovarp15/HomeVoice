@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout android:id="@+id/front_view"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorPrimaryDark"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/grid_item_height"
+            android:id="@+id/relativeLayout">
+
+            <ImageView android:id="@+id/instance_item_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_sensor"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:layout_margin="10dp" />
+
+            <TextView android:id="@+id/instance_item_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
+                android:maxLines="1"
+                android:text="sdfsdfsdfsdfsdfsdfsdfsdf"
+                android:gravity="center_vertical"
+                android:layout_alignBottom="@+id/instance_item_icon"
+                android:layout_toEndOf="@+id/instance_item_icon"
+                android:layout_alignTop="@+id/instance_item_icon" />
+
+            <TextView android:id="@+id/instance_item_module"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/device_grid_item_seek_bar"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp" />
+
+            <Switch android:id="@+id/instance_item_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="50dp"
+                android:layout_marginBottom="10dp" />
+
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@android:color/black"/>
+
+
+    </LinearLayout>
+
+</FrameLayout>

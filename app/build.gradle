@@ -19,6 +19,7 @@ android {
         }
         debug {
             buildConfigField 'String', 'WIT_API_KEY', WIT_API_KEY
+            buildConfigField 'String', 'FIREBASE_API_KEY', FIREBASE_API_KEY
         }
     }
 }

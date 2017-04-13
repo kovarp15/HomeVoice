@@ -26,10 +26,10 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import cz.kovar.petr.homevoice.zwave.dataModel.Device;
 import cz.kovar.petr.homevoice.zwave.dataModel.Filter;
+import cz.kovar.petr.homevoice.zwave.dataModel.Instance;
 import cz.kovar.petr.homevoice.zwave.dataModel.Location;
 import cz.kovar.petr.homevoice.zwave.dataModel.Notification;
 
@@ -37,57 +37,78 @@ public class DataContext {
 
     private static final String LOG_TAG = "DataContext";
 
-    private List<Device> mDevices;
-    private List<Location> mLocation;
-    private List<Notification> mNotifications;
+    private List<Device> m_devices;
+    private List<Location> m_locations;
+    private List<Notification> m_notifications;
+    private List<Instance> m_instances;
 
     public DataContext() {
-        mDevices = new ArrayList<>();
-        mLocation = new ArrayList<>();
-        mNotifications = new ArrayList<>();
+        m_devices = new ArrayList<>();
+        m_locations = new ArrayList<>();
+        m_notifications = new ArrayList<>();
+        m_instances = new ArrayList<>();
     }
 
     public void addNotifications(List<Notification> notifications) {
         Log.v(LOG_TAG, "Add " + notifications.size() + " notifications");
-        if (mNotifications.isEmpty()) {
-            mNotifications.addAll(notifications);
+        if (m_notifications.isEmpty()) {
+            m_notifications.addAll(notifications);
         } else {
             for (Notification notification : notifications) {
-                final int i = mNotifications.indexOf(notification);
+                final int i = m_notifications.indexOf(notification);
                 if (i >= 0) {
                     try {
-                        Log.v(LOG_TAG, "remove " + i + " of " + mNotifications.size());
-                        mNotifications.remove(i);
-                        mNotifications.add(i, notification);
+                        Log.v(LOG_TAG, "remove " + i + " of " + m_notifications.size());
+                        m_notifications.remove(i);
+                        m_notifications.add(i, notification);
                     } catch (IndexOutOfBoundsException e) {
                         //TODO Need to find the reason of this exception!
                         e.printStackTrace();
                     }
                 } else {
-                    mNotifications.add(notification);
+                    m_notifications.add(notification);
                 }
             }
         }
-        Log.v(LOG_TAG, "Notifications count " + mNotifications.size());
+        Log.v(LOG_TAG, "Notifications count " + m_notifications.size());
         Log.v(LOG_TAG, "---------------------------");
     }
 
     public void addLocations(List<Location> locations) {
         Log.v(LOG_TAG, "Add " + locations.size() + " locations");
-        if (mLocation.isEmpty()) {
-            mLocation.addAll(locations);
+        if (m_locations.isEmpty()) {
+            m_locations.addAll(locations);
         } else {
             for (Location location : locations) {
-                final int i = mLocation.indexOf(location);
+                final int i = m_locations.indexOf(location);
                 if (i >= 0) {
-                    mLocation.remove(i);
-                    mLocation.add(i, location);
+                    m_locations.remove(i);
+                    m_locations.add(i, location);
                 } else {
-                    mLocation.add(location);
+                    m_locations.add(location);
                 }
             }
         }
-        Log.v(LOG_TAG, "Locations count " + mLocation.size());
+        Log.v(LOG_TAG, "Locations count " + m_locations.size());
+        Log.v(LOG_TAG, "---------------------------");
+    }
+
+    public void addInstances(List<Instance> instances) {
+        Log.v(LOG_TAG, "Add " + instances.size() + " instnaces");
+        if (m_instances.isEmpty()) {
+            m_instances.addAll(instances);
+        } else {
+            for (Instance instance : instances) {
+                final int i = m_instances.indexOf(instance);
+                if (i >= 0) {
+                    m_instances.remove(i);
+                    m_instances.add(i, instance);
+                } else {
+                    m_instances.add(instance);
+                }
+            }
+        }
+        Log.v(LOG_TAG, "Instances count " + m_locations.size());
         Log.v(LOG_TAG, "---------------------------");
     }
 
@@ -95,23 +116,23 @@ public class DataContext {
         Log.v(LOG_TAG, "Add " + devices.size() + " devices");
         for (Device device : devices) {
             if (!device.permanentlyHidden) {
-                final int i = mDevices.indexOf(device);
+                final int i = m_devices.indexOf(device);
                 if (i >= 0) {
-                    mDevices.remove(i);
-                    mDevices.add(i, device);
+                    m_devices.remove(i);
+                    m_devices.add(i, device);
                 } else {
-                    mDevices.add(device);
+                    m_devices.add(device);
                 }
             }
         }
-        Log.v(LOG_TAG, "Devices count " + mDevices.size());
+        Log.v(LOG_TAG, "Devices count " + m_devices.size());
         Log.v(LOG_TAG, "---------------------------");
     }
 
     public List<String> getDeviceTypes() {
         final List<String> result = new ArrayList<String>();
-        if (mDevices != null) {
-            for (Device device : mDevices) {
+        if (m_devices != null) {
+            for (Device device : m_devices) {
                 if (device != null && device.deviceType != null) {
                     final String deviceType = device.deviceType.toString();
                     if (!result.contains(deviceType))
@@ -124,8 +145,8 @@ public class DataContext {
 
     public List<String> getDeviceTags() {
         final List<String> result = new ArrayList<String>();
-        if (mDevices != null) {
-            for (Device device : mDevices) {
+        if (m_devices != null) {
+            for (Device device : m_devices) {
                 for (String tag : device.tags) {
                     if (!result.contains(tag))
                         result.add(tag);
@@ -137,8 +158,8 @@ public class DataContext {
 
     public List<String> getLocationsNames() {
         final List<String> result = new ArrayList<String>();
-        if (mLocation != null) {
-            for (Location location : mLocation) {
+        if (m_locations != null) {
+            for (Location location : m_locations) {
                 if (!result.contains(location.title))
                     result.add(location.title);
             }
@@ -148,8 +169,8 @@ public class DataContext {
 
     public List<String> getLocationsNamesLowerCase() {
         final List<String> result = new ArrayList<String>();
-        if (mLocation != null) {
-            for (Location location : mLocation) {
+        if (m_locations != null) {
+            for (Location location : m_locations) {
                 if (!result.contains(location.title))
                     result.add(location.title.toLowerCase());
             }
@@ -158,19 +179,23 @@ public class DataContext {
     }
 
     public List<Location> getLocations() {
-        return mLocation == null ? new ArrayList<Location>() : mLocation;
+        return m_locations == null ? new ArrayList<Location>() : m_locations;
+    }
+
+    public List<Instance> getInstances() {
+        return m_instances == null ? new ArrayList<Instance>() : m_instances;
     }
 
     public List<Notification> getNotifications() {
-        return mNotifications;
+        return m_notifications;
     }
 
     public List<Device> getDevicesWithType(String deviceType) {
         if (deviceType.equalsIgnoreCase(Filter.DEFAULT_FILTER))
-            return mDevices;
+            return m_devices;
 
         final ArrayList<Device> result = new ArrayList<Device>();
-        for (Device device : mDevices) {
+        for (Device device : m_devices) {
             if (device.deviceType.toString().equalsIgnoreCase(deviceType))
                 result.add(device);
         }
@@ -179,10 +204,10 @@ public class DataContext {
 
     public List<Device> getDevicesWithTag(String deviceTag) {
         if (deviceTag.equalsIgnoreCase(Filter.DEFAULT_FILTER))
-            return mDevices;
+            return m_devices;
 
         final ArrayList<Device> result = new ArrayList<Device>();
-        for (Device device : mDevices) {
+        for (Device device : m_devices) {
             if (device.tags.contains(deviceTag))
                 result.add(device);
         }
@@ -191,10 +216,10 @@ public class DataContext {
 
     public List<Device> getDevicesForLocation(String location) {
         if (location.equalsIgnoreCase(Filter.DEFAULT_FILTER))
-            return mDevices;
+            return m_devices;
 
         final ArrayList<Device> result = new ArrayList<Device>();
-        for (Device device : mDevices) {
+        for (Device device : m_devices) {
             if (device.location != null && device.location.equalsIgnoreCase(location))
                 result.add(device);
         }
@@ -202,14 +227,14 @@ public class DataContext {
     }
 
     public List<Device> getDevices() {
-        return new ArrayList<>(mDevices);
+        return new ArrayList<>(m_devices);
     }
 
     public void clear() {
         Log.v(LOG_TAG, "Clear data context");
-        clearList(mDevices);
-        clearList(mLocation);
-        clearList(mNotifications);
+        clearList(m_devices);
+        clearList(m_locations);
+        clearList(m_notifications);
     }
 
     private void clearList(List list) {

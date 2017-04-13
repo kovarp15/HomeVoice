@@ -43,8 +43,10 @@ import cz.kovar.petr.homevoice.app.ZWayApplication;
 import cz.kovar.petr.homevoice.bus.MainThreadBus;
 import cz.kovar.petr.homevoice.bus.events.AuthEvent;
 import cz.kovar.petr.homevoice.bus.events.CancelConnectionEvent;
+import cz.kovar.petr.homevoice.notifications.FirebaseNotifications;
 import cz.kovar.petr.homevoice.zwave.ApiClient;
 import cz.kovar.petr.homevoice.zwave.DataContext;
+import cz.kovar.petr.homevoice.zwave.dataModel.Instance;
 import cz.kovar.petr.homevoice.zwave.dataModel.Location;
 import cz.kovar.petr.homevoice.zwave.network.auth.AuthRequest;
 import cz.kovar.petr.homevoice.zwave.network.auth.HttpClientHelper;
@@ -253,8 +255,12 @@ public class AuthService extends IntentService {
         apiClient.init(aProfile, aAdaptor, m_cloudCookie);
         //final List<ContactsContract.Profile> serverProfiles = loadProfiles();
         final List<Location> locations = loadLocation();
-
         dataContext.addLocations(locations);
+
+        final List<Instance> instances = loadInstance();
+        dataContext.addInstances(instances);
+
+        FirebaseNotifications.init(dataContext, apiClient);
 
         /*dataContext.addProfiles(serverProfiles);
         provider.addServerProfiles(serverProfiles, aProfile.id);
@@ -273,6 +279,15 @@ public class AuthService extends IntentService {
     private void onAuthFail(ZWayProfile profile, boolean isNetworkError) {
         Log.v(LOG_TAG, "Auth fail");
         bus.post(new AuthEvent.Fail(profile, isNetworkError));
+    }
+
+    private List<Instance> loadInstance() {
+        try {
+            return apiClient.getInstances().data;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 
     private List<Location> loadLocation(){

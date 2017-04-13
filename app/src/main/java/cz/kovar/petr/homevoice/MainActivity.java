@@ -48,6 +48,7 @@ import cz.kovar.petr.homevoice.modules.TimeModule;
 import cz.kovar.petr.homevoice.nlu.UserIntent;
 import cz.kovar.petr.homevoice.nlu.NLUInterface;
 import cz.kovar.petr.homevoice.nlu.WitHandler;
+import cz.kovar.petr.homevoice.notifications.FirebaseNotifications;
 import cz.kovar.petr.homevoice.sr.SpeechRecognition;
 import cz.kovar.petr.homevoice.tts.SpeechSynthesizer;
 import cz.kovar.petr.homevoice.utils.NetworkStateReceiver;

@@ -32,10 +32,13 @@ import cz.kovar.petr.homevoice.app.AppConfig;
 import cz.kovar.petr.homevoice.zwave.dataModel.Device;
 import cz.kovar.petr.homevoice.zwave.dataModel.DeviceRgbColor;
 import cz.kovar.petr.homevoice.zwave.dataModel.DeviceType;
+import cz.kovar.petr.homevoice.zwave.dataModel.Instance;
 import cz.kovar.petr.homevoice.zwave.dataModel.Notification;
 import cz.kovar.petr.homevoice.zwave.network.devices.DevicesStateRequest;
 import cz.kovar.petr.homevoice.zwave.network.devices.DevicesStateResponse;
 import cz.kovar.petr.homevoice.zwave.network.devices.UpdateDeviceRequest;
+import cz.kovar.petr.homevoice.zwave.network.instances.InstanceRequest;
+import cz.kovar.petr.homevoice.zwave.network.instances.InstanceResponse;
 import cz.kovar.petr.homevoice.zwave.network.locations.LocationsRequest;
 import cz.kovar.petr.homevoice.zwave.network.locations.LocationsResponse;
 import cz.kovar.petr.homevoice.zwave.network.notifications.NotificationDataWrapper;
@@ -54,16 +57,16 @@ public class ApiClient {
     private static final String LOG_TAG = "ApiClient";
 
     public static interface ApiCallback<T, K> {
-        public void onSuccess(T result);
+        void onSuccess(T result);
 
-        public void onFailure(K request, boolean isNetworkError);
+        void onFailure(K request, boolean isNetworkError);
 
     }
 
     public static interface EmptyApiCallback<T> {
-        public void onSuccess();
+        void onSuccess();
 
-        public void onFailure(T request, boolean isNetworkError);
+        void onFailure(T request, boolean isNetworkError);
     }
 
     private ZWayProfile m_localProtile;
@@ -151,6 +154,18 @@ public class ApiClient {
 
     public LocationsResponse getLocations() throws IOException {
         return m_adaptor.create(LocationsRequest.class).getLocations().execute().body();
+    }
+
+    public InstanceResponse getInstances() throws IOException {
+        return m_adaptor.create(InstanceRequest.class).getInstances().execute().body();
+    }
+
+    public void updateInstance(Instance aInstance) throws IOException {
+        m_adaptor.create(InstanceRequest.class).updateInstance(aInstance.id, aInstance).execute().body();
+    }
+
+    public void createInstance(Instance aInstance) throws IOException {
+        m_adaptor.create(InstanceRequest.class).createInstance(aInstance).execute().body();
     }
 
     public NotificationResponse getNotifications(final long lastUpdateTime) {

@@ -26,6 +26,7 @@ import javax.inject.Singleton;
 import cz.kovar.petr.homevoice.MainActivity;
 import cz.kovar.petr.homevoice.frontend.FragmentBase;
 import cz.kovar.petr.homevoice.frontend.FragmentHome;
+import cz.kovar.petr.homevoice.frontend.FragmentLogin;
 import cz.kovar.petr.homevoice.frontend.FragmentSettings;
 import cz.kovar.petr.homevoice.frontend.dialogs.CameraDialog;
 import cz.kovar.petr.homevoice.modules.DeviceModule;
@@ -51,6 +52,8 @@ public interface ZWayComponent {
     void inject(FragmentHome fragment);
 
     void inject(FragmentBase fragment);
+
+    void inject(FragmentLogin fragment);
 
     void inject(DataUpdateService fragment);
 
