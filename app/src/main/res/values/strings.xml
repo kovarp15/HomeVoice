@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">HomeVoice</string>
+    <string name="created_by">Created by Petr Kovář (2017)</string>
 
     <string name="remote_url">Remote URL</string>
     <string name="local_ip">Local IP</string>

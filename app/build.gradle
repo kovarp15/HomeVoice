@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply from: 'versioning.gradle'
 
 android {
     compileSdkVersion 24
@@ -11,6 +12,12 @@ android {
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
+
+        buildConfigField "String", "GIT_BRANCH", "\"${getGitBranch()}\""
+        buildConfigField "String", "GIT_SHA", "\"${getGitSha()}\""
+        buildConfigField "String", "BUILD_TIME", "\"${getBuildTime()}\""
+        buildConfigField "String", "BUILD_NUMBER", "\"${getBuildNumber()}\""
+        buildConfigField "String", "FULL_VERSION_NAME", "\"${getVersionName()}\""
     }
     buildTypes {
         release {

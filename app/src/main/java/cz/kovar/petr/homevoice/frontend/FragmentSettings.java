@@ -86,6 +86,14 @@ public class FragmentSettings extends Fragment {
             }
         });
 
+        Button aboutButton = (Button) v.findViewById(R.id.aboutButton);
+        aboutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAboutFragment();
+            }
+        });
+
         showInstancesFragment();
 
         return v;
@@ -115,6 +123,13 @@ public class FragmentSettings extends Fragment {
         FragmentManager fm = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.fragmentSettings, FragmentInstances.newInstance());
+        fragmentTransaction.commit();
+    }
+
+    private void showAboutFragment() {
+        FragmentManager fm = getChildFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentSettings, FragmentAbout.newInstance());
         fragmentTransaction.commit();
     }
 
