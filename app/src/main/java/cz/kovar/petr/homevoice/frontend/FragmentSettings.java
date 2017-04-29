@@ -131,7 +131,7 @@ public class FragmentSettings extends Fragment {
     }
 
     private void showDevices() {
-        showFragment(FragmentDevices.newInstance(new HashMap<Filter, String>()));
+        showFragment(FragmentDevices.newInstance(new HashMap<Filter, String>(), true));
     }
 
     private void showInstancesFragment() {

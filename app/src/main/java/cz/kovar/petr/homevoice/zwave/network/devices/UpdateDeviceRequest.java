@@ -23,12 +23,18 @@
 package cz.kovar.petr.homevoice.zwave.network.devices;
 
 import cz.kovar.petr.homevoice.zwave.dataModel.Device;
+import cz.kovar.petr.homevoice.zwave.dataModel.Instance;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface UpdateDeviceRequest {
+
+    @PUT("/ZAutomation/api/v1/devices/{id}")
+    Call<Device> updateDevice(@Path("id") String id, @Body Device device);
 
     //TODO refactor this!
     @GET("/ZAutomation/api/v1/devices/{id}/command/{state}")

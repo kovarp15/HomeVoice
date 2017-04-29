@@ -184,7 +184,7 @@ public class LightModule extends DeviceModule {
         List<String> availableLocations = dataContext.getLocationsNames();
         Set<String> deviceLocations = new HashSet<>();
         for (Device device : devices) {
-            String location = availableLocations.get(Integer.parseInt(device.location));
+            String location = availableLocations.get(device.location);
             deviceLocations.add(location);
             boolean ok = false;
             for (String requestedLocation : aContext.locations)
@@ -365,10 +365,10 @@ public class LightModule extends DeviceModule {
         Set<String> notUpdatedLocations = new HashSet<>();
 
         for(Device device : aUpdatedDevices)
-            updatedLocations.add(availableLocations.get(Integer.parseInt(device.location)));
+            updatedLocations.add(availableLocations.get(device.location));
 
         for(Device device : aNotUpdatedDevices)
-            notUpdatedLocations.add(availableLocations.get(Integer.parseInt(device.location)));
+            notUpdatedLocations.add(availableLocations.get(device.location));
 
         List<String> response = new ArrayList<>();
         if(!updatedLocations.isEmpty())
@@ -397,10 +397,10 @@ public class LightModule extends DeviceModule {
         Set<String> notUpdatedLocations = new HashSet<>();
 
         for(Device device : aUpdatedDevices)
-            updatedLocations.add(availableLocations.get(Integer.parseInt(device.location)));
+            updatedLocations.add(availableLocations.get(device.location));
 
         for(Device device : aNotUpdatedDevices)
-            notUpdatedLocations.add(availableLocations.get(Integer.parseInt(device.location)));
+            notUpdatedLocations.add(availableLocations.get(device.location));
 
         List<String> response = new ArrayList<>();
         if(!updatedLocations.isEmpty())
@@ -426,7 +426,7 @@ public class LightModule extends DeviceModule {
         for(Device device : aDevices) {
             String name = device.metrics.title;
             String value = device.metrics.level;
-            String location = availableLocations.get(Integer.parseInt(device.location));
+            String location = availableLocations.get(device.location);
             if(value.equalsIgnoreCase(VALUE_ON)
                     || value.equalsIgnoreCase(VALUE_OFF)
                     || value.equals("0") || value.equals("99")) {
@@ -450,7 +450,7 @@ public class LightModule extends DeviceModule {
         Map<String, Integer> devicesInLocation = new HashMap<>();
 
         for(Device device : aDevices) {
-            String location = availableLocations.get(Integer.parseInt(device.location));
+            String location = availableLocations.get(device.location);
             if(devicesInLocation.containsKey(location)) {
                 int count = devicesInLocation.get(location) + 1;
                 devicesInLocation.put(location, count);
@@ -482,7 +482,7 @@ public class LightModule extends DeviceModule {
         Map<String, Set<String>> devicesInLocation = new HashMap<>();
 
         for(final Device device : aDevices) {
-            String location = availableLocations.get(Integer.parseInt(device.location));
+            String location = availableLocations.get(device.location);
             if(devicesInLocation.containsKey(location)) {
                 devicesInLocation.get(location).add(device.metrics.title);
             } else {

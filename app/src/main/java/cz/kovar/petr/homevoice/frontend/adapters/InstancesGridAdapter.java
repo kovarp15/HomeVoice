@@ -73,7 +73,7 @@ public class InstancesGridAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null){
-            convertView = m_inflater.inflate(R.layout.instance_item, parent, false);
+            convertView = m_inflater.inflate(R.layout.grid_item_instance, parent, false);
             convertView.setTag(new ViewHolder(convertView));
         }
 

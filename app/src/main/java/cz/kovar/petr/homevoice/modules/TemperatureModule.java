@@ -91,7 +91,7 @@ public class TemperatureModule extends BaseSensorModule {
         List<String> availableLocations = dataContext.getLocationsNames();
         Map<String, Set<Device>> devicesInLocation = new HashMap<>();
         for(Device device : devices) {
-            String location = availableLocations.get(Integer.parseInt(device.location));
+            String location = availableLocations.get(device.location);
             if(!devicesInLocation.containsKey(location)) {
                 devicesInLocation.put(location, new HashSet<Device>());
             }

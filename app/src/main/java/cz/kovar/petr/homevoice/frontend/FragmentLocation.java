@@ -150,7 +150,7 @@ public class FragmentLocation extends FragmentBase {
         HashMap<Filter, String> filters = new HashMap<>();
         filters.put(Filter.LOCATION, locationIndex);
         if(aTag != null) filters.put(Filter.TAG, aTag);
-        fragmentTransaction.replace(R.id.fragmentDevices, FragmentDevices.newInstance(filters));
+        fragmentTransaction.replace(R.id.fragmentDevices, FragmentDevices.newInstance(filters, false));
         fragmentTransaction.commit();
     }
 

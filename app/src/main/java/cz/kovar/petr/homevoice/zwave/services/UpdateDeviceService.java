@@ -39,6 +39,7 @@ public class UpdateDeviceService extends IntentService {
 
     private static final String LOG_TAG = "UpdateDeviceService";
 
+    private static final String ACTION_UPDATE_DEVICE = "cz.kovar.petr.homevoice.zwave.services.action.UPDATE_DEVICE";
     private static final String ACTION_UPDATE_SWITCH_STATE = "me.z_wave.android.servises.action.UPDATE_SWITCH_STATE";
     private static final String ACTION_UPDATE_RGB = "me.z_wave.android.servises.action.UPDATE_RGB";
     private static final String ACTION_UPDATE_MODE = "me.z_wave.android.servises.action.UPDATE_MODE";
@@ -61,6 +62,13 @@ public class UpdateDeviceService extends IntentService {
     public static void updateRgbColor(Context context, Device device) {
         Intent intent = new Intent(context, UpdateDeviceService.class);
         intent.setAction(ACTION_UPDATE_RGB);
+        intent.putExtra(EXTRA_DEVICE, device);
+        context.startService(intent);
+    }
+
+    public static void updateDevice(Context context, Device device) {
+        Intent intent = new Intent(context, UpdateDeviceService.class);
+        intent.setAction(ACTION_UPDATE_DEVICE);
         intent.putExtra(EXTRA_DEVICE, device);
         context.startService(intent);
     }
@@ -164,7 +172,9 @@ public class UpdateDeviceService extends IntentService {
         if (intent != null) {
             final Device device = (Device) intent.getSerializableExtra(EXTRA_DEVICE);
             final String action = intent.getAction();
-            if (ACTION_UPDATE_RGB.equals(action)) {
+            if (ACTION_UPDATE_DEVICE.equals(action)) {
+                updateDevice(device);
+            } else if (ACTION_UPDATE_RGB.equals(action)) {
                 updateRgbColor(device);
             } else if(ACTION_UPDATE_SWITCH_STATE.equals(action)) {
                 updateSwitchState(device);
@@ -194,6 +204,13 @@ public class UpdateDeviceService extends IntentService {
         }
     }
 
+    private void updateDevice(Device device) {
+        try {
+            apiClient.updateDevice(device);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Failed to update device: ", e);
+        }
+    }
 
     private void updateRgbColor(Device device) {
         try {

@@ -93,6 +93,10 @@ public class ApiClient {
         return m_adaptor.create(DevicesStateRequest.class).getDevices(lastUpdateTime).execute().body();
     }
 
+    public void updateDevice(Device aDevice) throws IOException {
+        m_adaptor.create(UpdateDeviceRequest.class).updateDevice(aDevice.id, aDevice).execute().body();
+    }
+
     public void updateDevicesState(final Device updatedDevice) throws IOException {
         final String state = updatedDevice.deviceType == DeviceType.DOORLOCK
                 ? updatedDevice.metrics.mode : updatedDevice.metrics.level;

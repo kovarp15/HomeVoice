@@ -40,7 +40,7 @@ public class Device implements Serializable {
     public Metrics metrics;
     public List<String> tags;
     public boolean visibility;
-    public String location;
+    public int location;
     public DeviceType deviceType;
     @SerializedName("permanently_hidden")
     public boolean permanentlyHidden;

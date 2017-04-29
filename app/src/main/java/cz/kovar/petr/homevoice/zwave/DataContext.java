@@ -214,18 +214,6 @@ public class DataContext {
         return result;
     }
 
-    public List<Device> getDevicesForLocation(String location) {
-        if (location.equalsIgnoreCase(Filter.DEFAULT_FILTER))
-            return m_devices;
-
-        final ArrayList<Device> result = new ArrayList<Device>();
-        for (Device device : m_devices) {
-            if (device.location != null && device.location.equalsIgnoreCase(location))
-                result.add(device);
-        }
-        return result;
-    }
-
     public List<Device> getDevices() {
         return new ArrayList<>(m_devices);
     }

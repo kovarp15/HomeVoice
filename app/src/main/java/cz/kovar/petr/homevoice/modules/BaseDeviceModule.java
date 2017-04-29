@@ -202,7 +202,7 @@ abstract class BaseDeviceModule extends Module {
                 List<String> availableLocations = dataContext.getLocationsNames();
                 Set<String> deviceLocations = new HashSet<>();
                 for (Device device : devices)
-                    deviceLocations.add(availableLocations.get(Integer.parseInt(device.location)));
+                    deviceLocations.add(availableLocations.get(device.location));
                 if(!availableLocations.containsAll(deviceLocations) && deviceLocations.size() > 1) {
                     notifyDeviceNotSpecified(deviceLocations);
                     return false;
@@ -302,7 +302,7 @@ abstract class BaseDeviceModule extends Module {
         List<String> availableLocations = dataContext.getLocationsNames();
         Set<String> suggestedLocations = new HashSet<>();
         for(Device device : suggestedDevices)
-            suggestedLocations.add(availableLocations.get(Integer.parseInt(device.location)));
+            suggestedLocations.add(availableLocations.get(device.location));
         return suggestedLocations;
     }
 

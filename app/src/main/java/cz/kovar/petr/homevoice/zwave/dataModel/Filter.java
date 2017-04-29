@@ -54,7 +54,7 @@ public enum Filter {
                 switch (filter.filter){
                     case LOCATION:
                         for(String filterValue : filter.value) {
-                            keep2 |= device.location.equalsIgnoreCase(filterValue);
+                            keep2 |= String.valueOf(device.location).equalsIgnoreCase(filterValue);
                         }
                         //if(!device.location.equalsIgnoreCase(filter.value)) devToRemove.add(device);
                         break;

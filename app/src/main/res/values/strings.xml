@@ -60,11 +60,14 @@
     <string name="device_visible">visible</string>
     <string name="device_invisible">invisible</string>
 
-    <string-array name="deviceTypeItems">
+    <string-array name="device_categories">
         <item>Alarm</item>
-        <item>Camera</item>
+        <item>Door</item>
         <item>Light</item>
+        <item>Climate</item>
         <item>Power</item>
+        <item>Camera</item>
+        <item>Other</item>
     </string-array>
 
     <!--CLOSE MODULE-->

@@ -52,12 +52,12 @@ public class FragmentDevices extends FragmentDevicesBase {
 
     private GridView m_gridView;
 
-    public static FragmentDevices newInstance(HashMap<Filter, String> aFilters) {
+    public static FragmentDevices newInstance(HashMap<Filter, String> aFilters, boolean aShowHidden) {
 
         FragmentDevices f = new FragmentDevices();
         Bundle b = new Bundle();
         b.putSerializable(FILTERS, aFilters);
-        b.putBoolean(SHOW_HIDDEN, true);
+        b.putBoolean(SHOW_HIDDEN, aShowHidden);
 
         f.setArguments(b);
 
@@ -70,7 +70,8 @@ public class FragmentDevices extends FragmentDevicesBase {
         View v = inflater.inflate(R.layout.fragment_devices, container, false);
 
         m_gridView = (GridView) v.findViewById(R.id.devicesGridView);
-        m_showHidden = savedInstanceState.getBoolean(SHOW_HIDDEN);
+
+        m_showHidden = getArguments().getBoolean(SHOW_HIDDEN);
 
         return v;
     }
@@ -125,7 +126,7 @@ public class FragmentDevices extends FragmentDevicesBase {
         for(Device device : aDevices) {
             switch (aFilter){
                 case LOCATION:
-                    if(!device.location.equalsIgnoreCase(aFilterValue)) devToRemove.add(device);
+                    if(!String.valueOf(device.location).equalsIgnoreCase(aFilterValue)) devToRemove.add(device);
                     break;
                 case TYPE:
                     if(!device.deviceType.toString().equalsIgnoreCase(aFilterValue)) devToRemove.add(device);
@@ -143,7 +144,7 @@ public class FragmentDevices extends FragmentDevicesBase {
             String filterValue = m_filters.get(filter);
             switch (filter) {
                 case LOCATION:
-                    if(!device.location.equalsIgnoreCase(filterValue)) return false;
+                    if(!String.valueOf(device.location).equalsIgnoreCase(filterValue)) return false;
                     break;
                 case TYPE:
                     if(device.deviceType != null && !device.deviceType.toString().equalsIgnoreCase(filterValue)) return false;
@@ -153,7 +154,7 @@ public class FragmentDevices extends FragmentDevicesBase {
                     break;
             }
         }
-        return device.visibility;
+        return m_showHidden || device.visibility;
     }
 
 }
