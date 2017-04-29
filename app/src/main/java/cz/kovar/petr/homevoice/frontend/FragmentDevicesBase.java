@@ -27,6 +27,7 @@ import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.URLUtil;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ import cz.kovar.petr.homevoice.UserData;
 import cz.kovar.petr.homevoice.app.ZWayApplication;
 import cz.kovar.petr.homevoice.frontend.adapters.DevicesGridAdapter;
 import cz.kovar.petr.homevoice.frontend.dialogs.CameraDialog;
+import cz.kovar.petr.homevoice.frontend.dialogs.DeviceSettingsDialog;
 import cz.kovar.petr.homevoice.utils.CameraUtils;
 import cz.kovar.petr.homevoice.zwave.DataContext;
 import cz.kovar.petr.homevoice.zwave.dataModel.Device;
@@ -120,6 +122,13 @@ public class FragmentDevicesBase extends FragmentBase
         } else {
             bus.post(new ShowAttentionDialogEvent(getString(R.string.invalid_camera_url)));
         }*/
+    }
+
+    @Override
+    public void onOptionsClicked(Device aDevice) {
+        DeviceSettingsDialog dialog = DeviceSettingsDialog.newInstance(aDevice);
+        FragmentManager fm = getFragmentManager();
+        dialog.show(fm, "device_settings");
     }
 
     @Override

@@ -7,6 +7,7 @@
     <string name="local_port">Local Port</string>
     <string name="login">Login</string>
     <string name="password">Password</string>
+    <string name="devices">Devices</string>
     <string name="modules">Modules</string>
     <string name="apps">Apps</string>
     <string name="about">About</string>
@@ -20,6 +21,7 @@
 
     <!--CONTROLS-->
     <string name="cancel">Cancel</string>
+    <string name="apply">Apply</string>
     <string name="done">Done</string>
     <string name="delete">Delete</string>
     <string name="options">Options</string>
@@ -49,6 +51,21 @@
     <string name="label_devices_with_type">Devices with type</string>
     <string name="label_devices_with_location">Devices with location</string>
     <string name="label_devices_with_id">Devices with id</string>
+
+    <!--DEVICE_SETTINGS_DIALOG-->
+    <string name="device_settings">Device Settings</string>
+    <string name="device_title">Title</string>
+    <string name="device_type">Type</string>
+    <string name="device_visibility">Visibility</string>
+    <string name="device_visible">visible</string>
+    <string name="device_invisible">invisible</string>
+
+    <string-array name="deviceTypeItems">
+        <item>Alarm</item>
+        <item>Camera</item>
+        <item>Light</item>
+        <item>Power</item>
+    </string-array>
 
     <!--CLOSE MODULE-->
     <string-array name="goodbye">

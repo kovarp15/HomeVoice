@@ -45,8 +45,10 @@ public class FragmentDevices extends FragmentDevicesBase {
     private static final String LOG_TAG = "FragmentDevices";
 
     public static final String FILTERS = "filters";
+    public static final String SHOW_HIDDEN = "show_hidden";
 
     private HashMap<Filter, String> m_filters = new HashMap<>();
+    private boolean m_showHidden = false;
 
     private GridView m_gridView;
 
@@ -55,6 +57,7 @@ public class FragmentDevices extends FragmentDevicesBase {
         FragmentDevices f = new FragmentDevices();
         Bundle b = new Bundle();
         b.putSerializable(FILTERS, aFilters);
+        b.putBoolean(SHOW_HIDDEN, true);
 
         f.setArguments(b);
 
@@ -67,6 +70,7 @@ public class FragmentDevices extends FragmentDevicesBase {
         View v = inflater.inflate(R.layout.fragment_devices, container, false);
 
         m_gridView = (GridView) v.findViewById(R.id.devicesGridView);
+        m_showHidden = savedInstanceState.getBoolean(SHOW_HIDDEN);
 
         return v;
     }

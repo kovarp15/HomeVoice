@@ -21,7 +21,13 @@
  */
 package cz.kovar.petr.homevoice.nlu;
 
+import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.AsyncTask;
+import android.os.IBinder;
 import android.util.Log;
 
 import com.google.gson.JsonElement;
@@ -37,6 +43,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 
 import cz.kovar.petr.homevoice.BuildConfig;
+import cz.kovar.petr.homevoice.zwave.services.DataUpdateService;
 
 public class WitHandler implements NLUInterface {
 

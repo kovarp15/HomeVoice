@@ -27,6 +27,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import cz.kovar.petr.homevoice.BuildConfig;
@@ -43,6 +44,18 @@ public class FirebaseNotifications {
 
     private static final String TAG_API_KEY = "api_key";
     private static final String TAG_DEVICE_ID = "device_id";
+    private static final String TAG_EVENTS = "events";
+
+    private static final ArrayList<String> EVENTS = new ArrayList<String>() {{
+        add("security.intrusion.alarm");
+        add("security.flood.alarm");
+        add("security.smoke.alarm");
+        add("security.gas.alarm");
+        add("security.heat.alarm");
+        add("security.cold.alarm");
+        add("security.tamper.alarm");
+        add("security.energy.alarm");
+    }};
 
     public static void init(DataContext aContext, ApiClient aApiClient) {
         Instance firebaseInstance = FirebaseNotifications.getInstance(aContext.getInstances());
@@ -74,15 +87,18 @@ public class FirebaseNotifications {
 
         String apiKey = (String) aInstance.params.get(TAG_API_KEY);
         String deviceId = (String) aInstance.params.get(TAG_DEVICE_ID);
+        List<String> events = (ArrayList) aInstance.params.get(TAG_EVENTS);
 
         return apiKey.equals(BuildConfig.FIREBASE_API_KEY)
-                && deviceId.equals(FirebaseInstanceId.getInstance().getToken());
+                && deviceId.equals(FirebaseInstanceId.getInstance().getToken())
+                && events.containsAll(EVENTS);
 
     }
 
     private static void fillParams(Instance aInstance) {
         aInstance.params.put(TAG_API_KEY, BuildConfig.FIREBASE_API_KEY);
         aInstance.params.put(TAG_DEVICE_ID, FirebaseInstanceId.getInstance().getToken());
+        ((ArrayList) aInstance.params.get(TAG_EVENTS)).addAll(EVENTS);
     }
 
     private static void updateInstance(ApiClient aClient, Instance aInstance) {
@@ -108,6 +124,8 @@ public class FirebaseNotifications {
         instance.params = new LinkedTreeMap<>();
         instance.params.put(TAG_API_KEY, BuildConfig.FIREBASE_API_KEY);
         instance.params.put(TAG_DEVICE_ID, FirebaseInstanceId.getInstance().getToken());
+        instance.params.put(TAG_EVENTS, new ArrayList<String>());
+        ((ArrayList) instance.params.get(TAG_EVENTS)).addAll(EVENTS);
         return instance;
 
     }

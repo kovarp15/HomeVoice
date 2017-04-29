@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout android:id="@+id/front_view"
         android:layout_width="match_parent"
@@ -29,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textColor="@android:color/white"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:text="sdfsdfsdfsdfsdfsdfsdfsdf"
                 android:gravity="center_vertical"
                 android:layout_alignBottom="@+id/device_grid_item_icon"
@@ -83,6 +84,16 @@
                 android:layout_marginBottom="10dp"
                 android:layout_height="40dp"
                 android:layout_width="40dp" />
+
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:srcCompat="@drawable/ic_options"
+                android:id="@+id/optionsButton"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/options"
+                android:background="?android:attr/selectableItemBackground" />
 
 
         </RelativeLayout>

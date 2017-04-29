@@ -64,6 +64,10 @@
             android:exported="false" />
 
         <service
+            android:name=".nlu.WitService"
+            android:exported="false" />
+
+        <service
             android:name=".FirebaseService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>

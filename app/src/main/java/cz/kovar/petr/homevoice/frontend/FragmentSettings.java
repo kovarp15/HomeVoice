@@ -32,12 +32,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import java.util.HashMap;
+
 import javax.inject.Inject;
 
 import cz.kovar.petr.homevoice.R;
 import cz.kovar.petr.homevoice.UserData;
 import cz.kovar.petr.homevoice.app.ZWayApplication;
 import cz.kovar.petr.homevoice.bus.MainThreadBus;
+import cz.kovar.petr.homevoice.zwave.dataModel.Filter;
 
 /**
  * Provides frontend for preference settings
@@ -70,6 +73,14 @@ public class FragmentSettings extends Fragment {
             }
         });
 
+        Button devicesButton = (Button) v.findViewById(R.id.devicesButton);
+        devicesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDevices();
+            }
+        });
+
         Button modulesButton = (Button) v.findViewById(R.id.modulesButton);
         modulesButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,7 +105,7 @@ public class FragmentSettings extends Fragment {
             }
         });
 
-        showInstancesFragment();
+        showAboutFragment();
 
         return v;
     }
@@ -119,6 +130,10 @@ public class FragmentSettings extends Fragment {
         fragmentTransaction.commit();
     }
 
+    private void showDevices() {
+        showFragment(FragmentDevices.newInstance(new HashMap<Filter, String>()));
+    }
+
     private void showInstancesFragment() {
         FragmentManager fm = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
@@ -130,6 +145,13 @@ public class FragmentSettings extends Fragment {
         FragmentManager fm = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.fragmentSettings, FragmentAbout.newInstance());
+        fragmentTransaction.commit();
+    }
+
+    private void showFragment(Fragment aFragment) {
+        FragmentManager fm = getChildFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentSettings, aFragment);
         fragmentTransaction.commit();
     }
 

@@ -48,7 +48,7 @@ import cz.kovar.petr.homevoice.modules.TimeModule;
 import cz.kovar.petr.homevoice.nlu.UserIntent;
 import cz.kovar.petr.homevoice.nlu.NLUInterface;
 import cz.kovar.petr.homevoice.nlu.WitHandler;
-import cz.kovar.petr.homevoice.notifications.FirebaseNotifications;
+import cz.kovar.petr.homevoice.nlu.WitService;
 import cz.kovar.petr.homevoice.sr.SpeechRecognition;
 import cz.kovar.petr.homevoice.tts.SpeechSynthesizer;
 import cz.kovar.petr.homevoice.utils.NetworkStateReceiver;
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity  {
     private TemperatureModule m_temperatureModule;
     private HumidityModule m_humidityModule;
 
-    private ServiceConnection m_serviceConnection;
+    private ServiceConnection m_ZWayServiceConnection;
 
     @Inject
     ApiClient apiClient;
@@ -227,6 +227,8 @@ public class MainActivity extends AppCompatActivity  {
 
         handleIntent(getIntent());
 
+        startWitService();
+
     }
 
     @Override
@@ -234,7 +236,7 @@ public class MainActivity extends AppCompatActivity  {
         super.onStart();
 
         final Intent intent = new Intent(this, DataUpdateService.class);
-        m_serviceConnection = new ServiceConnection() {
+        m_ZWayServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {}
 
@@ -242,8 +244,9 @@ public class MainActivity extends AppCompatActivity  {
             public void onServiceDisconnected(ComponentName componentName) {}
         };
         bindService(intent,
-                m_serviceConnection,
+                m_ZWayServiceConnection,
                 Context.BIND_AUTO_CREATE);
+
     }
 
     @Override
@@ -252,7 +255,7 @@ public class MainActivity extends AppCompatActivity  {
 
         bus.unregister(this);
 
-        unbindService(m_serviceConnection);
+        unbindService(m_ZWayServiceConnection);
         m_synthesizer.shutdown();
 
         if (m_recognition != null) {
@@ -367,6 +370,12 @@ public class MainActivity extends AppCompatActivity  {
         m_timeModule.reset();
         m_temperatureModule.reset();
         m_humidityModule.reset();
+    }
+
+    private void startWitService() {
+        Intent witIntent = new Intent(MainActivity.this, WitService.class);
+        witIntent.putExtra(WitService.COMMAND, WitService.CMD_START);
+        startService(witIntent);
     }
 
     private void startKeywordSpotting() {

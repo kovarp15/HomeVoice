@@ -43,6 +43,7 @@ public class DevicesGridAdapter extends BaseAdapter {
         void onToggleClicked(Device updatedDevice);
         void onColorViewClicked(Device updatedDevice);
         void onOpenCameraView(Device updatedDevice);
+        void onOptionsClicked(Device aDevice);
 //        void onAddRemoveClicked(Device updatedDevice);
     }
 
@@ -78,7 +79,7 @@ public class DevicesGridAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null){
-            convertView = mInflater.inflate(R.layout.layout_device_greed_item, parent, false);
+            convertView = mInflater.inflate(R.layout.grid_item_device, parent, false);
             convertView.setTag(new ViewHolder(convertView));
         }
 
@@ -93,6 +94,7 @@ public class DevicesGridAdapter extends BaseAdapter {
         prepareSeekBar(holder, device);
         prepareRgbView(holder, device);
         prepareToggle(holder, device);
+        prepareOptions(holder, device);
         //prepareAddRemoveView(holder, device);
         prepareCameraView(holder,device);
         return convertView;
@@ -271,6 +273,15 @@ public class DevicesGridAdapter extends BaseAdapter {
         }
     }
 
+    private void prepareOptions(ViewHolder holder, final Device device){
+        holder.options.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onOptionsClicked(device);
+            }
+        });
+    }
+
     private void prepareCameraView(ViewHolder holder, final Device device){
         holder.parent.setOnClickListener(null);
         if(device.deviceType == DeviceType.CAMERA){
@@ -298,6 +309,7 @@ public class DevicesGridAdapter extends BaseAdapter {
         public SeekBar seekBar;
         public View rgbView;
         public Button toggle;
+        public ImageButton options;
 
         private ViewHolder(View parent) {
             this.parent = parent;
@@ -308,6 +320,7 @@ public class DevicesGridAdapter extends BaseAdapter {
             seekBar = (SeekBar) parent.findViewById(R.id.device_grid_item_seek_bar);
             rgbView = parent.findViewById(R.id.device_grid_item_rgb_color);
             toggle = (Button) parent.findViewById(R.id.device_grid_item_toggle);
+            options = (ImageButton) parent.findViewById(R.id.optionsButton);
         }
     }
 

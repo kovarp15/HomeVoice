@@ -29,6 +29,7 @@ import cz.kovar.petr.homevoice.frontend.FragmentHome;
 import cz.kovar.petr.homevoice.frontend.FragmentLogin;
 import cz.kovar.petr.homevoice.frontend.FragmentSettings;
 import cz.kovar.petr.homevoice.frontend.dialogs.CameraDialog;
+import cz.kovar.petr.homevoice.frontend.dialogs.DeviceSettingsDialog;
 import cz.kovar.petr.homevoice.modules.DeviceModule;
 import cz.kovar.petr.homevoice.modules.Module;
 import cz.kovar.petr.homevoice.modules.RoomModule;
@@ -66,5 +67,6 @@ public interface ZWayComponent {
     void inject(RoomModule module);
     void inject(DeviceModule module);
     void inject(CameraDialog dialog);
+    void inject(DeviceSettingsDialog dialog);
 
 }
