@@ -79,8 +79,10 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public void clear() {
-        locationsIDs.clear();
-        notifyDataSetChanged();
+        if(!locationsIDs.isEmpty()) {
+            locationsIDs.clear();
+            notifyDataSetChanged();
+        }
     }
 
 }

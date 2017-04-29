@@ -105,7 +105,7 @@ public class FragmentSettings extends Fragment {
             }
         });
 
-        showAboutFragment();
+        showLoginFragment();
 
         return v;
     }

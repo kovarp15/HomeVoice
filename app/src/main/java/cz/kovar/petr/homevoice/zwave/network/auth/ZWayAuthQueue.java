@@ -42,6 +42,8 @@ public class ZWayAuthQueue {
 
     private static final String LOG_TAG = "ZWayAuthQueue";
 
+    private static final int MAX_CLOUD_LOGIN_ATTEMPTS = 2;
+
     private enum State {
         DISCONNECTED,
         CONNECTING_LOCAL,
@@ -59,6 +61,8 @@ public class ZWayAuthQueue {
 
     private State m_state = State.DISCONNECTED;
 
+    private int m_cloudLoginAttemp = 0;
+
     public ZWayAuthQueue(Context aContext) {
         m_context = aContext;
         ((ZWayApplication) aContext.getApplicationContext()).getComponent().inject(this);
@@ -66,6 +70,7 @@ public class ZWayAuthQueue {
     }
 
     public void init() {
+        m_cloudLoginAttemp = 0;
         m_ipQueue.clear();
         loginCloud();
     }
@@ -116,6 +121,8 @@ public class ZWayAuthQueue {
 
     private void loginCloud() {
         Log.d(LOG_TAG, "LOGIN CLOUD");
+        m_cloudLoginAttemp++;
+        if(m_cloudLoginAttemp > MAX_CLOUD_LOGIN_ATTEMPTS) return;
         m_state = State.CONNECTING_CLOUD;
         userData.getProfile().useRemote(true);
         AuthService.login(m_context, userData.getProfile());

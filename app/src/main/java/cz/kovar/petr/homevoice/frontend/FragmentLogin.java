@@ -85,7 +85,7 @@ public class FragmentLogin extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        bus.unregister(this);
+        if (bus != null) bus.unregister(this);
     }
 
     private void initZWayLayout(View aView) {
@@ -96,8 +96,12 @@ public class FragmentLogin extends Fragment {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if(!hasFocus) {
-                    m_profile.setRemoteLogin(m_loginEdit.getText().toString());
-                    notifyZWayProfileChanged(m_profile);
+                    String oldRemoteLogin = m_profile.getRemoteLogin();
+                    String newRemoteLogin = m_loginEdit.getText().toString();
+                    if(!oldRemoteLogin.equals(newRemoteLogin)) {
+                        m_profile.setRemoteLogin(newRemoteLogin);
+                        notifyZWayProfileChanged(m_profile);
+                    }
                 }
             }
         });
@@ -108,8 +112,12 @@ public class FragmentLogin extends Fragment {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if(!hasFocus) {
-                    m_profile.setPassword(m_passwordEdit.getText().toString());
-                    notifyZWayProfileChanged(m_profile);
+                    String oldPassword = m_profile.getPassword();
+                    String newPassword = m_passwordEdit.getText().toString();
+                    if(!oldPassword.equals(newPassword)) {
+                        m_profile.setPassword(newPassword);
+                        notifyZWayProfileChanged(m_profile);
+                    }
                 }
             }
         });
