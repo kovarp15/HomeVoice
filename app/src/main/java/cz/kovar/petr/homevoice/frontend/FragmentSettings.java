@@ -126,7 +126,7 @@ public class FragmentSettings extends Fragment {
     private void showLoginFragment() {
         FragmentManager fm = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentSettings, FragmentLogin.newInstance());
+        fragmentTransaction.replace(R.id.fragmentSettings, FragmentUser.newInstance());
         fragmentTransaction.commit();
     }
 

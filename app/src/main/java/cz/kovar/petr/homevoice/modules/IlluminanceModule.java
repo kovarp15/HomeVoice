@@ -37,13 +37,13 @@ import cz.kovar.petr.homevoice.utils.SentenceHelper;
 import cz.kovar.petr.homevoice.zwave.dataModel.Device;
 import cz.kovar.petr.homevoice.zwave.dataModel.DeviceType;
 
-public class HumidityModule extends BaseSensorModule {
+public class IlluminanceModule extends BaseSensorModule {
 
-    private static final String LOG_TAG = "HumidityModule";
+    private static final String LOG_TAG = "IlluminanceModule";
 
-    private static final String INTENT_GET_TEMPERATURE = "GET_HUMIDITY";
+    private static final String INTENT_GET_ILLUMINANCE = "GET_ILLUMINANCE";
 
-    public HumidityModule(Context aContext) {
+    public IlluminanceModule(Context aContext) {
         super(aContext);
         if(AppConfig.DEBUG) Log.d(LOG_TAG, "INITIALIZED");
     }
@@ -51,7 +51,7 @@ public class HumidityModule extends BaseSensorModule {
     @Override
     Set<String> getSupportedIntents() {
         return new HashSet<String>() {{
-            add(INTENT_GET_TEMPERATURE);
+            add(INTENT_GET_ILLUMINANCE);
         }};
     }
 
@@ -64,7 +64,7 @@ public class HumidityModule extends BaseSensorModule {
 
     @Override
     String getTag() {
-        return "HUMIDITY";
+        return "ILLUMINANCE";
     }
 
     @Override
@@ -74,12 +74,12 @@ public class HumidityModule extends BaseSensorModule {
 
     @Override
     String getDeviceTitle() {
-        return "humidity sensor";
+        return "illuminance sensor";
     }
 
     @Override
     String getQuantityTitle() {
-        return "humidity";
+        return "illuminance";
     }
 
     @Override
@@ -102,18 +102,18 @@ public class HumidityModule extends BaseSensorModule {
             if(devices.size() == 1) {
                 double humidity = Double.parseDouble(devices.get(0).metrics.level);
                 response.add(String.format(SentenceHelper.randomResponse(m_context,
-                        R.array.humidity_response), humidity, location));
+                        R.array.illuminance_response), humidity, location));
             } else {
-                double averageHumidity = getAverageHumidity(deviceSet);
+                double averageIlluminance = getAverageIlluminance(deviceSet);
                 response.add(String.format(SentenceHelper.randomResponse(m_context,
-                        R.array.average_humidity_response), averageHumidity, location));
+                        R.array.average_illuminance_response), averageIlluminance, location));
             }
         }
         notifyIntentHandled(response);
 
     }
 
-    private double getAverageHumidity(Set<Device> aDevices) {
+    private double getAverageIlluminance(Set<Device> aDevices) {
         double temp = 0;
         for(Device device : aDevices) {
             temp += Double.parseDouble(device.metrics.level)/aDevices.size();

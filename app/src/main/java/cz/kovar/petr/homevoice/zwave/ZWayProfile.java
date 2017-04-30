@@ -25,8 +25,6 @@ package cz.kovar.petr.homevoice.zwave;
 import android.text.TextUtils;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import cz.kovar.petr.homevoice.app.AppConfig;
 
@@ -50,7 +48,8 @@ public class ZWayProfile implements Serializable {
     private String m_login = "";
     private String m_pass  = "";
 
-    public ZWayProfile(String aRemoteURL, String aLocalIP, int aLocalPort, String aLogin, String aPass, boolean aUseRemote) {
+    public ZWayProfile(String aRemoteURL, String aLocalIP, int aLocalPort, String aLogin,
+                       String aPass, boolean aUseRemote) {
 
         m_useRemote = aUseRemote;
         m_remoteURL = aRemoteURL;
@@ -62,27 +61,17 @@ public class ZWayProfile implements Serializable {
     }
 
     public void useRemote(boolean aUseRemote) {
-
         m_useRemote = aUseRemote;
-
     }
-
     public boolean useRemote() {
-
         return m_useRemote;
-
     }
 
     public void setRemoteURL(String aRemoteURL) {
-
         m_remoteURL = aRemoteURL;
-
     }
-
     public String getRemoteURL() {
-
         return m_remoteURL;
-
     }
 
     private String getLocalURL() {

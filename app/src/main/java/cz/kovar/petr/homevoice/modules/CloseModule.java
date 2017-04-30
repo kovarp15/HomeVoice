@@ -69,7 +69,10 @@ public class CloseModule extends Module {
     }
 
     private void provideGoodbyeResponse() {
-        notifyIntentHandled(SentenceHelper.randomResponse(m_context, R.array.goodbye));
+        String response = SentenceHelper.randomResponse(m_context, R.array.goodbye);
+        String userName = userData.getUserProfile().getUserName();
+        if(!userName.isEmpty()) response += ", " + userName;
+        notifyIntentHandled(response);
     }
 
     @Override

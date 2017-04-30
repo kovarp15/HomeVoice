@@ -52,12 +52,7 @@ abstract class BaseDeviceModule extends Module {
     private static final String ENTITY_NUMBER       = "number";
     private static final String ENTITY_COLOR        = "color";
     private static final String ENTITY_QUERY        = "query";
-    private static final String QUERY_VALUE         = "value";
-    private static final String QUERY_LIST          = "LIST";
-    private static final String QUERY_COUNT         = "COUNT";
     private static final String ENTITY_ON_OFF       = "on_off";
-    private static final String VALUE_ON            = "on";
-    private static final String VALUE_OFF           = "off";
 
     protected static final int SPEC_NOT_NEEDED  = 0;
     protected static final int SPECIFY_LOCATION = 1;

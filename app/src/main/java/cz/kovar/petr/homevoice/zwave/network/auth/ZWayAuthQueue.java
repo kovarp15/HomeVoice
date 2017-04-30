@@ -114,9 +114,9 @@ public class ZWayAuthQueue {
     private void loginLocal(String aIP) {
         Log.d(LOG_TAG, "LOGIN LOCAL: " + aIP);
         m_state = State.CONNECTING_LOCAL;
-        userData.getProfile().setLocalIP(aIP);
-        userData.getProfile().useRemote(false);
-        AuthService.login(m_context, userData.getProfile());
+        userData.getZWayProfile().setLocalIP(aIP);
+        userData.getZWayProfile().useRemote(false);
+        AuthService.login(m_context, userData.getZWayProfile());
     }
 
     private void loginCloud() {
@@ -124,8 +124,8 @@ public class ZWayAuthQueue {
         m_cloudLoginAttemp++;
         if(m_cloudLoginAttemp > MAX_CLOUD_LOGIN_ATTEMPTS) return;
         m_state = State.CONNECTING_CLOUD;
-        userData.getProfile().useRemote(true);
-        AuthService.login(m_context, userData.getProfile());
+        userData.getZWayProfile().useRemote(true);
+        AuthService.login(m_context, userData.getZWayProfile());
     }
 
 }

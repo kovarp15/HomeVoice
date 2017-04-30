@@ -94,7 +94,7 @@ public class CameraDialog extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        final String cameraUrl = CameraUtils.getCameraUrl(userData.getProfile(),
+        final String cameraUrl = CameraUtils.getCameraUrl(userData.getZWayProfile(),
                 m_device.metrics.url);
         m_mjpegView.setSource(cameraUrl);
     }

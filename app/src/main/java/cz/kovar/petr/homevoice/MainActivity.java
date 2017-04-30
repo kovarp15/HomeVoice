@@ -40,11 +40,14 @@ import cz.kovar.petr.homevoice.modules.CancelModule;
 import cz.kovar.petr.homevoice.modules.CloseModule;
 import cz.kovar.petr.homevoice.modules.FeedbackModule;
 import cz.kovar.petr.homevoice.modules.HumidityModule;
+import cz.kovar.petr.homevoice.modules.IlluminanceModule;
 import cz.kovar.petr.homevoice.modules.LightModule;
 import cz.kovar.petr.homevoice.modules.Module;
 import cz.kovar.petr.homevoice.modules.RoomModule;
 import cz.kovar.petr.homevoice.modules.TemperatureModule;
 import cz.kovar.petr.homevoice.modules.TimeModule;
+import cz.kovar.petr.homevoice.modules.UVRadiationModule;
+import cz.kovar.petr.homevoice.modules.UserModule;
 import cz.kovar.petr.homevoice.nlu.UserIntent;
 import cz.kovar.petr.homevoice.nlu.NLUInterface;
 import cz.kovar.petr.homevoice.nlu.WitHandler;
@@ -95,6 +98,9 @@ public class MainActivity extends AppCompatActivity  {
     private LightModule m_lightModule;
     private TemperatureModule m_temperatureModule;
     private HumidityModule m_humidityModule;
+    private IlluminanceModule m_illuminanceModule;
+    private UVRadiationModule m_uvRadiationModule;
+    private UserModule m_userModule;
 
     private ServiceConnection m_ZWayServiceConnection;
 
@@ -126,6 +132,9 @@ public class MainActivity extends AppCompatActivity  {
         m_timeModule = new TimeModule(this);
         m_temperatureModule = new TemperatureModule(this);
         m_humidityModule = new HumidityModule(this);
+        m_illuminanceModule = new IlluminanceModule(this);
+        m_uvRadiationModule = new UVRadiationModule(this);
+        m_userModule = new UserModule(this);
 
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -207,6 +216,9 @@ public class MainActivity extends AppCompatActivity  {
                             m_lightModule.handleIntent(aMsg);
                             m_temperatureModule.handleIntent(aMsg);
                             m_humidityModule.handleIntent(aMsg);
+                            m_illuminanceModule.handleIntent(aMsg);
+                            m_uvRadiationModule.handleIntent(aMsg);
+                            m_userModule.handleIntent(aMsg);
                         } else {
                             output.addOutput(SentenceHelper.randomResponse(MainActivity.this, R.array.unknown), new OutputFieldAdapter.OnProgressListener() {
                                 @Override
@@ -312,6 +324,11 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     @Subscribe
+    public void onUserSettingsChanged(SettingsEvent.UserChanged event) {
+        UserData.saveUserProfile(this, event.profile);
+    }
+
+    @Subscribe
     public void onAuthSuccess(AuthEvent.Success event) {
         if(event.profile.useRemote()) {
             if(AppConfig.DEBUG) Log.d(LOG_TAG, "[NETWORK] cloud connection established");
@@ -370,6 +387,9 @@ public class MainActivity extends AppCompatActivity  {
         m_timeModule.reset();
         m_temperatureModule.reset();
         m_humidityModule.reset();
+        m_illuminanceModule.reset();
+        m_uvRadiationModule.reset();
+        m_userModule.reset();
     }
 
     private void startWitService() {

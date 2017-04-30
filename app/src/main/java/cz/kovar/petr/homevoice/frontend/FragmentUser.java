@@ -38,16 +38,17 @@ import javax.inject.Inject;
 
 import cz.kovar.petr.homevoice.R;
 import cz.kovar.petr.homevoice.UserData;
+import cz.kovar.petr.homevoice.UserProfile;
 import cz.kovar.petr.homevoice.app.ZWayApplication;
 import cz.kovar.petr.homevoice.bus.MainThreadBus;
 import cz.kovar.petr.homevoice.bus.events.SettingsEvent;
 import cz.kovar.petr.homevoice.zwave.ZWayProfile;
 
-public class FragmentLogin extends Fragment {
+public class FragmentUser extends Fragment {
 
     private static final String LOG_TAG = "FragmentLogin";
 
-    private ZWayProfile m_profile = null;
+    private ZWayProfile m_zwayProfile = null;
 
     @Inject
     UserData userData;
@@ -57,18 +58,18 @@ public class FragmentLogin extends Fragment {
     private EditText m_loginEdit;
     private EditText m_passwordEdit;
 
-    public static FragmentLogin newInstance() {
+    public static FragmentUser newInstance() {
 
         Log.v(LOG_TAG, "Create new instance of Fragment Settings.");
-        return new FragmentLogin();
+        return new FragmentUser();
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_login, container, false);
+        View v = inflater.inflate(R.layout.fragment_user, container, false);
 
-        initZWayLayout(v);
+        initLayout(v);
 
         return v;
     }
@@ -78,7 +79,7 @@ public class FragmentLogin extends Fragment {
         super.onStart();
         ((ZWayApplication) getContext().getApplicationContext()).getComponent().inject(this);
         bus.register(this);
-        m_profile = userData.getProfile();
+        m_zwayProfile = userData.getZWayProfile();
         updateLayout();
     }
 
@@ -88,35 +89,35 @@ public class FragmentLogin extends Fragment {
         if (bus != null) bus.unregister(this);
     }
 
-    private void initZWayLayout(View aView) {
+    private void initLayout(View aView) {
 
         m_loginEdit = (EditText) aView.findViewById(R.id.login);
-        m_loginEdit.setOnEditorActionListener(new FragmentLogin.ClearFocusListener(m_loginEdit));
+        m_loginEdit.setOnEditorActionListener(new FragmentUser.ClearFocusListener(m_loginEdit));
         m_loginEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if(!hasFocus) {
-                    String oldRemoteLogin = m_profile.getRemoteLogin();
+                    String oldRemoteLogin = m_zwayProfile.getRemoteLogin();
                     String newRemoteLogin = m_loginEdit.getText().toString();
                     if(!oldRemoteLogin.equals(newRemoteLogin)) {
-                        m_profile.setRemoteLogin(newRemoteLogin);
-                        notifyZWayProfileChanged(m_profile);
+                        m_zwayProfile.setRemoteLogin(newRemoteLogin);
+                        notifyZWayProfileChanged(m_zwayProfile);
                     }
                 }
             }
         });
 
         m_passwordEdit = (EditText) aView.findViewById(R.id.password);
-        m_passwordEdit.setOnEditorActionListener(new FragmentLogin.ClearFocusListener(m_passwordEdit));
+        m_passwordEdit.setOnEditorActionListener(new FragmentUser.ClearFocusListener(m_passwordEdit));
         m_passwordEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if(!hasFocus) {
-                    String oldPassword = m_profile.getPassword();
+                    String oldPassword = m_zwayProfile.getPassword();
                     String newPassword = m_passwordEdit.getText().toString();
                     if(!oldPassword.equals(newPassword)) {
-                        m_profile.setPassword(newPassword);
-                        notifyZWayProfileChanged(m_profile);
+                        m_zwayProfile.setPassword(newPassword);
+                        notifyZWayProfileChanged(m_zwayProfile);
                     }
                 }
             }
@@ -125,8 +126,8 @@ public class FragmentLogin extends Fragment {
     }
 
     private void updateLayout() {
-        m_loginEdit.setText(m_profile.getRemoteLogin());
-        m_passwordEdit.setText(m_profile.getPassword());
+        m_loginEdit.setText(m_zwayProfile.getRemoteLogin());
+        m_passwordEdit.setText(m_zwayProfile.getPassword());
     }
 
     private void notifyZWayProfileChanged(ZWayProfile aProfile) {

@@ -27,22 +27,16 @@ import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.URLUtil;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.inject.Inject;
-
-import cz.kovar.petr.homevoice.UserData;
-import cz.kovar.petr.homevoice.app.ZWayApplication;
 import cz.kovar.petr.homevoice.frontend.adapters.DevicesGridAdapter;
 import cz.kovar.petr.homevoice.frontend.dialogs.CameraDialog;
 import cz.kovar.petr.homevoice.frontend.dialogs.DeviceSettingsDialog;
 import cz.kovar.petr.homevoice.utils.CameraUtils;
-import cz.kovar.petr.homevoice.zwave.DataContext;
 import cz.kovar.petr.homevoice.zwave.dataModel.Device;
 import cz.kovar.petr.homevoice.zwave.services.UpdateDeviceService;
 
@@ -101,7 +95,7 @@ public class FragmentDevicesBase extends FragmentBase
 
     @Override
     public void onOpenCameraView(Device updatedDevice) {
-        final String cameraUrl = CameraUtils.getCameraUrl(userData.getProfile(),
+        final String cameraUrl = CameraUtils.getCameraUrl(userData.getZWayProfile(),
                 updatedDevice.metrics.url);
         Log.d("FragmentDevicesBase", "onOpenCameraView: " + cameraUrl);
         if(!TextUtils.isEmpty(cameraUrl)

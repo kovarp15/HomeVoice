@@ -2,11 +2,10 @@
     <string name="app_name">HomeVoice</string>
     <string name="created_by">Created by Petr Kovář (2017)</string>
 
-    <string name="remote_url">Remote URL</string>
-    <string name="local_ip">Local IP</string>
-    <string name="local_port">Local Port</string>
+    <!---FRAGMENT SETTINGS-->
     <string name="login">Login</string>
     <string name="password">Password</string>
+    <string name="userName">Name</string>
     <string name="devices">Devices</string>
     <string name="modules">Modules</string>
     <string name="apps">Apps</string>
@@ -130,6 +129,15 @@
         <item>It\'s the same time it was few seconds ago.</item>
         <item>The time hasn\'t changed since your last query.</item>
         <item>It\'s not funny to ask for the time again.</item>
+    </string-array>
+
+    <!--USER MODULE-->
+    <string-array name="your_name_is">
+        <item>I\'ll call you %1$s.</item>
+        <item>OK %1$s, that\'s nice name. </item>
+        <item>Hi %1$s, my name is HomeVoice.</item>
+        <item>Nice to meet you %1$s, my name is HomeVoice.</item>
+        <item>You are %1$s, I\'m HomeVoice.</item>
     </string-array>
 
     <!--FEEDBACK MODULE-->
@@ -301,6 +309,24 @@
 
     <string-array name="average_humidity_response">
         <item>Average humidity in %2$s is %1$s%%.</item>
+    </string-array>
+
+    <!--ILLUMINANCE MODULE-->
+    <string-array name="illuminance_response">
+        <item>Illuminance in %2$s is %1$s Lux.</item>
+    </string-array>
+
+    <string-array name="average_illuminance_response">
+        <item>Average illuminance in %2$s is %1$s Lux.</item>
+    </string-array>
+
+    <!--UV RADIATION MODULE-->
+    <string-array name="uv_radiation_response">
+        <item>UV radiation in %2$s is %1$s of UV index.</item>
+    </string-array>
+
+    <string-array name="average_uv_radiation_response">
+        <item>Average UV radiation in %2$s is %1$s of UV index.</item>
     </string-array>
 
 </resources>

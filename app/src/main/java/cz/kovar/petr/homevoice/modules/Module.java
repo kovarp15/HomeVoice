@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import cz.kovar.petr.homevoice.UserData;
 import cz.kovar.petr.homevoice.app.ZWayApplication;
 import cz.kovar.petr.homevoice.bus.MainThreadBus;
 import cz.kovar.petr.homevoice.bus.events.IntentEvent;
@@ -27,6 +28,8 @@ public abstract class Module {
 
     ModuleContext moduleContext = new ModuleContext();
 
+    @Inject
+    UserData userData;
     @Inject
     DataContext dataContext;
     @Inject

@@ -33,10 +33,14 @@ import cz.kovar.petr.homevoice.zwave.ZWayProfile;
  */
 public class UserData {
 
-    private ZWayProfile m_profile = null;
+    private ZWayProfile m_zwayProfile = null;
+    private UserProfile m_userProfile = null;
 
-    public ZWayProfile getProfile() {
-        return m_profile;
+    public ZWayProfile getZWayProfile() {
+        return m_zwayProfile;
+    }
+    public UserProfile getUserProfile() {
+        return m_userProfile;
     }
 
     /**
@@ -45,6 +49,13 @@ public class UserData {
      * @param aContext activity
      */
     public void initUserData(Context aContext) {
+
+        loadZWayProfile(aContext);
+        loadUserProfile(aContext);
+
+    }
+
+    private void loadZWayProfile(Context aContext) {
 
         SharedPreferences sharedPreferences = aContext.getSharedPreferences(AppConfig.ZWAY_PREF_FILE_KEY, Context.MODE_PRIVATE);
 
@@ -55,15 +66,23 @@ public class UserData {
         String  pass      = sharedPreferences.getString(ZWayProfile.PREF_TAG_PASSWORD, "");
         boolean useRemote = sharedPreferences.getBoolean(ZWayProfile.PREF_TAG_USE_REMOTE, true);
 
-        m_profile = new ZWayProfile(remoteURL, localIP, localPort, login, pass, useRemote);
+        m_zwayProfile = new ZWayProfile(remoteURL, localIP, localPort, login, pass, useRemote);
+    }
 
+    private void loadUserProfile(Context aContext) {
+
+        SharedPreferences sharedPreferences = aContext.getSharedPreferences(AppConfig.USER_PREF_FILE_KEY, Context.MODE_PRIVATE);
+
+        String  username  = sharedPreferences.getString(UserProfile.PREF_TAG_USER_NAME, "");
+        String  location  = sharedPreferences.getString(UserProfile.PREF_TAG_USER_LOCATION, "");
+
+        m_userProfile = new UserProfile(username, location);
     }
 
     public static void saveZWayProfile(Context aContext, ZWayProfile aProfile) {
 
         SharedPreferences sharedPreferences = aContext.getSharedPreferences(AppConfig.ZWAY_PREF_FILE_KEY, Context.MODE_PRIVATE);
 
-        // save useRemote flag to shared preferences file
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(ZWayProfile.PREF_TAG_REMOTE_URL, aProfile.getRemoteURL());
         editor.putString(ZWayProfile.PREF_TAG_LOCAL_IP, aProfile.getLocalIP());
@@ -72,6 +91,17 @@ public class UserData {
         editor.putString(ZWayProfile.PREF_TAG_PASSWORD, aProfile.getPassword());
         editor.putBoolean(ZWayProfile.PREF_TAG_USE_REMOTE, aProfile.useRemote());
         editor.apply();
+    }
+
+    public static void saveUserProfile(Context aContext, UserProfile aProfile) {
+
+        SharedPreferences sharedPreferences = aContext.getSharedPreferences(AppConfig.USER_PREF_FILE_KEY, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(UserProfile.PREF_TAG_USER_NAME, aProfile.getUserName());
+        editor.putString(UserProfile.PREF_TAG_USER_LOCATION, aProfile.getUserLocation());
+        editor.apply();
+
     }
 
 }

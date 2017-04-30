@@ -70,6 +70,7 @@ public class DataUpdateService extends Service {
         Log.v(LOG_TAG, "On create");
         ((ZWayApplication) getApplication()).getComponent().inject(this);
         bus.register(this);
+        m_lastUpdateTime = 0;
     }
 
     @Override
@@ -114,8 +115,10 @@ public class DataUpdateService extends Service {
             @Override
             public void run() {
                 if(apiClient.isPrepared()) {
+                    Log.v(LOG_TAG, "Update data");
                     onUpdateData();
                 } else {
+                    Log.v(LOG_TAG, "apiClient not prepared");
                     m_lastUpdateTime = 0;
                 }
             }
@@ -126,6 +129,7 @@ public class DataUpdateService extends Service {
     public void onUpdateData() {
         final DevicesStateResponse devicesStateResponse;
         try {
+            Log.v(LOG_TAG, "update (" + m_lastUpdateTime + ")");
             devicesStateResponse = apiClient.getDevices(m_lastUpdateTime);
             m_lastUpdateTime = devicesStateResponse.data.updateTime;
             if(devicesStateResponse.data.devices.size() > 0) {

@@ -22,6 +22,7 @@
 
 package cz.kovar.petr.homevoice.bus.events;
 
+import cz.kovar.petr.homevoice.UserProfile;
 import cz.kovar.petr.homevoice.zwave.ZWayProfile;
 
 public class SettingsEvent {
@@ -30,6 +31,14 @@ public class SettingsEvent {
         public final ZWayProfile profile;
 
         public ZWayChanged(ZWayProfile profile) {
+            this.profile = profile;
+        }
+    }
+
+    public static class UserChanged {
+        public final UserProfile profile;
+
+        public UserChanged(UserProfile profile) {
             this.profile = profile;
         }
     }
